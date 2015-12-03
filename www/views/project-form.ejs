@@ -1,0 +1,200 @@
+    <p>Makselahendus sisaldab endas makseks vajalikke kasutajatunnuseid ning sertifikaate. Makselahendused võimaldavad  grupeerida näiteks ühe kliendi või projektiga seotud makseid. Iga tehtud makse logitakse koos kogu sellega seotud infoga ning seda on võimalik hiljem vaadata.</p>
+
+    <h3>Üldised seaded</h3>
+
+    <hr/>
+
+    <input type="hidden" name="id" value="<%= id %>"/>
+
+    <% if(action == "add"){ %>
+
+        <div class="form-group<% if(validation.bank){%> has-error<%}%>">
+            <label class="col-lg-2 control-label" for="bank">Vali panga tüüp</label>
+            <div class="col-lg-6">
+                <select class="form-control" name="bank" id="bank" onclick="showBankSettings()" onchange="showBankSettings()" required>
+                    <option value=""> –– Vali pank –– </option>
+                    <%
+
+                    var groups = {
+                        "ipizza": "Aegunud ipizza protokoll (päringud 1001 ja 1002)",
+                        "pangalink": "Pangalingi protokoll (päringud 1011, 1012, 4011 ja 4012)",
+                        "eesti": "Muud Eesti makseteenused",
+                        "läti": "Läti makseteenused",
+                        "leedu": "Leedu makseteenused",
+                        "soome": "Soome makseteenused"
+                    };
+
+                    var order = ["pangalink", "eesti", "läti", "leedu", "soome", "ipizza"];
+
+                    %>
+
+                    <% order.forEach(function(group){ %>
+                        <optgroup label="<%= groups[group] %>">
+                            <% Object.keys(banks).forEach(function(key){ %>
+                                <% if(banks[key].group === group){%>
+                                <option value="<%= banks[key].key %>"<% if(banks[key].key == bank){%> selected<%}%><% if(banks[key].disabled){%> disabled<%}%>><%= banks[key].name %></option>
+                                <% } %>
+                            <%})%>
+                        </optgroup>
+                    <%})%>
+
+                </select>
+                <% if(validation.bank){%>
+                    <span class="help-block"><%= validation.bank %></span>
+                <%}%>
+            </div>
+        </div>
+
+    <% } %>
+
+    <% if(action == "modify"){ %>
+        <p>Panga tüüp: <strong><%- banks[bank].name %></strong></p>
+    <% } %>
+
+    <div class="form-group<% if(validation.name){%> has-error<%}%>">
+        <label class="col-lg-2 control-label" for="name">Nimetus</label>
+        <div class="col-lg-6">
+            <input class="form-control" type="text" name="name" id="name" value="<%= name %>"  placeholder="Minu makselahendus" required/>
+            <% if(validation.name){%>
+                <span class="help-block"><%= validation.name %></span>
+            <%}%>
+        </div>
+    </div>
+
+    <div class="form-group<% if(validation.description){%> has-error<%}%>">
+        <label class="col-lg-2 control-label" for="description">Kirjeldus</label>
+        <div class="col-lg-6">
+            <textarea class="form-control" rows="3" id="description" name="description"><%= description %></textarea>
+            <% if(validation.description){%>
+                <span class="help-block"><%= validation.description %></span>
+            <%}%>
+        </div>
+    </div>
+
+    <div class="form-group<% if(validation.authorized){%> has-error<%}%>">
+        <label class="col-lg-2 control-label" for="authorized">Kasutajad</label>
+        <div class="col-lg-6">
+            <textarea class="form-control" rows="3" id="authorized" name="authorized"><%= authorized && authorized.join("\n") || "" %></textarea>
+            <% if(validation.authorized){%>
+                <span class="help-block"><%= validation.authorized %></span>
+            <%}%>
+            <span class="help-block">Sisesta eraldi ridadele nende kasutajate e-posti aadressid, kes tohivad selle makselahendusega toimetada (muuta andmeid, näha maksete infot jne)</span>
+        </div>
+    </div>
+
+    <div id="soloform" style="<%= ["nordea", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].indexOf(bank) >= 0 ? "display: block;" : "display:none;" %>">
+
+        <h3>Täpsemad seaded</h3>
+        <hr />
+
+        <div class="form-group<% if(validation.soloAlgo){%> has-error<%}%>">
+            <label class="col-lg-2 control-label" for="soloAlgo">Allkirjastamise algoritm</label>
+            <div class="col-lg-6">
+                <select class="form-control" name="soloAlgo" id="soloAlgo">
+                    <option <% if(soloAlgo == "md5"){ %> selected<% } %> value="md5">MD5 (vaikimisi)</option>
+                    <option <% if(soloAlgo == "sha1"){ %> selected<% } %> value="sha1">SHA1</option>
+                    <option <% if(soloAlgo == "sha256"){ %> selected<% } %> value="sha256">SHA256</option>
+                </select>
+                <% if(validation.soloAlgo){%>
+                    <span class="help-block"><%= validation.soloAlgo %></span>
+                <%}%>
+            </div>
+        </div>
+
+        <div class="form-group<% if(validation.soloAutoResponse){%> has-error<%}%>">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" name="soloAutoResponse" value="true" <%= soloAutoResponse ? "checked" : "" %>>
+                    Saada automaatvastus kaupmehe serverile (kasutades SOLOPMT_RETURN aadressi) peale makse sooritamist (kehtib ainult Nordea puhul)
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div id="ecform" style="<%= bank == "ec" ? "display: block;" : "display:none;" %>">
+
+        <h3>Pankade kaardikeskuse seaded</h3>
+
+        <hr />
+
+        <div class="form-group<% if(validation.ecUrl){%> has-error<%}%>">
+            <label class="col-lg-2 control-label" for="ecUrl">URL</label>
+            <div class="col-lg-6">
+                <input class="form-control" type="text" name="ecUrl" id="ecUrl" value="<%= ecUrl %>" placeholder="http://example.com/return_from_ec.php"/>
+                <% if(validation.ecUrl){%>
+                    <span class="help-block"><%= validation.ecUrl %></span>
+                <%}%>
+                <span class="help-block">Peale makse sooritamist suunatakse maksja siin määratud aadressile (kui <code>ver=002</code>)</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="ipizzaform" style="<%= ["ec", "nordea", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].indexOf(bank) < 0 ? "display: block;" : "display:none;" %>">
+
+        <h3>Ipizza seaded</h3>
+
+        <hr />
+
+        <p>Järgmised andmed on vajalikud teenuskoodi 1002 kasutamiseks ning need defineerivad makse saaja andmed.</p>
+
+        <div class="form-group<% if(validation.ipizzaReceiverName){%> has-error<%}%>">
+            <label class="col-lg-2 control-label" for="ipizzaReceiverName">Makse saaja</label>
+            <div class="col-lg-6">
+                <input class="form-control" type="text" name="ipizzaReceiverName" id="ipizzaReceiverName" value="<%= ipizzaReceiverName %>" placeholder="Konto Omanik OÜ"/>
+                <% if(validation.ipizzaReceiverName){%>
+                    <span class="help-block"><%= validation.ipizzaReceiverName %></span>
+                <%}%>
+                <span class="help-block">Kui saaja nimi on määramata, kasutatakse vaikimisi makselahenduse nimetust</span>
+            </div>
+        </div>
+
+        <div class="form-group<% if(validation.ipizzaReceiverAccount){%> has-error<%}%>">
+            <label class="col-lg-2 control-label" for="ipizzaReceiverAccount">Saaja konto</label>
+            <div class="col-lg-6">
+                <input class="form-control" type="text" name="ipizzaReceiverAccount" id="ipizzaReceiverAccount" value="<%= ipizzaReceiverAccount %>" placeholder="EE129900001234567897"/>
+                <% if(validation.ipizzaReceiverAccount){%>
+                    <span class="help-block"><%= validation.ipizzaReceiverAccount %></span>
+                <%}%>
+                <span class="help-block">Kui konto number on määramata, genereeritakse vajadusel selleks suvaline number</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showBankSettings(){
+            var bank = document.getElementById("bank"),
+                ipizzaform = document.getElementById("ipizzaform"),
+                soloform = document.getElementById("soloform"),
+                ecform = document.getElementById("ecform");
+
+            if(["ec", "nordea", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].indexOf(bank.value) < 0){
+                soloform.style.display = "none";
+                ecform.style.display = "none";
+                ipizzaform.style.display = "block";
+            }else{
+                switch(bank.value){
+                    case "nordea":
+                    case "tapiola":
+                    case "alandsbanken":
+                    case "handelsbanken":
+                    case "aktiasppop":
+                        soloform.style.display = "block";
+                        ecform.style.display = "none";
+                        ipizzaform.style.display = "none";
+                        break;
+                    case "ec":
+                        ecform.style.display = "block";
+                        soloform.style.display = "none";
+                        ipizzaform.style.display = "none";
+                        break;
+                    default:
+                        soloform.style.display = "none";
+                        ecform.style.display = "none";
+                        ipizzaform.style.display = "none";
+                }
+            }
+        }
+    </script>

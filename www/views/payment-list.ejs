@@ -1,0 +1,87 @@
+<div class="page-header">
+    <h2>Maksete ajalugu</h2>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Tüüp
+            </th>
+            <th>
+                Aeg
+            </th>
+            <th>
+                Selgitus
+            </th>
+            <th>
+                Staatus
+            </th>
+            <th>
+                Keel
+            </th>
+            <th>
+                Kodeering
+            </th>
+            <th>
+                Makse summa
+            </th>
+            <th>
+                Makse andmed
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if(!payments || !payments.length){%>
+            <tr>
+                <td colspan="9">
+                    Ühtegi makset pole nende tunnustega veel üritatud teha. Lae alla <a href="/project/<%= project._id %>/example/pay.php">PHP näiterakendus</a> makselahenduse andmetega ning soorita selle abil <a href="/project/<%= project._id %>/example/render/pay.php">esimene makse</a>.
+                </td>
+            </tr>
+        <% } %>
+        <% if(payments && payments.length){%>
+            <% payments.forEach(function(payment, i){%>
+                <tr>
+                    <td>
+                        <%= start_index + i + 1 %>
+                    </td>
+                    <td>
+                        <%= payment.typeName %>
+                    </td>
+                    <td>
+                        <%= payment.date %>
+                    </td>
+                    <td>
+                        <%= payment.message || (payment.state === "AUTHENTICATED" && ((payment.payment.authUserName || "") + " : " + (payment.payment.authUserId || ""))) || "" %>
+                    </td>
+                    <td>
+                        <% if(payment.state && labels[payment.state]){ %>
+                            <span class="label label-<%= labels[payment.state].type %>"><%= labels[payment.state].name %></span>
+                        <%}%>
+                        <% if(payment.state == "IN PROCESS"){%>
+                            (<a href="/preview/<%= payment._id %>">Jätka</a>)
+                        <%}%>
+                    </td>
+                    <td>
+                        <div class="flag flag-<%= countries[payment.language] || "gb" %>"></div> <%= languages[payment.language] || languages.en %>
+                    </td>
+                    <td>
+                        <%= payment.charset %>
+                    </td>
+                    <td>
+                        <%= payment.type == "PAYMENT" ? payment.amount : "–" %>
+                    </td>
+                    <td>
+                        <a href="/payment/<%= payment._id %>">Vaata andmeid</a>
+                    </td>
+                </tr>
+
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>
+
+<% include pagination %>

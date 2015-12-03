@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="<%= (typeof payment == 'object' ? payment.charset : '') || 'utf-8' %>">
+        <title>Automaatne testmakse</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="Andris Reinman" name="author">
+
+        <% if(method == "GET"){ %>
+            <meta content="0; url=<%= target %>" http-equiv="refresh">
+        <% } %>
+    </head>
+    <body>
+
+        <p>Makse automaatselt
+            <%- [{'PAYED': teostatud, 'CANCELLED': katkestatud, 'REJECTED': tagasi lükatud}[payment.state]]) %>, suunatakse tagasi kaupmehe juurde...</p>
+
+        <div data-current-state="<%= payment.state.toLowerCase() %>"></div>
+        <div data-payment-state="<%= payment.state %>"></div>
+
+        <% if(method == "POST"){%>
+
+            <form id="submit-form" method="POST" action="<%= target %>">
+
+                <% Object.keys(payment.responseFields).forEach(function(key){%>
+                    <input type="hidden" name="<%= key %>" value="<%= payment.responseFields[key] %>" />
+                <% }) %>
+
+                <p>Juhul, kui automaatne ümbersuunamine ei toiminud, <input type="submit" data-button="return" value="kliki siia"></p>
+
+            </form>
+
+        <%}%>
+
+        <% if(method == "GET"){%>
+            <p>Juhul, kui automaatne ümbersuunamine ei toiminud, <a data-button="return" href="<%= target %>">kliki siia</a></p>
+        <%}%>
+
+        <p>&copy; 2011&ndash;<%= new Date().getFullYear() %>
+            <a href="http://www.kreata.ee/">Kreata OÜ</a>
+            <a href="mailto:info@pangalink.net">info@pangalink.net</a>
+        </p>
+
+        <% if(method == "POST"){%>
+            <script>
+                document.getElementById("submit-form").submit();
+            </script>
+        <%}%>
+
+        <% if(googleAnalyticsID){%>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', '<%= googleAnalyticsID %>', 'auto');
+          ga('send', 'pageview');
+
+        </script>
+        <%}%>
+
+    </body>
+</html>

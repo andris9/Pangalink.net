@@ -1,0 +1,80 @@
+
+<div class="page-header">
+    <h1><span class="glyphicon glyphicon-link"></span> <%= title %></h1>
+</div>
+
+<p class="lead"><%= title %> on pangalingi testimise teenus, mis võimaldab arendajal testida pangalingi toimivust, ilma et oleks vaja sõlmida pangaga lepinguid või vahetada sertifikaate.</p>
+
+<p>Nimelt genereerib <%= title %> arendajale testimiseks vastavad sertifikaadid ja unikaalse kliendi tunnuskoodi. Arendaja saab kasutada neid andmeid oma pangalingi rakenduses. Kui nüüd klikata arendaja rakenduses või veebipoes nupule "Maksa," ei suunata kasutajat mitte päris panka, vaid <%= title %> netipanga emulaatorile, kus on võimalik uurida tehtud päringu kehtivust ning sooritada ka test-maksekorraldus.</p>
+
+<h4>Kui soovid toetada <%= title %> arendust, saad seda teha järgmiste kanalite kaudu:</h4>
+
+<p>Paypal: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=DB26KWR2BQX5W"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="Donate to author" style="max-width:100%;"></a></p>
+
+<p>Bitcoin: <code>15Z8ADxhssKUiwP3jbbqJwA21744KMCfTM</code></p>
+
+<h3>Kuidas alustada?</h3>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4><%= title %> on esimene valik pangalinkide testimiseks!</h4>
+        <p>Kas teadsid, et praeguseks kasutavad peaaegu kõik arendajad pangalinkide testimiseks just <%= title %> teenust? Unusta 1€ testmaksed läbi panga ja sellega seonduv raamatupidamislik peavalu - <%= title %> automatiseerib kõik pangalinkidega seonduva täiesti tasuta. Päris raha pole enam testimiseks vaja kasutada.</p>
+    </div>
+</div>
+
+<p>Alustamiseks tuleb <a href="/join">luua konto</a> ning seejärel <a href="/add-project">lisada uus makselahendus</a>, millega saad oma rakenduse jaoks vajaliku kasutajatunnuse, salajase võtme ja panga sertifikaadi.</p>
+
+<p>Maksekorralduste andmed on logitud – nimelt salvestatakse kõik vormiväljad, HTTP päringute päised ja automaatvastuste sisu. Samuti annab <%= title %> teada vigadest ja nende põhjustest. Logitud andmeid näeb ainult konto omanik, kõrvalised isikud andmetele ligi ei pääse.</p>
+
+<h3>Kasutusnäide</h3>
+
+<div class="row">
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <p><strong>Samm 1. Maksevorm</strong></p>
+      </div>
+      <a href="/images/step1.png" targe="_blank"><img src="/images/step1.png"/></a>
+      <div class="caption">
+        <p>Kaupmehe saidil "Maksma" nupp ei suuna päris panka, vaid <%= title %> teenusele</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <p><strong>Samm 2. Makse teostamine</strong></p>
+      </div>
+      <a href="/images/step2.png" targe="_blank"><img src="/images/step2.png"/></a>
+      <div class="caption">
+        <p><%= title %> kontrollib päringu kehtivust ja võimaldab teostada testmakse</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <p><strong>Samm 3. Makseinfo tagastamine</strong></p>
+      </div>
+      <a href="/images/step3.png" targe="_blank"><img src="/images/step3.png"/></a>
+      <div class="caption">
+        <p>Teenus koostab vastuspäringu, mis saadetakse nupuga "Tagasi kaupmehe juurde"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail">
+      <div class="caption">
+        <p><strong>Samm 4. Makse kinnitamine</strong></p>
+      </div>
+      <a href="/images/step4.png" targe="_blank"><img src="/images/step4.png"/></a>
+      <div class="caption">
+        <p>Kaupmees kontrollib pangalt saabunud päringu kehtivust ja saab kinnitada makse</p>
+      </div>
+    </div>
+  </div>
+
+</div>

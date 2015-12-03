@@ -1,0 +1,296 @@
+
+<div class="page-header">
+    <h1>Maksekorralduse andmed</h1>
+</div>
+
+<% if(payment.errors && payment.errors.length){%>
+    <div class="alert alert-danger">
+      <strong>Tähelepanu!</strong> Maksekorralduse töötlemisel ilmnes olulisi vigu.
+    </div>
+    <p>Järgnevad vead takistasid maksekorralduse edasist täitmist:</p>
+    <ul>
+    <% payment.errors.forEach(function(error, i){%>
+        <li><%= typeof error != "object" ? error : error.error %></li>
+    <%})%>
+    </ul>
+
+    <hr>
+<%}%>
+
+<% if(payment.warnings && payment.warnings.length){%>
+    <div class="alert alert-warning">
+      <strong>Tähelepanu!</strong> Maksekorralduse töötlemisel ilmnes tõrkeid.
+    </div>
+    <p>Järgnevad vead tasub parandada, kuid see ei ole kohustuslik:</p>
+    <ul>
+    <% payment.warnings.forEach(function(warning, i){%>
+        <li><%= typeof warning != "object" ? warning : warning.warning %></li>
+    <%})%>
+    </ul>
+
+    <hr>
+<%}%>
+
+<h3>Üldandmed</h3>
+
+<table class="table table-hover">
+
+    <% if(project){ %>
+    <tr>
+        <td>Makselahendus</td>
+        <td>
+            <a href="/project/<%= project._id%>"><%= project.name %></a>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(typeName){ %>
+    <tr>
+        <td>Tehingu tüüp</td>
+        <td>
+            <%= typeName || "" %>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(payment.date){ %>
+    <tr>
+        <td>Tehingu aeg</td>
+        <td>
+            <%= payment.date || "" %>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(payment.message){ %>
+    <tr>
+        <td>Selgitus</td>
+        <td>
+            <%= payment.message || "" %>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(payment.state){ %>
+    <tr>
+        <td>Staatus</td>
+        <td>
+            <% if(payment.state && labels[payment.state]){ %>
+                <span class="label label-<%= labels[payment.state].type %>"><%= labels[payment.state].name %></span>
+            <%}%>
+            <% if(payment.state == "IN PROCESS"){%>
+                (<a href="/preview/<%= payment._id %>">Jätka</a>)
+            <%}%>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(payment.language){ %>
+    <tr>
+        <td>Valitud keel</td>
+        <td>
+            <div class="flag flag-<%= countries[payment.language] || "gb" %>"></div> <%= languages[payment.language] || languages.en %>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(payment.charset){ %>
+    <tr>
+        <td>Teksti kodeering</td>
+        <td>
+            <%= payment.charset %>
+        </td>
+    </tr>
+    <%}%>
+
+    <% if(payment.type == "PAYMENT"){ %>
+    <tr>
+        <td>Makse summa</td>
+        <td>
+            <%= payment.type == "PAYMENT" ? amount : "" %>
+        </td>
+    </tr>
+    <%}%>
+
+</table>
+
+<h3>Sissetuleva päringu andmed</h3>
+
+<h4><%= payment.method %> <%= payment.url %></h4>
+
+<hr>
+
+<h4>Päringu HTTP päised</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nimi</th>
+            <th>Väärtus</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% payment.headers.forEach(function(header){%>
+            <tr>
+                <td><%= header.key %></td>
+                <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= header.value %></code></div></td>
+            </tr>
+        <%})%>
+    </tbody>
+</table>
+
+<% if(payment.body){%>
+    <h4>Päringu sisu</h4>
+    <div style="overflow: auto; margin:0; padding:0;"><pre style="background: #EFEFEF;"><%= new Buffer(payment.body, "base64").toString("binary") %></pre></div>
+<%}%>
+
+<% if (payment.method == "POST" && payment.fields && payment.fields.length) {%>
+    <h4>POST päringu parameetrid</h4>
+
+    <table class="table">
+        <thead>
+            <th>Nimi</th>
+            <th>Väärtus</th>
+        </thead>
+        <tbody>
+            <% payment.fields.forEach(function(field){%>
+                <tr>
+                    <td><%= field.key %></td>
+                    <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= (field.value || "") %></code></div>
+
+                        <% if(payment.errors){%>
+                            <% payment.errors.forEach(function(error, i){%>
+                                <% if(typeof error == "object" && error.field == field.key){%>
+                                    <div><strong><%= error.error %></strong></div>
+                                <% } %>
+                            <%})%>
+                        <%}%>
+
+                        <% if(payment.warnings){%>
+                            <% payment.warnings.forEach(function(warning, i){%>
+                                <% if(typeof warning == "object" && warning.field == field.key){%>
+                                    <div><strong><%= warning.warning %></strong></div>
+                                <% } %>
+                            <%})%>
+                        <%}%>
+
+                    </td>
+                </tr>
+            <%})%>
+        </tbody>
+    </table>
+<%}%>
+
+<% if(payment.hash){%>
+<h4>Allkirja kontrolli sisend</h4>
+
+<p>Allkirja kontrollimiseks <a href="/project/<%= project._id %>/user_cert.pem">kasutaja sertifikaadiga</a> kasutati järgmist stringi:</p>
+<pre><%= payment.hash %></pre>
+
+<p>
+<a href="/payment/<%= payment._id %>/scripts/pay.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> pay.php</a>
+<small>Lae alla näiteskript sisendandmete korrektseks allkirjastamiseks</small>
+<%}%>
+</p>
+
+<% if(payment.responseFields && typeof payment.responseFields == "object"){%>
+<hr>
+
+    <h3>Väljuva päringu andmed</h3>
+
+    <h4><%= payment.returnMethod %> <%= payment.state == "PAYED" ? payment.successTarget : (payment.state == "REJECTED" ? payment.rejectTarget: payment.cancelTarget) %></h4>
+
+    <hr>
+
+    <h4><%= payment.returnMethod %> päringu parameetrid</h4>
+
+    <table class="table">
+        <thead>
+            <th>Nimi</th>
+            <th>Väärtus</th>
+        </thead>
+        <tbody>
+            <% Object.keys(payment.responseFields).forEach(function(key){%>
+                <tr>
+                    <td><%= key %></td>
+                    <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= (payment.responseFields[key] || "") %></code></div>
+                    </td>
+                </tr>
+            <%})%>
+        </tbody>
+    </table>
+<% } %>
+
+<% if(payment.responseHash){%>
+<h4>Allkirjastamise sisend</h4>
+
+<p>Vastuse allkirjastamiseks <a href="/project/<%= project._id %>/bank_key.pem">panga võtmega</a> kasutati järgmist stringi:</p>
+<pre><%= payment.responseHash %></pre>
+
+<p><a href="/payment/<%= payment._id %>/scripts/receive.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> receive.php</a>
+<small>Lae alla näiteskript tehingu andmete allkirja kontrolliks</small></p>
+<%}%>
+
+<% if(payment.autoResponse){%>
+    <h3 id="automaatparingu_vastus">Automaatpäringu vastus</h3>
+
+    <% if(!payment.autoResponse.statusCode){%>
+
+    <div class="alert alert-danger">
+      Automaatpäring domeenile <strong><%= host %></strong> ebaõnnestus<% if(payment.autoResponse.error){%>: <strong><%= payment.autoResponse.error %></strong><%}%>
+    </div>
+
+    <p>Juhul kui domeen viitab väljastpoolt ligipääsmatule serverile (n. <em>localhost</em>), siis ei olegi võimalik sellele aadressile automaatpäringuid teha. Üldjuhul ei ole see ka probleem, va. juhul kui rakendus on ehitatud selliselt, et ootab üht päringut samade andmetega vaid ühe korra. Üks hetk avalikku serverisse pannes võib see rakenduse töö katki teha, kuna siis tuleb samade andmetega päringut juba kaks korda (esiteks panga poolt automaatpäring ja seejärel kasutaja poolne päring). Kui rakendus peab õigeks vaid esimest (automaatpäring) ja lükkab tagasi teise (kasutaja poolse duplikaatpäringu), siis <em>you're gonna have a bad time</em>.</p>
+
+    <blockquote>Alternatiiv <em>localhost</em> sisu lubamiseks avalikku veebi oleks kasutada <a href="http://progrium.com/localtunnel/">localtunnel</a> teenust või mõnd selle analoogi, kuid seda tuleb tuleb teha ülima ettevaatlikkusega - oma arvuti avamine tervele internetile ei pruugi olla väga tervislik.</blockquote>
+
+    <% } %>
+
+    <% if(payment.autoResponse.statusCode){%>
+
+    <h4>Staatus <%= payment.autoResponse.statusCode %></h4>
+
+        <% if(payment.autoResponse.statusCode >= 300 ){%>
+            <div class="alert alert-info">
+              <strong>Tähelepanu!</strong> Kuna päringu HTTP staatus oli <strong><%= payment.autoResponse.statusCode %></strong>, mitte <strong>200</Strong>, peab pank seda vigaseks vastuseks ning üritab mõne aja pärast samu andmeid uuesti saata (täpne käitumine sõltub konkreetsest pangast)
+            </div>
+        <% } %>
+
+    <% } %>
+
+    <% if(payment.autoResponse.headers){%>
+
+    <h4>Vastuse HTTP päised</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nimi</th>
+                <th>Väärtus</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% Object.keys(payment.autoResponse.headers).forEach(function(key){%>
+                <tr>
+                    <td><%= key %></td>
+                    <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= (payment.autoResponse.headers[key] || "") %></code></div></td>
+                </tr>
+            <%})%>
+        </tbody>
+    </table>
+    <% } %>
+
+    <% if(payment.autoResponse.body){%>
+
+    <h4>Vastuse sisu</h4>
+    <pre style="max-height: 340px; overflow: auto"><%= payment.autoResponse.body.substr(0, 20 * 1048)%></pre>
+    <% if(payment.autoResponse.body.length > 20 * 1048){ %>
+        <p><strong>Lühendatud sisu!</strong> Kuna vastus oli liiga pikk, kuvatakse siin vaid vastuse esimesed 20 kilobaiti.</p>
+    <% } %>
+    <% } %>
+
+    <% if(payment.autoResponse.headers && !payment.autoResponse.body){%>
+        <p>Päringu vastus oli tühi</p>
+    <% } %>
+
+<% } %>

@@ -1,0 +1,196 @@
+
+<div class="page-header">
+    <h1><%= project.name %></h1>
+</div>
+
+<% if(project.description){%>
+    <div class="well well-small">
+        <%= project.description %>
+    </div>
+<% } %>
+
+<ul class="nav nav-tabs">
+    <li class="<%= !tab || tab == "payments" ? "active":"" %>"><a href="#payments" data-toggle="tab">Maksete ajalugu</a></li>
+    <li class="<%= tab == "certs" ? "active":"" %>"><a href="#certs" data-toggle="tab">Sertifikaadid</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane <%= !tab || tab == "payments" ? "active":"" %>" id="payments">
+
+    <% include payment-list %>
+  </div>
+  <div class="tab-pane <%= tab == "certs" ? "active":"" %>" id="certs">
+
+
+    <div class="page-header">
+        <h2>Sertifikaadi andmed</h2>
+    </div>
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>
+                    Kirjeldus
+                </th>
+                <th>
+                    Väärtus
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <th>
+                    Panga tüüp
+                </th>
+                <td>
+                    <%= banks[project.bank].name %>
+                </td>
+            </tr>
+
+            <tr>
+                <th>
+                    Kliendi tunnuskood
+                </th>
+                <td>
+                    <code><%= project.uid %></code>
+                </td>
+            </tr>
+
+            <% if(project.authorized && project.authorized.length){%>
+            <tr>
+                <th>
+                    Lubatud kasutajad
+                </th>
+                <td>
+                    <%= project.authorized.join(", ") %>
+                </td>
+            </tr>
+            <% } %>
+
+            <tr>
+                <th>
+                    Pöörduspunkti URL
+                </th>
+                <td>
+                    <code><%= proto %>://<%= hostname %>/banklink/<%= project.bank %></code>
+                    <small>Pangalingi aadress makse sooritamiseks</small>
+                </td>
+            </tr>
+
+            <% if(banks[project.bank].type == "ipizza" || banks[project.bank].type == "ec"){ %>
+
+                <tr>
+                    <th>
+                        Võtme pikkus
+                    </th>
+                    <td>
+                        <%= project.keyBitsize %> bitti
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        Kaupmehe salajane võti
+                    </th>
+                    <td>
+                        <p>
+                            <a href="/project/<%= project._id %>/user_key.pem" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> user_key.pem</a>
+                            <small>Selle võtmefailiga tuleb allkirjastada panka mineva makse andmed</small
+                        </p>
+                        <p>
+                            <textarea class="form-control" rows="3" style="font-family: monospace;" onfocus="this.select()" onclick="this.select()"><%= project.userCertificate.clientKey %></textarea>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Panga sertifikaat
+                    </th>
+                    <td>
+                        <p>
+                            <a href="/project/<%= project._id %>/bank_cert.pem" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> bank_cert.pem</a>
+                            <small>Selle sertifikaadi abil tuleb kontrollida pangast saabunud maksekinnituse kehtivust</small>
+                        </p>
+                        <p>
+                            <textarea class="form-control" rows="3" style="font-family: monospace;" onfocus="this.select()" onclick="this.select()"><%= project.bankCertificate.certificate %></textarea>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        Täiendavad võtmefailid
+                    </th>
+                    <td>
+                        <p>
+                            <a href="/project/<%= project._id %>/user_cert.pem">kaupmehe sertifikaat</a>,
+                            <a href="/project/<%= project._id %>/bank_key.pem">panga salajane võti</a>
+                        </p>
+
+                        <p>
+                            Neid faile pole tõenäoliselt arenduses vaja, kuid võivad olla olulised <em>debugimisel</em>.
+                        </p>
+                        <p>
+                            Kaupmehe sertifikaadi abil valideerib <%= title %> sisenevaid makseid ning panga salajast võtit kasutatakse makse kinnituse allkirjastamisel.
+                        </p>
+                    </td>
+                </tr>
+
+            <% } %>
+
+            <% if(["solo", "aab", "samlink"].indexOf(banks[project.bank].type) >= 0){ %>
+                <tr>
+                    <th>
+                        Salajane MAC võti
+                    </th>
+                    <td>
+                        <code><%= project.secret %></code>
+                        <small>Salajane MAC võti päringute allkirjastamiseks ja valideerimiseks</small>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Allkirjastamise algoritm
+                    </th>
+                    <td>
+                        <code><%= project.soloAlgo %></code>
+                        <small>Päringute allkirjastamisel kasutatav krüptoalgoritm</small>
+                    </td>
+                </tr>
+            <% } %>
+
+            <tr>
+                <th>
+                    Näidisrakendused
+                </th>
+                <td>
+                    <p>
+                        <a href="/project/<%= project._id %>/example/pay.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> pay.php</a> Lae makse teostamise näidisrakendus alla või <a href="/project/<%= project._id %>/example/render/pay.php">proovi seda siin</a>.
+                    </p>
+
+                    <% if((banks[project.bank].allowedServices || []).indexOf("4011") >= 0){ %>
+                        <p>
+                            <a href="/project/<%= project._id %>/example/auth.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> auth.php</a> Lae autentimise näidisrakendus alla või <a href="/project/<%= project._id %>/example/render/auth.php">proovi seda siin</a>.
+                        </p>
+                    <% } %>
+
+                    <p>
+                        <small>NB! Siin toodud PHP näidisrakendused ei sisalda laekunud kinnituse kontrolli, need on ainult toimingu algatamiseks.</small>
+                    </p>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <a class="btn btn-info" href="/edit-project/<%= project._id %>">Muuda makselahenduse andmeid</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+  </div>
+</div>

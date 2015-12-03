@@ -1,0 +1,125 @@
+<% include header %>
+
+<h3><%= payment.state == "PAYED" ? "Makse teostatud" : (payment.state == "REJECTED" ? "Makse tagasi lükatud" : (payment.state == "AUTHENTICATED" ? "Kasutaja autenditud" : "Makse katkestatud")) %></h3>
+
+<span data-current-state="<%= payment.state.toLowerCase() %>"></span>
+<span data-payment-state="<%= payment.state %>"></span>
+
+<% if(payment.responseFields){ %>
+    <% Object.keys(payment.responseFields).forEach(function(key){%>
+        <span data-out-key="<%= key %>" data-out-value="<%= payment.responseFields[key] %>"></span>
+    <%})%>
+<%}%>
+
+<% if(payment.autoResponse && !payment.autoResponse.statusCode){%>
+
+<div class="alert alert-info">
+    <p>Automaatpäringu sooritamisel tekkis järgnev viga: <strong><%= payment.autoResponse.error %></strong></p>
+    <p>Alternatiivselt proovib <%= title %> postitada andmed otse brauserist, kuid selle päringu vastust makse info lehel ei näidata.</p>
+    <p><strong id="sending"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Saadan päringut ...</strong></p>
+</div>
+
+<script type="text/javascript">
+    var iframeCounter = 0;
+
+    function postData(url, method, fields, callback) {
+
+        if(window.location.protocol === 'https:' && window.location.protocol !== url.toLowerCase().substr(0, window.location.protocol.length)){
+            document.getElementById('sending').innerHTML = '<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Brauserisisest automaatpäringut saab teha ainult HTTPS aadressile</strong>';
+            return;
+        }
+
+        var iframe = document.createElement('iframe');
+        var form = document.createElement('form');
+        var input;
+        var name = 'iframe-' + (++iframeCounter);
+
+        iframe.setAttribute('name', name);
+
+        form.setAttribute('action', url);
+        form.setAttribute('method', method);
+        form.setAttribute('target', name);
+
+        fields = [].concat(fields || []);
+        for (var i = 0; i < fields.length; i++) {
+            input = document.createElement('input');
+
+            input.setAttribute('type', 'hidden');
+            input.setAttribute('name', fields[i].key);
+            input.setAttribute('value', fields[i].value);
+
+            form.appendChild(input);
+        }
+
+        iframe.style.position = 'absolute';
+        iframe.style.width = '100px';
+        iframe.style.height = '100px';
+        iframe.style.left = '-1000px';
+        iframe.style.top = '-1000px';
+
+        document.body.appendChild(iframe);
+
+        var updated = false;
+        var timer = setTimeout(function() {
+            updated = true;
+            document.getElementById('sending').innerHTML = '<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Automaatpäring aegus</strong>';
+        }, 10 * 1000);
+
+        iframe.onload = function() {
+            clearTimeout(timer);
+            if(!updated){
+                document.getElementById('sending').innerHTML = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Automaatpäring saadetud</strong>';
+            }
+            callback();
+        };
+
+        if(!/^get$/i.test(method)){
+            form.submit();
+        }else{
+            iframe.setAttribute('src', url);
+        }
+    }
+
+    postData( <%- JSON.stringify(payment.autoResponse.url) %>, <%- JSON.stringify(payment.autoResponse.method) %>, <%- JSON.stringify(payment.autoResponse.fields) %>, function() {});
+</script>
+<% } %>
+
+<p>Kliki nupul, et lõpetada toiming ja pöörduda koos tulemusega tagasi kaupmehe saidile.</p>
+
+<% if(method == "POST"){%>
+
+    <form id="submit-form" method="POST" action="<%= target %>">
+
+        <% Object.keys(payment.responseFields).forEach(function(key){%>
+            <input type="hidden" name="<%= key %>" value="<%= payment.responseFields[key] %>" />
+        <% }) %>
+
+        <button data-button="return" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-arrow-right"></span> Tagasi kaupmehe juurde</button>
+        <% if(uid && (uid == project.owner || project.authorized.indexOf(uid.toLowerCase().trim()) >= 0)){ %>
+            <a href="/payment/<%= payment._id %>/scripts/receive.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Allkirja kontrolli PHP lähtekood</a>
+        <% } %>
+
+    </form>
+
+    <% if(payment.autoSubmit){%>
+    <script>
+        document.getElementById("submit-form").submit();
+    </script>
+    <% } %>
+
+<%}%>
+
+<% if(method == "GET"){%>
+    <p>
+        <a data-button="return" href="<%= target %>" class="btn btn-success"><span class="glyphicon glyphicon-arrow-right"></span> Tagasi kaupmehe juurde</a>
+        <% if(uid && (uid == project.owner || project.authorized.indexOf(uid.toLowerCase().trim()) >= 0)){ %>
+            <a href="/payment/<%= payment._id %>/scripts/receive.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Allkirja kontrolli PHP lähtekood</a>
+        <% } %>
+    </p>
+<%}%>
+
+<hr/>
+
+<% include info %>
+
+<% include footer %>

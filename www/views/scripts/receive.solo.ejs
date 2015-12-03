@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="<%- payment.charset.toLowerCase() %>" />
+        <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
+    </head>
+    <body>
+<?php
+
+// THIS IS AUTO GENERATED SCRIPT
+// (c) 2011 - <%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
+
+// STEP 1. Setup signing
+// =====================
+
+$secret = "<%- project.secret %>";
+
+// STEP 2. Define payment information
+// ==================================
+
+<%
+var data = "";
+-%>
+$fields = array(
+<% Object.keys(payment.responseFields || {}).forEach(function(field, i, arr){ -%>
+<% if(field != "SOLOPMT_MAC" && field != "MAC"){ -%>
+        "<%- field %>" <%- field.length < 23 && new Array(23 - field.length).join(" ") || "" %>=> "<%- payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"<%- i < arr.length - 1  && "," || "" %>
+<% } -%>
+<% }) -%>
+);
+
+// STEP 3. Generate data to be verified
+// ====================================
+<%
+    signatureOrder = signatureOrder[payment.responseFields.SOLOPMT_RETURN_VERSION || payment.responseFields.RETURN_VERSION || "0002"] || signatureOrder["0002"];
+    signatureOrder = signatureOrder["PAYMENT-OUT"];
+-%>
+
+<% signatureOrder.forEach(function(field, i, arr){ -%>
+<% data += (payment.responseFields[field] || payment.responseFields["SOLOPMT_" + field] || "") + "&" -%>
+<%- !i ? "$data = " : "        "%>$fields["<%- "SOLOPMT_" + field in payment.responseFields ? "SOLOPMT_" + field : field %>"] . "&" .
+<% })
+data += project.secret + "&"
+-%>
+        $secret . "&";
+
+/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
+
+$fields["<%= "SOLOPMT_RETURN_VERSION" in payment.responseFields ? "SOLOPMT_" : "" %>MAC"] = strtoupper(<%= project.soloAlgo %>($data));
+
+// STEP 4. Verify the data with <%= project.soloAlgo.toUpperCase() %>
+// =====================================
+
+if (strtoupper(<%= project.soloAlgo %>($data)) != $fields["<%= "SOLOPMT_RETURN_VERSION" in payment.responseFields ? "SOLOPMT_" : "" %>MAC"]) {
+    $signatureVerified = false;
+}else{
+    $signatureVerified = true;
+}
+
+// STEP 5. Display output of the received payment
+// ==============================================
+?>
+
+    <p>Payment: <?php echo !empty($fields["<%= "SOLOPMT_RETURN_VERSION" in payment.responseFields ? "SOLOPMT_" : "" %>RETURN_PAID"]) ? "received" : "cancelled" ?></p>
+    <p>Signature: <?php echo $signatureVerified ? "verified" : "not verified" ?></p>
+
+    </body>
+</html>

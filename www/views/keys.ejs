@@ -1,0 +1,111 @@
+<form action="/keys" method="post" class="form-horizontal">
+
+    <div class="page-header">
+        <h1>Loo uus salajane võti ning sertifikaadipäring (CSR)</h1>
+    </div>
+
+    <p>Failid luuakse järgmiste Linux käskudega, kus <code>1024</code> ja <code>sha1</code> on asendatud valitud väärtusega:</p>
+
+    <pre>openssl genrsa -rand /var/log/mail:/var/log/messages -out private_key.pem 1024
+openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
+
+
+            <div class="alert alert-warning">
+            Kui on võimalik nende käskude abil ise võtmefailid genereerida, siis peaksidki seda tegema - siinset vormi tasub kasutada vaid viimase häda sunnil. <a href="/" class="alert-link"><%= hostname %></a> neid andmeid ei logi ega salvesta, kuid alati on mõistlikum, et sensitiivsete andmetega (milleks on salajase võtme sisu) puutuks kokku võimalikult vähe osapooli.
+        </div>
+
+        <h4>Miks ei tohi salajane võti lekkida?</h4>
+
+        <p>Kes iganes omab ligipääsu salajasele võtmele, saab võltsida panka minevaid maksekorraldusi. Näiteks ostab pahatahtlik kasutaja veebipoes 1000 € eest kaupa, kuid pangalingi kaudu maksma minnes vahetab makse vormi sisu ära, märgib ostu summaks 1 € ning allkirjastab selle lekkinud salajase võtmega. Panga jaoks tundub selline päring täiesti korrektne olevat ja pank lubabki kasutajal 1000 € asemel maksta vaid 1 €. Kui nüüd kaupmehe rakendus ei jälgi täpselt, et mis summa kasutaja tegelikult tasus, ongi pahatahtlik kasutaja veebipoodi 999 € eest petnud.</p>
+
+        <h4>Milleks pangale üldse CSR?</h4>
+
+        <p>Pangale ei ole tegelikult tarvis mitte sertifikaadipäringut (CSR - Certificate Signing Request) ega sertifikaati, vaid hoopis salajase võtmega seotud avalikku võtit (omavahel seotud salajane ja avalik võti moodustavad nn. võtmepaari), kuna kõike, mis on allkirjastatud salajase võtmega, saab kontrollida ainult sellele vastava avaliku võtmega. Avalik võti on samas loetav ka sertifikaadipäringust ning sertifikaadist. Pangad tahavad tõenäoliselt sertifikaadipäringut või sertifikaat seetõttu, et avaliku võtme failis puudub igasugune lisainfo - see on lihtsalt baitide jada. Sertifikaadipäringus ja sertifikaadis on lisaks avaliku võtme infole kirjas, et kes on selle võtme omanik. Täiendavalt on sellisel juhul võimalik sertifikaadis kirjas oleva domeeninime väärtuse järgi kontrollida, kas maksekorraldus tuleb ikka õigelt aadressilt (kuigi praktikas tundub, et seda ei kontrollita).</p>
+
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="keyBitsize">Võtme pikkus</label>
+        <div class="col-lg-6">
+            <select class="form-control" name="keyBitsize" id="keyBitsize" required>
+                <option value="1024">1024 bitti</option>
+                <option value="2048" selected>2048 bitti</option>
+                <option value="4096">4096 bitti</option>
+            </select>
+            <span class="help-block">Soovitav oleks kasutada vähemalt 2048 bitist võtit</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="hash">Räsi algoritm</label>
+        <div class="col-lg-6">
+            <select class="form-control" name="hash" id="hash" required>
+                <option value="sha1">SHA-1 (vaikimisi)</option>
+                <option value="md5">MD5 (ära seda vali, kui ei ole 100% kindel)</option>
+                <option value="sha256">SHA-256</option>
+            </select>
+            <span class="help-block">Peaaegu alati on algoritmiks SHA1, kuid erandjuhtudeks saab siin valida ka MD5</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="country">Riik</label>
+        <div class="col-lg-6">
+            <input type="text" class="form-control" name="country" id="country" value="EE"  maxlength="2" required/>
+            <span class="help-block">Kahekohaline riigi kood</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="state">Maakond</label>
+        <div class="col-lg-6">
+            <input type="text" class="form-control" name="state" id="state" value="Harju maakond" required/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="locality">Asula</label>
+        <div class="col-lg-6">
+            <input type="text" class="form-control" name="locality" id="locality" value="Tallinn" required/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="organization">Organisatsioon</label>
+        <div class="col-lg-6">
+            <input type="text" class="form-control" name="organization" id="organization" value="Minu ettevõte OÜ" required/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="organizationUnit">Allasutus (valikuline)</label>
+        <div class="col-lg-6">
+            <input type="text" class="form-control" name="organizationUnit" id="organizationUnit" value="banklink"/>
+            <span class="help-block">Reeglina soovivad pangad, et selle välja väärtus oleks <code>banklink</code></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="commonName">Domeeninimi</label>
+        <div class="col-lg-6">
+            <input class="form-control" type="text" name="commonName" id="commonName" value="example.com" required/>
+            <span class="help-block">Sisesta oma veebipoe domeeninimi, millelt eeldatavasti hakatakse makseid tegema</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label" for="emailAddress">E-posti aadress</label>
+        <div class="col-lg-6">
+            <input class="form-control" type="text" name="emailAddress" id="emailAddress" value="info@example.com" required/>
+            <span class="help-block">Sisesta sertifikaadi kontaktaadress</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-6">
+            <button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Genereeri salajane võti ja CSR fail</button>
+            <span class="help-block">Genereeritavas ZIP failis on kaks faili - <em>private_key.pem</em>, mis on salajane allkirjastamise võti ning <em>csr.pem</em>, mis on sertifikaadipäring pangale edastamiseks.</span>
+        </div>
+    </div>
+
+</form>

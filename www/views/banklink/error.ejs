@@ -1,0 +1,119 @@
+<% include header %>
+
+<h3>Viga makse töötlemisel</h3>
+
+<div data-current-state="error"></div>
+<span data-payment-state="ERRORED"></span>
+<span data-payment-error="<%= errors.map(error => typeof error != 'object' ? error : error.error).join('; ') %>" ></span>
+
+<% if(errors){%>
+
+    <div class="alert alert-danger">
+      <strong>Tähelepanu!</strong> Maksekorralduse töötlemisel ilmnes olulisi vigu.
+    </div>
+    <p>Järgnevad vead takistasid maksekorralduse edasist täitmist:</p>
+    <ul>
+    <% var download = false; %>
+    <% errors.forEach((error, i) => {%>
+        <% if(error.download){download = true;} %>
+        <li><%= typeof error != 'object' ? error : error.error %></li>
+    <%})%>
+    </ul>
+
+    <% if(id && download) {%>
+        <p>
+            <a href="/payment/<%= id %>/scripts/pay.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> pay.php</a>
+            <small>Lae alla näiteskript sisendandmete korrektseks allkirjastamiseks (ainult sisseloginud kasutajale)</small>
+        </p>
+    <%}%>
+    <hr>
+<%}%>
+
+<% if(warnings){%>
+    <div class="alert alert-warning">
+      <strong>Tähelepanu!</strong> Maksekorralduse töötlemisel ilmnes tõrkeid.
+    </div>
+    <p>Järgnevad vead tasub parandada, kuid see ei ole kohustuslik:</p>
+    <ul>
+    <% warnings.forEach((warning, i) => {%>
+        <li><%= typeof warning != 'object' ? warning : warning.warning %></li>
+    <%})%>
+    </ul>
+    <hr>
+<%}%>
+
+<% if(id){ %>
+
+    <p>Vaata ebaõnnestunud maksekorralduse täpsemaid andmeid <a href="/payment/<%= id %>">maksekorralduse infolehelt</a> (ainult sisseloginud kasutajale). Siinkohal on toodud üldisemad andmed.</p>
+
+<hr>
+<% } %>
+
+<h3>Päringu andmed</h3>
+
+<h4><%= method %> <%= url %></h4>
+
+<hr>
+
+<h4>Päringu HTTP päised</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nimi</th>
+            <th>Väärtus</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% headers.forEach(header => {%>
+            <tr>
+                <td><%= header.key %></td>
+                <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= header.value %></code></div></td>
+            </tr>
+        <%})%>
+    </tbody>
+</table>
+
+<% if (method == "POST" && fields && fields.length) {%>
+    <h4>POST päringu parameetrid</h4>
+
+    <table class="table">
+        <thead>
+            <th>Nimi</th>
+            <th>Väärtus</th>
+        </thead>
+        <tbody>
+            <% fields.forEach(field => {%>
+                <tr>
+                    <td><%= field.key %></td>
+                    <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= field.value %></code></div>
+
+                        <% if(errors){%>
+                            <% errors.forEach((error, i) => {%>
+                                <% if(typeof error == 'object' && error.field == field.key){%>
+                                    <div><strong><%= error.error %></strong></div>
+                                <% } %>
+                            <%})%>
+                        <%}%>
+
+                        <% if(warnings){%>
+                            <% warnings.forEach((warning, i) => {%>
+                                <% if(typeof warning == 'object' && warning.field == field.key){%>
+                                    <div><strong><%= warning.warning %></strong></div>
+                                <% } %>
+                            <%})%>
+                        <%}%>
+
+                    </td>
+                </tr>
+            <%})%>
+        </tbody>
+    </table>
+<%}%>
+
+<% if(body){%>
+    <h4>Päringu sisu</h4>
+    <div style="overflow: auto; margin:0; padding:0;"><pre style="background: #EFEFEF;"><%= body %></pre></div>
+<%}%>
+
+<% include footer %>

@@ -1,0 +1,68 @@
+
+<div class="page-header">
+    <div class="pull-right">
+        <a class="btn btn-info" href="/add-project"><span class="glyphicon glyphicon-plus-sign"></span> Lisa uus makselahendus</a>
+    </div>
+    <h1>Minu makselahendused</h1>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Makselahenduse nimi
+            </th>
+            <th>
+                Panga tüüp
+            </th>
+            <th>
+                Kasutajatunnus
+            </th>
+            <th>
+                Viimane makse
+            </th>
+            <th>
+                &nbsp;
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if(!projects || !projects.length){%>
+            <tr>
+                <td colspan="6">
+                    Ühtegi makselahendust pole veel loodud, <a href="/add-project">tee üks siin</a>.
+                </td>
+            </tr>
+        <% } %>
+        <% if(projects && projects.length){%>
+            <% projects.forEach(function(project, i){%>
+                <tr>
+                    <td>
+                        <%= start_index + i + 1 %>
+                    </td>
+                    <td>
+                        <strong><a href="/project/<%= project._id %>"><%= project.name %></a></strong>
+                    </td>
+                    <td>
+                        <%= banks[project.bank].name %>
+                    </td>
+                    <td>
+                        <%= project.uid %>
+                    </td>
+                    <td>
+                        <%= project.formattedDate || "-- pole veel tehtud --" %>
+                    </td>
+                    <td>
+                        <a href="/edit-project/<%= project._id %>">Muuda</a>
+                    </td>
+                </tr>
+
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>
+
+<% include pagination %>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="<%- payment.charset.toLowerCase() %>" />
+        <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
+    </head>
+    <body>
+<?php
+
+// THIS IS AUTO GENERATED SCRIPT
+// (c) 2011-<%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
+
+// File encoding: <%= payment.charset.toUpperCase() %>
+// Check that your editor is set to use <%= payment.charset.toUpperCase() %> before using any non-ascii characters
+
+// STEP 1. Setup signing
+// =====================
+
+$secret = "<%- project.secret %>";
+
+// STEP 2. Define payment information
+// ==================================
+
+<%
+var fields = {};
+var data = "";
+-%>
+$fields = array(
+<% payment.fields.forEach(function(field, i){ -%>
+<% fields[field.key] = field.value -%>
+<% if(field.key != "SOLOPMT_MAC" && field.key != "MAC"){ -%>
+        "<%- field.key %>" <%- field.key.length < 15 && new Array(15 - field.key.length).join(" ") || "" %>=> <%- !/%(RETURN|CANCEL|REJECT)%/.test(field.value) ? '"' + field.value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n")+'"': "($_SERVER[\"HTTPS\"]?\"https\":\"http\").\"://\".$_SERVER[\"HTTP_HOST\"].dirname($_SERVER[\"PHP_SELF\"]).\"/confirm.php?action=" + field.value.toLowerCase().replace(/%/g, "")+"\"" %><%- i < payment.fields.length - 1  && "," || "" %>
+<% } -%>
+<% }) -%>
+);
+
+// STEP 3. Generate data to be signed
+// ==================================
+<%
+    signatureOrder = signatureOrder[fields.SOLOPMT_VERSION || fields.VERSION || "0002"] || signatureOrder["0002"];
+    signatureOrder = signatureOrder["PAYMENT-IN"];
+-%>
+
+<% signatureOrder.forEach(function(field, i, arr){ -%>
+<% data += (fields[field] || fields["SOLOPMT_" + field] || "") + "&" -%>
+<%- !i ? "$data = " : "        "%>$fields["<%- "SOLOPMT_" + field in fields ? "SOLOPMT_" + field : field %>"] . "&" .
+<% })
+data += project.secret + "&"
+-%>
+        $secret . "&";
+
+/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
+
+// STEP 4. Sign the data with <%= project.soloAlgo.toUpperCase() %> to generate MAC code
+// ========================================================
+
+<% if(fields.MAC || fields.SOLOPMT_MAC){%>
+/* <%= fields.MAC || fields.SOLOPMT_MAC %> */<%}%>
+$fields["<%= "SOLOPMT_VERSION" in fields ? "SOLOPMT_" : "" %>MAC"] = strtoupper(<%= project.soloAlgo %>($data));
+
+// STEP 5. Generate POST form with payment data that will be sent to the bank
+// ==========================================================================
+?>
+
+<% include form.pay.ejs %>
+
+    </body>
+</html>

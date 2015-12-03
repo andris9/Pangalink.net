@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="<%- payment.charset.toLowerCase() %>" />
+        <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
+    </head>
+    <body>
+<?php
+
+// THIS IS AUTO GENERATED SCRIPT
+// (c) 2011 - <%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
+
+// STEP 1. Setup bank certificate
+// ==============================
+
+$public_key = openssl_pkey_get_public("<%- project.bankCertificate.certificate %>");
+
+// STEP 2. Define payment information
+// ==================================
+// NB! In a real application, you should read the values either from `$_POST`, `$_GET` or `$_REQUEST`.
+
+$fields = array(
+<% payment.responseFields = payment.responseFields || {} -%>
+<% Object.keys(payment.responseFields).forEach(function(field, i, arr){ -%>
+<% if(field.match(/^VK_/)){ -%>
+        "<%- field %>" <%- field.length < 15 && new Array(15 - field.length).join(" ") || "" %>=> "<%- payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"<%- i < arr.length - 1  && "," || "" %>
+<% } -%>
+<% }) -%>
+);
+
+// STEP 3. Generate data to be verified
+// ====================================
+
+// Data to be verified is in the form of XXXYYYYY where XXX is 3 char
+// zero padded length of the value and YYY the value itself
+<% if(bank.utf8length != "bytes" && payment.charset.match(/^utf[\-_]8$/i)){ -%>
+// NB! <%= bank.name %> expects symbol count, not byte count with UTF-8,
+// so use `mb_strlen` instead of `strlen` to detect the length of a string
+<% } -%>
+
+<%
+
+var data = "";
+
+(signatureOrder[payment.responseFields["VK_SERVICE"] || "1101"] || signatureOrder["1101"]).forEach(function(field, i, arr){
+    var len = bank.utf8length == "bytes" && payment.charset.match(/^utf[\-_]8$/i) ? Buffer.byteLength(payment.responseFields[field] || "") : (payment.responseFields[field] || "").length;
+-%>
+<% data+=  new Array(4 - String(len).length).join("0") + len + (field in payment.responseFields ? payment.responseFields[field] : "") -%>
+<%- !i ? "$data = " : "        "%>str_pad (<%- bank.utf8length != "bytes" && payment.charset.match(/^utf[\-_]8$/i) ? "mb_strlen" : "strlen" %>($fields["<%= field %>"]<%- bank.utf8length != "bytes" && payment.charset.match(/^utf[\-_]8$/i) ? ", \"UTF-8\"" : "" %>),<%- new Array(13 - field.length).join(" ") %> 3, "0", STR_PAD_LEFT) . $fields["<%- field %>"]<%- i< arr.length - 1?" .":"; " -%>
+<%- new Array(15 - field.length).join(" ") %>/* <%- field in payment.responseFields ? payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") : "" %> */
+<% }) -%>
+
+/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
+
+// STEP 4. Verify the data with RSA-SHA1
+// =====================================
+
+if (openssl_verify ($data, base64_decode($fields["VK_MAC"]), $public_key) !== 1) {
+    $signatureVerified = false;
+}else{
+    $signatureVerified = true;
+}
+
+// STEP 5. Display output of the received payment
+// ==============================================
+<% if(!payment.isAuth) { %>?>
+
+    <h2>Payment results</h2>
+
+    <p>Payment: <?php echo $fields["VK_SERVICE"] == "<%= /11$/.test(payment.responseFields["VK_SERVICE"]) ? '1111' : '1101' %>" ? "received" : "cancelled" ?></p>
+    <p>Signature: <?php echo $signatureVerified ? "verified" : "not verified" ?></p>
+    <%} %><% if(payment.isAuth) { %>
+
+// Define device names
+$tokens = array(
+    "1" => "ID card",
+    "2" => "mobile ID",
+    "5" => "one-off codes",
+    "6" => "PIN calculator",
+    "7" => "reusable card"
+);
+
+?>
+
+    <h2>Authentication results</h2>
+
+    <table border="1">
+        <% if("VK_USER" in payment.responseFields){ %>
+        <tr>
+            <td>Agreed user identifier</td>
+            <td><?php echo htmlspecialchars($fields["VK_USER"]); ?></td>
+        </tr>
+        <%} %>
+        <tr>
+            <td>User name</td>
+            <td><?php echo htmlspecialchars($fields["VK_USER_NAME"]); ?></td>
+        </tr>
+        <tr>
+            <td>Country</td>
+            <td><?php echo htmlspecialchars($fields["VK_COUNTRY"]); ?></td>
+        </tr>
+        <tr>
+            <td>User's personal identification code</td>
+            <td><?php echo htmlspecialchars($fields["VK_USER_ID"]); ?></td>
+        </tr>
+        <tr>
+            <td>Other user information</td>
+            <td><?php echo nl2br(htmlspecialchars($fields["VK_OTHER"])); ?></td>
+        </tr>
+        <tr>
+            <td>Authentication device</td>
+            <td><?php echo $tokens[$fields["VK_TOKEN"]]; ?></td>
+        </tr>
+    </table>
+
+    <p>Signature: <?php echo $signatureVerified ? "verified" : "not verified" ?></p>
+<%} %>
+    </body>
+</html>

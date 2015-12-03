@@ -1,0 +1,51 @@
+{
+  "name": "pangalink.net",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pangalink.net",
+  "scripts": {
+    "test": "grunt"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/andris9/pangalink.net.git"
+  },
+  "author": "Andris Reinman",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "compression": "^1.6.0",
+    "config": "^1.17.1",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^0.8.2",
+    "cookie-parser": "^1.4.0",
+    "diacritics": "^1.2.3",
+    "ejs": "^2.3.4",
+    "encoding": "^0.1.11",
+    "express": "^4.13.3",
+    "express-session": "^1.12.1",
+    "fetch": "^0.3.6",
+    "he": "^0.5.0",
+    "highlight.js": "^9.0.0",
+    "iban": "0.0.6",
+    "joi": "^7.0.1",
+    "marked": "^0.3.5",
+    "moment": "^2.10.6",
+    "mongodb": "^2.0.49",
+    "morgan": "^1.6.1",
+    "nodemailer": "^1.10.0",
+    "npmlog": "^2.0.0",
+    "on-headers": "^1.0.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "pem": "^1.8.1",
+    "random-string": "^0.1.2",
+    "st": "^1.0.0",
+    "zip-stream": "^0.8.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.3"
+  }
+}

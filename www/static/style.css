@@ -1,0 +1,372 @@
+/* pealkirjade (h1, h2) jaoks google font "Muli" */
+@import url(https://fonts.googleapis.com/css?family=Muli&v2);
+
+body{
+	font-family: Helvetica, Arial, Sans-serif;
+	color: #333;
+	font-size: 12px;
+}
+
+#content{
+	width: 800px;
+	margin: 10px auto;
+}
+
+img{
+	border: 0;
+}
+
+/* debug kast */
+
+.debugdata{
+	border: 1px solid #CCC;
+	background: #F9F7ED;
+}
+
+/* maksekorralduse viimasel sammul näidatakse automaatse kinnituse vastust */
+
+.htmlbox{
+	height: 200px;
+	width: 772px;
+	overflow: auto;
+}
+
+/* geneerilised elemendid */
+
+h1{
+	font-size: 28px;
+	font-weight: normal;
+	border-bottom: 2px solid #356AA0;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	font-family: 'Muli', Helvetica, Arial, serif;
+    font-weight: 400;
+}
+
+h2{
+	font-size: 20px;
+	font-weight: normal;
+	padding: 3px 13px;
+	padding-left: 27px;
+	background: #F9F7ED url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAACB0RVh0U29mdHdhcmUATWFjcm9tZWRpYSBGaXJld29ya3MgTVi7kSokAAAAFnRFWHRDcmVhdGlvbiBUaW1lADExLzA1LzA33bqJ2wAAAk1JREFUeJyNk8tLlGEUxn/vO994adIcSFs4BRpCWRaB1cJaJBSULRQkk9z2J0QgYhQILSpoEUTbBKmNFiiWrRIpYoLS0kC8IKOUjpdp/JyZb95LC1FmnJKe5e88z8PhwBHWWjJ1/fWXE3vzfHf9QtQ6gpAymnhKRVxPheOeuvPuRt1opl9kFtwc/Nbrl6Ix/DPGXDyBpzdnfikoK3SoCPhJKN031Ha+Katgam2j4PHn2cmp1Y3Qh4U1dlNFwKHEIXIqYKseNF9ISoD7H6d7/icMMOMqlpI69H5F9QD4Vs5dOy3g4eBMFICGw6U8qj/KoeJCRuZX/8p+awhKc+Tpp8kBJ5ZSXRPL6wDUlBbxvOEkAHXlQeZ/LfLVFTmse3adRSXYY02XDOb7qufiCQCuVJZmrRu0aa4eLM5hPjeGawRSq2qpjS3fuvaWXoYnePN9mhfhCbAmhwmjMQiU1uWOMno7ODC9xO2zlXS+GmZVFiDIo38uxi3IYjqwDwClDTKV1vN+KQAYW4ozElnh8vFKVPAAXmmI0eWNHGalD2EtaW3m5VLCGy8rdLa3aOsf5VJNFQ2hol2Zoz085LgskLRXBPzbg1hK0fb2B9JL4kvE/8lk0kWl0+3CWsvF7uHelZRunHFV1jF9iTi6sCiHCSEwXqov2tHSJAHq9+e1ljhEQvkiy7wzDGyGU4mItzDbCjue6cyzoV5rTOOiErhGYNgsFNbiaA+ZdEkb2xftaMl+pkwdezJYg9H3rNa1WquQ0gbPEElbG1ZWdEbbm8cy/X8ADqJL+cBNQZkAAAAASUVORK5CYII=) no-repeat 5px center;
+
+	font-family: 'Muli', Helvetica, Arial, serif;
+	font-weight: 400;
+	border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -ms-border-radius: 3px;
+}
+
+h3{
+	font-size: 18px;
+	font-weight: normal;
+	border-bottom: 1px solid #EEE;
+	font-family: 'Muli', Helvetica, Arial, serif;
+    font-weight: 400;
+}
+
+h1 a{
+	text-decoration: none;
+	color: #4096EE;
+}
+
+#footer{
+	margin-top:20px;
+	padding-top:5px;
+	border-top: 1px solid #CCC;
+	color: #999;
+}
+
+table.formatted{
+	border-left: 1px solid #CCC;
+	border-top: 1px solid #CCC;
+	border-collapse: collapse;
+	padding: 0;
+}
+
+table.formatted th{
+	border-right: 1px solid #CCC;
+	border-bottom: 2px solid #CCC;
+}
+
+table.formatted td{
+	border-right: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	text-align: left;
+	vertical-align: top;
+}
+
+/* .header klassid on maksekorralduse vormi juures päise vormindamiseks */
+.header{
+    height: 40px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -ms-border-radius: 3px;
+}
+
+.header .joon{
+    height: 7px;
+    margin-top: -14px;
+}
+
+.header .limit{
+    width: 800px;
+}
+
+.header .limit img{
+    margin-top: 6px;
+    margin-left: 20px;
+}
+
+/* Igal pangal on oma välimus. SEB on rohelise taustaga jne */
+
+/* eyp */
+.header-eyp{
+    background: #58C50F;
+}
+
+.header-eyp .joon{
+    background: #634932;
+}
+
+/* hp */
+/* vana värv: #EA5E0D*/
+.header-hp, .header-hp-lt, .header-hp-lv{
+    background: #ee844c;
+}
+
+.header-hp .joon, .header-hp-lt .joon, .header-hp-lv .joon{
+    background: #222222;
+}
+
+/* krep */
+.header-krep{
+    background: #9A0030;
+}
+
+.header-krep .joon{
+    background: #E4E3E3;
+}
+
+/* ipizza */
+.header-ipizza{
+    background: #99CC33;
+}
+
+.header-ipizza .joon{
+    background: #FFFFCC;
+}
+
+/* sampo */
+.header-sampo{
+    background: #003F62;
+}
+
+.header-sampo .joon{
+    background: #7F9FB0;
+}
+
+/* solo */
+.header-solo{
+    background: #005284;
+}
+
+.header-solo .joon{
+    background: #E4E3E3;
+}
+
+/* ec */
+.header-ec{
+    background: #0066FF;
+}
+
+.header-ec .joon{
+    background: #FFFFFF;
+}
+
+.inline-block{
+    display: -moz-inline-stack;
+    display: inline-block;
+    _overflow: hidden;
+    zoom: 1;
+    *display: inline;
+}
+
+/* lhv */
+.header-lhv{
+    background: #0A0A0A;
+}
+
+.header-lhv .joon{
+    background: #C1C1C1;
+}
+
+/* Kuva/peida debug info nupp */
+
+.cog{
+    padding: 5px;
+    padding-left: 23px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAACB0RVh0U29mdHdhcmUATWFjcm9tZWRpYSBGaXJld29ya3MgTVi7kSokAAAAFnRFWHRDcmVhdGlvbiBUaW1lADExLzA1LzA33bqJ2wAAAvFJREFUeJx9k01onGUUhZ/3+74ZJ52OTiRNa2bQ+ak4JEaRtkEILmKbIoiQQjUWhRREurDqroVQKrrRhV1EiKAouFDqLkGkHZMSQcX+pVLStCbNtNo406ZJiGnH6fx87/teFzXDZOPZnnvuuZzLUSJCI1797uJTG4Pu+wGltnuKuLaGYlXnSzU9Wazp90691j3VOK8aF7yZnR4JOKpvcuEO88UyNXOfCziK1iaPZDhAWZvR8def27NuwbXVe6GhC3/OXfv7Xvz0zVX+D8mwR9Qj/0xYHv94b0/FAfjozPXja+IX05vo3BQBYPHgTm699Xxd/PITW/Adj6WKif+0oo8DqLfHL+/QVs59O3OLRx9s4uL+br6fLSDKYXd6M1aEE1M5JPwQvYkWuj87ScF32Rp2MdZ2uZn+A19NLRXTKxWfO1WNNZqBpxOkmsNYEaxAqrWZVHQDxyZ+44dfz+M8vBntuChrEl7zA277fLFcP/PJ1ihGhF+uzvPON1lAOLbvBbrScTItEZyWNlQgSMkKG61ud4yV2Fraiwd3sjvZghVh4ItR8hXLzebHOPDjHFaEXR1pZg6/AoBFoY2JOdqaursRqZ8N4MbSqEAQ5QWxwn+coGcuAKCNxan6phBwFACPDE9wYiqHFeHLN/qIR0LEIiGGezuwIoxN58gcGlr7P76xBW+pXLvS2uTFCiUfgMsVl10CO1IxJpJt65ytgIpEcWNpPF2lhnPFCTkMJsMBAJ5ti/LutgQnZ/8ieylXF49N5/hk7Aw97Sle6kwD4FRKaN8fVCJC79c/j6xUTd8fJc1A+xZOnz3H73d9Zo/ux4qQOTSEikTp6dhK4cYNrvsuKhgaXT7Sv0eJCB9mz4ZO3S7PLVVMPF8V5J9V8IKo0IZ6YF5m233nlQXEmtv+8kLi7qeHK+vK1PX5+IhY27eoFSWrsKh6YJ6p4VRK+FZGl4/0ry9TIzqGs51Y84EYs90YHdfGUrPkfZFJLero8uDeS43z/wLP643BBjyurQAAAABJRU5ErkJggg==) no-repeat 3px center;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -ms-border-radius: 3px;
+    text-decoration: none;
+}
+
+.cog:hover{
+    background-color: #EEE;
+}
+
+/* "Lae sertifikaadifail alla" link */
+
+.padlock{
+    padding: 5px;
+    padding-left: 23px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAACB0RVh0U29mdHdhcmUATWFjcm9tZWRpYSBGaXJld29ya3MgTVi7kSokAAAAFnRFWHRDcmVhdGlvbiBUaW1lADExLzA1LzA33bqJ2wAAAkhJREFUeJx9U01rU1EQPfe+9zS1VYpNFFssCpHEb1RUKBSsqXQZxY246T9w1U0Xbq1EBDcuxJW/oAS6EqOiLZRqwbZ28aSRflgj5qsfSV/y3r0zLtKG16bxwOUu5pyZMzOMYGb48XYxd6PFNEakEBcFEPKIUPZ01lE0V9V6+OHZzik/X/gTjK8WUwFD3s6Uqyi5GrQdEwAMKSAAOJreD57viu1NEPj6Z2N5w/VCmVIV/4NmhqMo+7dc7X7cE66Y25XHXE2hxIdZTKZXsBYfbJqgPfkGz+73hQ4fNMcA9Jvjq8XegCFjS+sOgh1HIdc1cI1BzPCIoYjhEW3/DDnxGR9XCrhy/EjsyWS61yTmRKbcaPvTj2VoYmiuJdEMXD3dWY+3WQYKmhLmAUOGS67eJSZm9IRP7utgB62WgaWNStgkQpD2rLJYUfi2+BuaCZoYigFNjDNdx+ocKQRcrYOmR9Rg/+7oNAZOBUFcmzoxgxh4Ovd9F8/VDNNRlBNA0O9hPlfCfK7UdBMAoGrt5cyypxcMKYLK19/oZQu2bSMSiTQI7814AIC846LFNBakRzQk9qmQTCZh2zai0Wj9+ZFe28Kmp4bkg+iJCUdTSjPjVncHbna2AwDi8XiDaAd5xwUgUq8HLkwIZsarmZUAgGUJhA5ZBn5tVjCb3WwqXq+qLbtQ7ig86q/sOqYX04vvFHGszTLQahmQQtQHlndcpNe2AIjUyzvn+nc0Yu85J6Z+Xnc1j1QUXXKUCrmaASArhZg1pRh+3hf94uf/A8l2VQYGIFQOAAAAAElFTkSuQmCC) no-repeat 3px center;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -ms-border-radius: 3px;
+    text-decoration: none;
+}
+
+.padlock:hover{
+    background-color: #EEE;
+}
+
+
+/* Nordea MAC võti on readonly input=text väljas */
+
+.field-padlock{
+    padding-left: 24px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAACB0RVh0U29mdHdhcmUATWFjcm9tZWRpYSBGaXJld29ya3MgTVi7kSokAAAAFnRFWHRDcmVhdGlvbiBUaW1lADExLzA1LzA33bqJ2wAAAiBJREFUeJyNk09IVHEQxz+/31ufrq3/2BDCrVNSGUV/1sCIMiLoEKGHunSP7nYSUQqkk4euHTsonhTq0KGDXrREpD+0QlKErkbRZrXr+nb3vZkOyrrP1mhOw3w/852ZwxhVJRTvj53EuPcVJ6k4CdUADQpptDCPFIYip1feVuImZJA6NYFxeiguQ7AOGmwLDmJi+CaOammy9sxyb9ggfa+O7PQS/vcExc/8K0rE8SWazvqJ9tauWc8C8PvF2P80A9SQwSGXiNmPY1sbpJKdIHPkF8rQWsZlZPwg02+aAbjelaHv1goN9UGZ2SjtR1XOWcQbprgcmnJ35AiNDfVMPTnK1OgFTPQ4tx92Qu3hMuPaHEZLw1ZttINgPWSwlnEZ6rtEzH4iln1E343nrH0rQdO1MhOxBXwxHRFVbTO6s9rjZwcASPbOblfO7mjjX7hzeSs3RhGRNqsVzbtjdGCR0YHFcHFfVzlVEayKvwpOVYPspkN2s7qmaoBgNUKQS4mJtVn99Rc09bqZbL66QdG3OMZPRYSafjHxq24Vg6cz8T2Og7xnEAn6japSWDg0YTXfU0Nm587Y+eqduRk2MnMUSzLZ0i29RlX5MX+lLqoflhxyCdf+3HMqwIbn4BUk/TWj7R031Qs9U/5V64Sq9rg2R8QWMGZLUzUUfUveM0Aw2dItu56p8raXTSdEeCCiyUA0oSIY46cNMm9NMNh4Ud5V8n8A3W0Imr0SMc0AAAAASUVORK5CYII=) no-repeat 4px center;
+}
+
+.input-padlock{
+    padding: 3px;
+    padding-left: 23px;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAACB0RVh0U29mdHdhcmUATWFjcm9tZWRpYSBGaXJld29ya3MgTVi7kSokAAAAFnRFWHRDcmVhdGlvbiBUaW1lADExLzA1LzA33bqJ2wAAAopJREFUeJx9k19Ik1EYxp9zvvNt6hRXyEo31JUJGQaRSVAGBd3kjYJQK28Db7oNkTAKpIJugoToOjHowmEqhl6lVNSCSJPwT+ja/A/ua27f9n3nTxerueXovTuc5/e8z/vCS5RSyK1rw19Oljq0ezohTYzAx6VAPM0jCYuH4ha/O3nj3NdcPck1uDk+O6RT0hZaNxCOm7BE5k+nBJ5iBr9Lh8lFcKKzpT3PYCmWLHryeXlhaSfpe78aw//K72JwM0ROudSxxx0XUwwAHn74Mbi6myoIt1ZtIFATRbnO8WyxBqOrh+BzEt/btBwE0E5uTXw7w6X6+PL72j74ek0UT0/PwLAYBuZK0eJN4tFsLcZ2juCoQ0BI2UyNNO8LrRsF494+vggAmF7W0P2mCKMr5eiqC0PFY9jkBKaQffSAU2sIx82CBuU6z4xRn8ZYp4Hupi1AY5A7m0hIAip4AxVSef9uOx+2Ydgs+z7vzTTpf0cBABIEXAgv5VIUhIcvfEJ1yV6ysKGh63UZRuedoAc9AAAuJFjaFlGdEq8tVR7cWP4rC1954cZ0WAfRHdAqq0BK3SBKwRYyyrZMa85TzLzRhL0PHpl3IhyjMFIEWnU9SElZ1pQJCxboHCui6PG79MvRhI2uupUsPLWi48bIYVCPD3AIQNvbBwDQVAI2Fz30VcfZkMlF0O9iMGwdhqXhwZQLrQNugGogJWWZyM7ive6pXdhSBbd7AyEGAJcqHIHJDXNh5Getr38yCZVKglZUgVZU7lswS+1Cps2ItRYOAP8cU/PziSElZdsmJ0hIAgmCPyIwYWViSxXcvnM1/5hy60T/eCOkuK+EaBKC+7iQsCQitlIhrkjvdk/HTK7+NwO3QiBFDPqAAAAAAElFTkSuQmCC) no-repeat 3px center;
+    font-weight: bold;
+}
+
+/* fieldsetid andmete struktureerimiseks */
+
+fieldset{
+    margin: 5px 0;
+    border-radius: 3px;
+    border: 1px solid #333;
+}
+
+fieldset fieldset{
+    border: 1px solid #CCC;
+}
+
+legend{
+    font-weight: bold;
+    font-size: 14px;
+}
+
+fieldset fieldset legend{
+    font-size: 12px;
+    color: #333;
+}
+
+/* CSS menüü */
+
+#menu {
+    background: #333;
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+#menu li {
+    float: left;
+    font: 12px "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+#menu a {
+    background: #333 url(data:image/gif;base64,R0lGODlhAQAjAMQAAD8/Pzw8PEZGRkJCQjY2NkBAQD09PTo6Ojc3N0RERDQ0ND4+Pjs7O0NDQ0FBQTg4OEVFRTk5OTU1NTMzMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAAABACMAAAUY4CSOoyKdBPI8UXQwgbEAheMMTZNAkBACADs=) bottom right no-repeat;
+    color: #ccc;
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 8px 12px;
+    text-decoration: none;
+}
+
+#menu li.right {
+    float: right;
+}
+
+#menu a:hover {
+    background: #2580a2 url(data:image/gif;base64,R0lGODlhCgAFAJEAAB03QBoaGiWAogAAACH5BAAAAAAALAAAAAAKAAUAAAINlAVwCxHKnINIStXsLQA7) bottom center no-repeat;
+    color: #fff;
+    padding-bottom: 8px;
+}
+
+#menu a.selected{
+    background: #2580a2;
+    color: #fff;
+    padding-bottom: 8px;
+}
+
+#menu a.selected:hover{
+    background: #2580a2 url(data:image/gif;base64,R0lGODlhCgAFAJEAAB03QBoaGiWAogAAACH5BAAAAAAALAAAAAAKAAUAAAINlAVwCxHKnINIStXsLQA7) bottom center no-repeat;
+}
+
+/* input=text lahtrid */
+
+.textinput{
+    border: 1px solid #999;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -ms-border-radius: 3px;
+    padding:3px;
+    width: 200px;
+}
+
+.textinput:focus{
+    background: #F9F7ED;
+}
+
+#twitter{
+    display: block;
+    text-decoration: none;
+    margin:0;
+    padding:0;
+    position: fixed;
+    top: 136px;
+    width: 30px;
+    height: 119px;
+    z-index: 8765;
+    background: #35CCFF url(data:image/png;base64,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);
+    background-repeat: no-repeat;
+    left: 0;
+    background-position: right top;
+}
+
+#twitter:hover{
+    background-color: #4096EE;
+}
+
+.logo-link{
+    text-decoration: none;
+    padding:0;
+    margin:0;
+    border-radius: 3px;
+}
+
+.logo-link img{
+    border:0;
+    margin:0;
+    padding:0;
+}

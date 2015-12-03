@@ -1,0 +1,15 @@
+{
+    "free": {
+        "title": "Tasuta konto",
+        "description": "Tasuta konto on täisfunktsionaalne, kuid kasutajale võidakse kuvada reklaame",
+        "label": "warning",
+        "price": "0.00 €"
+    },
+
+    "pro": {
+        "title": "PRO-pakett",
+        "description": "PRO-pakett on reklaamivaba ning sobib professionaalseks kasutuseks",
+        "label": "success",
+        "price": "59 € aastas (ilma km.)"
+    }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="<%= payment.charset.toLowerCase() %>" />
+        <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
+    </head>
+    <body>
+<?php
+
+// THIS IS AUTO GENERATED SCRIPT
+// (c) 2011-<%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
+
+// File encoding: <%= payment.charset.toUpperCase() %>
+// Check that your editor is set to use <%= payment.charset.toUpperCase() %> before using any non-ascii characters
+
+// STEP 1. Setup private key
+// =========================
+
+$private_key = openssl_pkey_get_private(
+"<%- project.userCertificate.clientKey %>");
+
+// STEP 2. Define payment information
+// ==================================
+
+$fields = array(
+<% payment.fields.forEach(function(field, i){ -%>
+<% if(field.key.match(/^VK_/) && field.key != "VK_MAC" ){ -%>
+        "<%- field.key %>" <%- field.key.length < 15 && new Array(15 - field.key.length).join(" ") || "" %>=> <%- !/%(RETURN|CANCEL|REJECT)%/.test(field.value) ? '"' + field.value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n")+'"': "($_SERVER[\"HTTPS\"]?\"https\":\"http\").\"://\".$_SERVER[\"HTTP_HOST\"].dirname($_SERVER[\"PHP_SELF\"]).\"/confirm.php?action=" + field.value.toLowerCase().replace(/%/g, "")+"\"" %><%- i < payment.fields.length - 1  && "," || "" %>
+<% } -%>
+<% }) -%>
+);
+
+// STEP 3. Generate data to be signed
+// ==================================
+
+// Data to be signed is in the form of XXXYYYYY where XXX is 3 char
+// zero padded length of the value and YYY the value itself
+<% if(bank.utf8length != "bytes" && payment.charset.match(/^utf[\-_]8$/i)){ -%>
+// NB! <%= bank.name %> expects symbol count, not byte count with UTF-8,
+// so use `mb_strlen` instead of `strlen` to detect the length of a string
+<% } -%>
+
+<%
+var fields = {};
+var data = "";
+payment.fields.forEach(function(field){
+    fields[field.key] = field.value;
+});
+(signatureOrder[fields.VK_SERVICE || "1001"] || signatureOrder["1001"]).forEach(function(field, i, arr){
+    var len = bank.utf8length == "bytes" && payment.charset.match(/^utf[\-_]8$/i) ? Buffer.byteLength(fields[field] || "") : (fields[field] || "").length;
+-%>
+<% data+=  new Array(4 - String(len).length).join("0") + len + (field in fields ? fields[field] : "") -%>
+<%- !i ? "$data = " : "        "%>str_pad (<%- bank.utf8length != "bytes" && payment.charset.match(/^utf[\-_]8$/i) ? "mb_strlen" : "strlen" %>($fields["<%= field %>"]<%- bank.utf8length != "bytes" && payment.charset.match(/^utf[\-_]8$/i) ? ", \"UTF-8\"" : "" %>),<%- new Array(11 - field.length).join(" ") %> 3, "0", STR_PAD_LEFT) . $fields["<%- field %>"]<%- i< arr.length - 1?" .":"; " -%>
+<%- new Array(15 - field.length).join(" ") %>/* <%- field in fields ? fields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") : "" %> */
+<% }) -%>
+
+/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
+
+// STEP 4. Sign the data with RSA-SHA1 to generate MAC code
+// ========================================================
+
+openssl_sign ($data, $signature, $private_key, OPENSSL_ALGO_SHA1);
+<% if(fields.VK_MAC){%>
+/* <%= fields.VK_MAC %> */<%}%>
+$fields["VK_MAC"] = base64_encode($signature);
+
+// STEP 5. Generate POST form with payment data that will be sent to the bank
+// ==========================================================================
+?>
+
+<% include form.pay.ejs %>
+
+    </body>
+</html>

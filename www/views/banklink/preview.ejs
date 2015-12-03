@@ -1,0 +1,266 @@
+<% include header %>
+
+<% if(!payment.showAuthForm) {%>
+    <h3>Maksekorralduse teostamine</h3>
+<% } %>
+<% if(payment.showAuthForm) {%>
+    <h3>Kasutaja autentimine</h3>
+<% } %>
+
+<span data-current-state="preview"></span>
+<span data-payment-state="PREVIEW"></span>
+
+<% if(payment.fields){ %>
+<% payment.fields.forEach(function(field){%>
+    <span data-in-key="<%= field.key %>" data-in-value="<%= field.value %>"></span>
+<%})%>
+<%}%>
+
+<% if(payment.warnings && payment.warnings.length){%>
+
+    <div class="alert alert-warning">
+            <h4>Tähelepanu!</h4>
+            <% payment.warnings.forEach(function(warning, i){%>
+                <%- i && "<br/>" || "" %>
+                <%= typeof warning != "object" ? warning : warning.warning %>
+            <% }) %>
+    </div>
+
+<%}%>
+
+<fieldset>
+    <!--
+    <% if(!payment.showAuthForm) {%>
+        <legend>Maksekorraldus</legend>
+    <% } %>
+    <% if(payment.showAuthForm) {%>
+        <legend>Autentimisandmed</legend>
+    <% } %>
+    -->
+    <form method="post" action="/final">
+    <input type="hidden" name="payment" value="<%= payment._id %>"/>
+
+    <div class="row">
+        <div class="col-lg-8">
+
+            <table class="table">
+
+
+                <% if(bank.logo){ %>
+                    <tr>
+                        <td colspan="2" <% if(bank.color){ %>style="background-color: <%= bank.color %>;"<%}%>>
+                            <img src="<%= bank.logo %>" border="0" alt="<%= bank.name %> emulaator" title="<%= bank.name %> emulaator"  <% if(bank.borderColor){ %>style="border: 1px solid <%= bank.borderColor %>;"<%}%> />
+                        </td>
+                    </tr>
+                <% } %>
+
+                <% if(!payment.showAuthForm) {%>
+                    <% if(payment.editSenderName){%>
+                        <tr>
+                            <td>
+                                <label for="payment_name">Makse sooritaja nimi</label>
+                            </td>
+                            <td>
+                                <input type="text" data-input="sender-name" id="payment_snd_name" name="senderName" placeholder="Tõõger Leõpäöld" value="<%= payment.senderName || "Tõõger Leõpäöld" %>" class="form-control"/>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.showSenderName){%>
+                        <tr>
+                            <td>
+                                Makse sooritaja nimi
+                            </td>
+                            <td>
+                                <strong><%= payment.senderName || "Tõõger Leõpäöld" %></strong>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.editSenderAccount){%>
+                        <tr>
+                            <td>
+                                <label for="payment_snd_account">Makse sooritaja konto</label>
+                            </td>
+                            <td>
+                                <input type="text" data-input="sender-account" id="payment_snd_account" name="senderAccount" placeholder="<%= payment.senderAccount %>" value="<%= payment.senderAccount %>" class="form-control"/>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.showSenderAccount){%>
+                        <tr>
+                            <td>
+                                Makse sooritaja konto
+                            </td>
+                            <td>
+                                <strong><%= payment.snd_account %></strong>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.showReceiverName){%>
+                        <tr>
+                            <td>
+                                Makse saaja nimi
+                            </td>
+                            <td>
+                                <strong><%= payment.receiverName || "" %></strong>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.showReceiverAccount){%>
+                        <tr>
+                            <td>
+                                Makse saaja konto
+                            </td>
+                            <td>
+                                <strong><%= payment.receiverAccount %></strong>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.message){%>
+                        <tr>
+                            <td>
+                                Makse selgitus
+                            </td>
+                            <td>
+                                <strong><%= payment.message || "" %></strong>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <% if(payment.referenceCode){%>
+                        <tr>
+                            <td>
+                                Viitenumber
+                            </td>
+                            <td>
+                                <strong><%= payment.referenceCode || "" %></strong>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <tr>
+                        <td>
+                            Makse summa
+                        </td>
+                        <td>
+                            <strong><%= payment.amount || "0,00" %></strong>
+                        </td>
+                    </tr>
+                <% } %>
+
+                <% if(payment.showAuthForm) {%>
+
+                    <% if(payment.editAuthUser){%>
+                        <tr>
+                            <td>
+                                <label for="auth_user">Kasutaja identifikaator</label>
+                            </td>
+                            <td>
+                                <input type="text" data-input="auth-user" id="auth_user" name="authUser" placeholder="" value="<%= payment.authUser || "" %>" class="form-control"/>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <tr>
+                        <td>
+                            <label for="auth_user_name">Kasutaja nimi</label>
+                        </td>
+                        <td>
+                            <input type="text" data-input="auth-user-name" id="auth_user_name" name="authUserName" placeholder="Tõõger Leõpäöld" value="<%= payment.authUserName || "Tõõger Leõpäöld" %>" class="form-control"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="auth_user_id">Kasutaja isikukood</label>
+                        </td>
+                        <td>
+                            <input type="text" data-input="auth-user-id" id="auth_user_id" name="authUserId" placeholder="37602294565" value="<%= payment.authUserId || "37602294565" %>" class="form-control"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="auth_country">Isikukoodi riik</label>
+                        </td>
+                        <td>
+                            <select class="form-control" data-input="auth-country" id="auth_country" name="authCountry">
+                            <% [{value: "Eesti", key: "EE"},{value: "Leedu", key: "LT"},{value: "Läti", key: "LV"},{value: "Rootsi", key: "SE"},{value: "Soome", key: "FI"},{value: "Venemaa", key: "RU"}].forEach(function(item){ %>
+
+                                <option value="<%= item.key %>"<% if(item.key === payment.authCountry){%> selected="SELECTED"<%}%>><%= item.value %></option>
+
+                            <% }) %>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="auth_other">Muu info kasutaja kohta</label>
+                        </td>
+                        <td>
+                            <textarea class="form-control" data-input="auth-other" id="auth_other" name="authOther" placeholder="" rows="3"><%= payment.authOther || "" %></textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="auth_token">Autentimisvahend</label>
+                        </td>
+                        <td>
+
+                            <select class="form-control" data-input="auth-token" id="auth_token" name="authToken">
+                            <% [{key: "1", value: "ID-kaart"},{key: "2", value: "Mobiil-ID"},{key: "5", value: "Ühekordsed koodid"},{key: "6", value: "PIN-kalkulaator"},{key: "7", value: "Koodikaart"}].forEach(function(item){ %>
+
+                                <option value="<%= item.key %>"<% if(item.key === payment.authToken){%> selected="SELECTED"<%}%>><%= item.value %></option>
+
+                            <% }) %>
+                        </td>
+                    </tr>
+                <% } %>
+
+            </table>
+
+        </div>
+    </div>
+
+    <hr />
+
+    <% if(!bank.disabled){ %>
+
+        <% if(!payment.showAuthForm) {%>
+
+            <button type="submit" data-button="accept" name="pay" value="pay" class="btn btn-success">Soorita makse</button>
+            <button type="submit" data-button="cancel" name="cancel" value="cancel" class="btn btn-danger">Katkesta makse</button>
+
+            <% if(bank.rejectAddress){%>
+                <button type="submit" data-button="reject" name="reject" value="reject" class="btn btn-info">Tühista tehnilistel põhjustel</button>
+            <% } %>
+
+        <% } %>
+
+        <% if(payment.showAuthForm) {%>
+            <button type="submit" data-button="auth" name="auth" value="auth" class="btn btn-success">Autendi kasutaja</button>
+        <% } %>
+
+    <% } %>
+    <% if(bank.disabled){ %>
+    <div class="alert alert-danger">
+        <h4><%= payment.showAuthForm ? "Autentimistehingu" : "Maksekorralduse" %> viga</h4>
+        <p>Hetkel ei ole võimalik <strong><%= bank.name %></strong> testmakseid teostada. Vabandame!</p>
+    </div>
+    <% } %>
+
+    </form>
+
+    <hr/>
+
+    <% include info %>
+
+</fieldset>
+
+<% include footer %>

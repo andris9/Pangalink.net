@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!-- This webpage uses bootstrap template -->
+<html>
+    <head>
+        <meta charset="<%- payment.charset.toLowerCase() %>" />
+        <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Andris Reinman">
+
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+        <!-- Le styles -->
+        <!--
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/style/custom.css" rel="stylesheet">
+        <style>
+            body {
+                padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+            }
+        </style>
+        <link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+        -->
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="/bootstrap/js/html5shiv.js"></script>
+        <![endif]-->
+        <!--
+        <link href="/style/todc-bootstrap.css" rel="stylesheet">
+      -->
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/style/generated/theme.css" rel="stylesheet">
+
+        <style type="text/css">
+            /* Sticky footer styles
+            -------------------------------------------------- */
+
+/* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+        padding-top: 0;
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+        height: 60px;
+        color: #fff;
+      }
+      #footer a{
+        color: #fff;
+      }
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+
+      /* Custom page CSS
+      -------------------------------------------------- */
+      /* Not required for template or sticky footer method. */
+
+      #wrap > .container {
+        padding-top: 60px;
+      }
+      .container .credit {
+        margin: 20px 0;
+      }
+
+      code {
+        font-size: 80%;
+      }
+        </style>
+
+    </head>
+
+    <body>
+    <!-- Part 1: Wrap all page content here -->
+    <div id="wrap">
+        <div class="container">
+
+        <h1><a href="<%= proto %>://<%= hostname %>/"><span class="glyphicon glyphicon-link"></span> <%= title %></a></h1>
+
+        <h3><%= payment.isAuth ?  'Autentimise ' : 'Makse teostamise ' %>näidisrakendus "<%= project.name %>"</h3>
+        <form method="post" action="<%= proto %>://<%= hostname %>/banklink/<%- bank.key %>">
+
+            <!-- include all values as hidden form fields -->
+<% payment.fields.forEach(function(field, i){ -%>
+            <input type="hidden" name="<%= field.key %>" value="<%= field.value.replace(/^%(RETURN|CANCEL|REJECT)%$/, project.ecUrl || (proto + "://" + hostname + "/project/" + project._id)) %>" />
+<% }) %>
+
+            <div class="row">
+        <div class="col-lg-8">
+
+            <table class="table">
+<% payment.fields.forEach(function(field, i){ -%>
+                <tr>
+                    <td><strong><%= field.key %></strong></td>
+                    <td><div style="max-width: 800px; overflow: auto; margin:0; padding:0;"><code style="background: #EFEFEF;"><%= field.value.replace(/^%(RETURN|CANCEL|REJECT)%$/, project.ecUrl || (proto + "://" + hostname + "/project/" + project._id)) %></code></div></td>
+                </tr>
+<% }) %>
+                <!-- when the user clicks "Pay" form data is sent to the bank -->
+            </table>
+            <p>
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-arrow-right"></span> <%= payment.isAuth ? 'Edasi panga lehele' : 'Edasi panga lehele' %></button>
+                <a href="/project/<%= project._id %>/example/<%= payment.isAuth ? 'auth.php' : 'pay.php' %><%= queryString %>" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Selle näite PHP lähtekood</a>
+            </p>
+            </div>
+        </div>
+        </form>
+
+        <% if(0 && payment.editable && Object.keys(payment.editable).length){ %>
+
+            <hr/>
+
+            <p></p>
+
+            <fieldset>
+                <legend>Uuenda vormi andmeid</legend>
+                <form method="get">
+                    <table>
+
+                        <% Object.keys(payment.editable).forEach(function(key){ %>
+                            <tr>
+                                <td><%= payment.editable[key].name %></td>
+                                <td><input type="text" name="<%= key %>" value="<%= payment.editable[key].value %>"/></td>
+                            </tr>
+                        <% }) %>
+
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td><input type="submit" value="Uuenda maksevormi andmed"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </fieldset>
+        <% } %>
+            </div>
+
+            <div id="push"></div>
+        </div>
+
+        <div id="footer" class="navbar-inverse">
+          <div class="container">
+            <p class="muted credit"><% include ../footer-text %></p>
+          </div>
+        </div>
+
+        <script src="/js/jquery-1.9.1.min.js"></script>
+        <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+        <% if(googleAnalyticsID){%>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', '<%= googleAnalyticsID %>', 'auto');
+          ga('send', 'pageview');
+
+        </script>
+        <%}%>
+
+    </body>
+</html>

@@ -1,0 +1,52 @@
+<% if(pageCount > 1){ %>
+    <section>
+        <ul class="pagination">
+            <% if(pageNumber > 2){ %>
+                <li>
+                    <a href="<%= pagePath %>/<%= pageNumber - 1 %>">←</a>
+                </li>
+            <% } %>
+
+            <% if(pageNumber == 2){ %>
+                <li>
+                    <a href="<%= pagePath %>">←</a>
+                </li>
+            <% } %>
+
+            <% if(pageNumber <= 1){ %>
+                <li class="disabled">
+                    <a href="<%= pagePath %>">←</a>
+                </li>
+            <% } %>
+
+
+            <% for(var i=0; i<paging.length; i++){%>
+
+                <% if(paging[i].disabled) {%>
+                    <li class="disabled"><a href="javascript:void(0)" >...</a></li>
+                <% } %>
+
+                <% if(!paging[i].disabled) {%>
+                    <li <% if(paging[i].active){%> class="active"<%}%>>
+                    <a href="<%= pagePath %><% if(paging[i].pageNumber != 1){%>/<%= paging[i].pageNumber %><%}%>" >
+                    <%= paging[i].pageNumber %></a></li>
+                <% } %>
+
+            <% } %>
+
+
+            <% if(pageNumber < pageCount){ %>
+                <li>
+                    <a href="<%= pagePath %>/<%= pageNumber + 1 %>">→</a>
+                </li>
+            <% } %>
+
+            <% if(pageNumber >= pageCount){ %>
+                <li class="disabled">
+                    <a href="<%= pagePath %>/<%= pageCount %>">→</a>
+                </li>
+            <% } %>
+        </ul>
+
+    </section>
+<% } %>
