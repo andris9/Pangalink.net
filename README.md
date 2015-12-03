@@ -12,6 +12,10 @@
     cd Pangalink.net
     npm install
 
+## Windowsi kasutajatele
+
+Pangalink.net genereerib sertifikaadid `openssl` käsu abil. *nix süsteemides on `openssl` reeglina vaikimisi installitud, kuid Windowsis ei ole. Seega Pangalink.net kasutamiseks kontrolli, et OpenSSL oleks installitud ja Node.js jaoks saadaval, vastasel korral ei ole võimalik genereerida serte ja teenus ei hakka korralikult tööle.
+
 ## Konfiguratsioon
 
 Muuda faili `config/default.js` väärtusi või või lisa NODE_ENV väärtuse nimega täiendav fail. Lisakonfiguratsioonifailid täiendavad, mitte ei asenda vaikimisi seadeid.
