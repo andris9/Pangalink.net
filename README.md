@@ -4,7 +4,7 @@
 
   * [Node.js](http://nodejs.org/), vähemalt versioon 5.0.0
   * [MongoDB](http://www.mongodb.org/)
-  * GIT (koodi alla laadimiseks ja uuendamiseks, pole otseselt vajalik)
+  * GIT (valikuline. Vajalik koodi alla laadimiseks ja uuendamiseks, kuid mitte rakenduse tööks)
 
 ## Install
 
@@ -26,9 +26,9 @@ Näiteks kui tahad, et konfiguratsioon laetaks failidest *default.js* + *product
 
 ## Käivitamine
 
-    node index.json
+    node index.js
 
-Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurkasutaja kasutaja õigustes.
+Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurkasutaja õigustes.
 
 ## Litsents
 
