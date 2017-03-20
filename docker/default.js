@@ -11,7 +11,7 @@ module.exports = {
     },
 
     // Domain name to be used all around the page,
-    hostname: '',
+    hostname: 'localhost',
 
     // Protocol to be used (if behind proxy might not autodetect correctly),
     proto: '',
@@ -23,7 +23,7 @@ module.exports = {
     web: {
 
         // Which port to listen (anything below 1000 requires root user. 80 is HTTP and 443 HTTPS,
-        port: 30,
+        port: 80,
 
         // If behind proxy, then the protocol the user sees is not what pangalink.net actually uses.,
         // Pangalink.net might be using HTTP internally but user should only use HTTPS addresses,

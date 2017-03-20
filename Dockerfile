@@ -1,8 +1,16 @@
 FROM node:6
 MAINTAINER Tõnis Tobre <tobre@bitweb.ee>
 
-ENV NODE_ENV=production node index.js
+ADD . /app
 
-EXPORT 80
+WORKDIR /app
 
-CMD ["node" "index.js"]
+RUN mv docker/default.js config/default.js
+
+RUN cat config/default.js
+
+EXPOSE 80
+
+RUN npm install
+
+CMD ["node", "index.js"]
