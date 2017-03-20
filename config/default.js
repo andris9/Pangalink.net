@@ -11,7 +11,7 @@ module.exports = {
     },
 
     // Domain name to be used all around the page,
-    hostname: '',
+    hostname: 'localhost:3480',
 
     // Protocol to be used (if behind proxy might not autodetect correctly),
     proto: '',
@@ -23,7 +23,7 @@ module.exports = {
     web: {
 
         // Which port to listen (anything below 1000 requires root user. 80 is HTTP and 443 HTTPS,
-        port: 30,
+        port: 3480,
 
         // If behind proxy, then the protocol the user sees is not what pangalink.net actually uses.,
         // Pangalink.net might be using HTTP internally but user should only use HTTPS addresses,
@@ -77,7 +77,7 @@ module.exports = {
 
     // Mongodb configuration,
     mongodb: {
-        url: 'mongodb://db:27017/pangalink',
+        url: 'mongodb://127.0.0.1:27017/pangalink',
 
         indexes: [{
             collection: 'user',
