@@ -30,6 +30,26 @@ Näiteks kui tahad, et konfiguratsioon laetaks failidest *default.js* + *product
 
 Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurkasutaja õigustes.
 
+## Docker
+
+### Rakenduse ehitamine lähtekoodist
+
+```sh
+docker build -t bitweb/banklink .
+```
+
+### MongoDB käivitamine
+
+```sh
+docker run --name banklink_mongo -d mongo
+```
+
+### Rakenduse käivitamine
+
+```sh
+docker run -d --name="banklink" -p 80:80 --link banklink_mongo:db bitweb/banklink
+```
+
 ## Litsents
 
 **MIT**
