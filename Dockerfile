@@ -7,8 +7,6 @@ WORKDIR /app
 
 RUN mv docker/default.js config/default.js
 
-RUN cat config/default.js
-
 EXPOSE 80
 
 RUN npm install
