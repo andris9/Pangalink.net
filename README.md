@@ -35,7 +35,7 @@ Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurk
 ### Rakenduse ehitamine lähtekoodist
 
 ```sh
-docker build -t bitweb/banklink .
+docker build -t bitweb/banklink-testing-tool .
 ```
 
 ### MongoDB käivitamine
@@ -47,7 +47,7 @@ docker run --name banklink_mongo -d mongo
 ### Rakenduse käivitamine
 
 ```sh
-docker run -d --name="banklink" -p 80:80 --link banklink_mongo:db bitweb/banklink
+docker run -d --name="banklink" -p 80:80 --link banklink_mongo:db bitweb/banklink-testing-tool
 ```
 
 ## Litsents
