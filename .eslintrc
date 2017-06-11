@@ -1,4 +1,7 @@
 {
-    "extends":    "nodemailer",
-    "fix":        false
+    "rules":{
+        "no-undefined": 0
+    },
+    "extends":          "nodemailer",
+    "fix":              false
 }
