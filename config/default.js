@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = {
-
     log: {
         // npm log level
         level: 'silly',
@@ -21,7 +20,6 @@ module.exports = {
 
     // HTTP/S server configuration,
     web: {
-
         // Which port to listen (anything below 1000 requires root user. 80 is HTTP and 443 HTTPS,
         port: 3480,
 
@@ -34,7 +32,7 @@ module.exports = {
         // Always redirect to this domain, if something else was used. Optional, might be left blank,
 
         // forceDomain: 'pangalink.net',
-        forceDomain: false,
+        forceDomain: false
 
         // If you want to enable HTTPS (if you are not behind HTTPS proxy):,
         // ssl: {,
@@ -52,8 +50,11 @@ module.exports = {
 
     // SMTP configuration,
     mail: {
-        // by default the app tries to send mail directly to recipients MX server
-        smtp: false,
+        smtp: {
+            // by default the app tries to send mail using sendmail binary
+            sendmail: true,
+            newline: 'unix'
+        },
         /*
         // alternatively, configure SMTP relay to use
         smtp: {
@@ -79,52 +80,62 @@ module.exports = {
     mongodb: {
         url: 'mongodb://127.0.0.1:27017/pangalink',
 
-        indexes: [{
-            collection: 'user',
-            data: {
-                username: 1
+        indexes: [
+            {
+                collection: 'user',
+                data: {
+                    username: 1
+                }
+            },
+            {
+                collection: 'user',
+                data: {
+                    token: 1
+                }
+            },
+            {
+                collection: 'project',
+                data: {
+                    owner: 1
+                }
+            },
+            {
+                collection: 'project',
+                data: {
+                    authorized: 1
+                }
+            },
+            {
+                collection: 'project',
+                data: {
+                    name: 1
+                }
+            },
+            {
+                collection: 'project',
+                data: {
+                    uid: 1
+                }
+            },
+            {
+                collection: 'project',
+                data: {
+                    created: -1
+                }
+            },
+            {
+                collection: 'payment',
+                data: {
+                    date: -1
+                }
+            },
+            {
+                collection: 'payment',
+                data: {
+                    project: 1
+                }
             }
-        }, {
-            collection: 'user',
-            data: {
-                token: 1
-            }
-        }, {
-            collection: 'project',
-            data: {
-                owner: 1
-            }
-        }, {
-            collection: 'project',
-            data: {
-                authorized: 1
-            }
-        }, {
-            collection: 'project',
-            data: {
-                name: 1
-            }
-        }, {
-            collection: 'project',
-            data: {
-                uid: 1
-            }
-        }, {
-            collection: 'project',
-            data: {
-                created: -1
-            }
-        }, {
-            collection: 'payment',
-            data: {
-                date: -1
-            }
-        }, {
-            collection: 'payment',
-            data: {
-                project: 1
-            }
-        }]
+        ]
     },
 
     // How many rows in one page (transaction logs etc.),
