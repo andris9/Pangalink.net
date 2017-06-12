@@ -1,12 +1,18 @@
 {
-    "ipizza": {
-        "name": "Ipizza Testpank",
-        "logo": "/assets/logos/ipizza-emu.png",
-        "color": "#99CC33",
-        "borderColor": "#FFFFCC",
-        "key": "ipizza",
+
+    "krediidipank": {
+        "key": "krediidipank",
+        "logo": "/assets/logos/krep-emu.png",
+        "color": "#9A0030",
+        "borderColor": "#E4E3E3",
         "type": "ipizza",
+        "name": "Krediidipank",
+        "id": "KREP",
+        "accountNr": "EE684204212345678907",
+        "prefix": "42",
+
         "charset": "VK_ENCODING",
+        "forceCharset": "Krediidipanga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
         "allowedCharsets": [
             "UTF-8",
             "ISO-8859-1",
@@ -19,9 +25,7 @@
         "allowedServices": [
             "1011", "1012", "4011", "4012"
         ],
-        "id": "GENIPIZZA",
-        "accountNr": "EE871600161234567892",
-        "prefix": "16",
+        "forceIban": true,
         "country": "EE",
         "fieldLength": {
             "VK_SERVICE": 4,
@@ -38,12 +42,137 @@
             "VK_CANCEL": 255,
             "VK_ENCODING": 12,
             "VK_DATETIME": 24,
-            "VK_LANG": 3,
-            "VK_REPLY": 4,
-            "VK_RID": 30,
-            "VK_NONCE": 50
+            "VK_LANG": 3
         },
         "group": "pangalink"
+
+    },
+
+
+    "lhv": {
+        "key": "lhv",
+        "logo": "/assets/logos/lhv-emu.png",
+        "color": "#0A0A0A",
+        "borderColor": "#C1C1C1",
+        "type": "ipizza",
+        "name": "LHV",
+        "id": "lhv-legacy",
+        "accountNr": "EE597700771234567897",
+        "prefix": "77",
+
+        "charset": "VK_ENCODING",
+        "allowedCharsets": [
+            "UTF-8",
+            "ISO-8859-1",
+            "WINDOWS-1257"
+        ],
+        "defaultCharset": "UTF-8",
+        "utf8length": "symbols",
+        "returnAddress": "VK_RETURN",
+        "cancelAddress": "VK_CANCEL",
+        "allowedServices": [
+            "1011", "1012", "4011", "4012"
+        ],
+        "forceIban": true,
+        "country": "EE",
+        "fieldLength": {
+            "VK_SERVICE": 4,
+            "VK_VERSION": 3,
+            "VK_SND_ID": 15,
+            "VK_STAMP": 20,
+            "VK_AMOUNT": 12,
+            "VK_CURR": 3,
+            "VK_ACC": 34,
+            "VK_NAME": 70,
+            "VK_REF": 35,
+            "VK_MSG": 95,
+            "VK_RETURN": 255,
+            "VK_CANCEL": 255,
+            "VK_ENCODING": 12,
+            "VK_DATETIME": 24,
+            "VK_LANG": 3
+        },
+        "group": "pangalink"
+    },
+
+    "ec": {
+        "key": "ec",
+        "logo": "/assets/logos/ec-emu.png",
+        "color": "#0066FF",
+        "borderColor": "#FFFFFF",
+        "type": "ec",
+        "name": "Nets",
+        "charset": false,
+        "id": "ECOMMERCE",
+        "defaultCharset": "ISO-8859-1",
+        "allowedCharsets": [
+            "ISO-8859-1",
+            "UTF-8"
+        ],
+        "fieldLength": {
+            "action": 3,
+            "ver": 3,
+            "id": 10,
+            "ecuno": 12,
+            "eamount": 12,
+            "cur": 3,
+            "datetime": 14,
+            "lang": 2,
+            "charEncoding": 16,
+            "feedBackUrl": 128,
+            "delivery": 1
+        },
+        "allowGet": true,
+        "group": "pangalink",
+        "disabled": false
+    },
+
+    "nordea": {
+        "key": "nordea",
+        "logo": "/assets/logos/solo-emu.png",
+        "color": "#005284",
+        "borderColor": "#E4E3E3",
+        "type": "ipizza",
+        "name": "Nordea",
+        "id": "NORDEA",
+        "accountNr": "EE561700017123456786",
+        "prefix": "17",
+        "country": "EE",
+        "charset": "VK_ENCODING",
+        "allowedCharsets": [
+            "UTF-8",
+            "ISO-8859-1",
+            "WINDOWS-1257"
+        ],
+        "defaultCharset": "UTF-8",
+        "utf8length": "symbols",
+        "returnAddress": "VK_RETURN",
+        "cancelAddress": "VK_CANCEL",
+        "returnMethod": "GET",
+        "allowedServices": [
+            "1011", "1012", "4011", "4012"
+        ],
+        "forceIban": true,
+        "fieldLength": {
+            "VK_SERVICE": 4,
+            "VK_VERSION": 3,
+            "VK_SND_ID": 15,
+            "VK_STAMP": 20,
+            "VK_AMOUNT": 12,
+            "VK_CURR": 3,
+            "VK_ACC": 34,
+            "VK_NAME": 70,
+            "VK_REF": 35,
+            "VK_MSG": 95,
+            "VK_RETURN": 255,
+            "VK_CANCEL": 255,
+            "VK_ENCODING": 12,
+            "VK_DATETIME": 24,
+            "VK_LANG": 3
+        },
+        "group": "pangalink",
+        "disabled": false
+
     },
 
     "sampo": {
@@ -97,135 +226,6 @@
         "group": "pangalink"
     },
 
-    "sampo-legacy": {
-        "key": "sampo-legacy",
-        "logo": "/assets/logos/danske-emu.png",
-        "color": "#003F62",
-        "borderColor": "#7F9FB0",
-        "type": "ipizza",
-        "name": "Danske (vana protokoll)",
-        "charset": false,
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_RETURN",
-        "id": "SAMPOPANK",
-        "accountNr": "EE823300331234567897",
-        "prefix": "33",
-        "country": "EE",
-        "disallowQueryParams": true,
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 14,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 17,
-            "VK_CURR": 3,
-            "VK_ACC": 20,
-            "VK_NAME": 70,
-            "VK_REF": 20,
-            "VK_MSG": 210,
-            "VK_RETURN": 150,
-            "VK_LANG": 3
-        },
-        "fieldRegex": {
-            "VK_MSG": {
-                "re": "^[a-z0-9õäöü\\+\\-\\(\\)\\.\\,\\;\\!\\&\\_\\@\\/ ]+$",
-                "flags": "i"
-            }
-        },
-        "deprecated": true,
-        "group": "ipizza"
-    },
-
-    "krediidipank": {
-        "key": "krediidipank",
-        "logo": "/assets/logos/krep-emu.png",
-        "color": "#9A0030",
-        "borderColor": "#E4E3E3",
-        "type": "ipizza",
-        "name": "Krediidipank",
-        "id": "KREP",
-        "accountNr": "EE684204212345678907",
-        "prefix": "42",
-
-        "charset": "VK_ENCODING",
-        "forceCharset": "Krediidipanga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
-        "defaultCharset": "UTF-8",
-        "utf8length": "symbols",
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_CANCEL",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
-        "forceIban": true,
-        "country": "EE",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 15,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 12,
-            "VK_CURR": 3,
-            "VK_ACC": 34,
-            "VK_NAME": 70,
-            "VK_REF": 35,
-            "VK_MSG": 95,
-            "VK_RETURN": 255,
-            "VK_CANCEL": 255,
-            "VK_ENCODING": 12,
-            "VK_DATETIME": 24,
-            "VK_LANG": 3
-        },
-        "group": "pangalink"
-
-    },
-
-    "krediidipank-legacy": {
-        "key": "krediidipank-legacy",
-        "logo": "/assets/logos/krep-emu.png",
-        "color": "#9A0030",
-        "borderColor": "#E4E3E3",
-        "type": "ipizza",
-        "name": "Krediidipank (vana protokoll)",
-        "charset": "VK_CHARSET",
-        "allowedCharsets": [
-            "ISO-8859-13",
-            "UTF-8",
-            "WINDOWS-1257"
-        ],
-        "defaultCharset": "ISO-8859-13",
-        "forceCharset": "Krediidipanga puhul on kodeeringu parameetri VK_CHARSET kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_CANCEL",
-        "id": "KREP",
-        "allowedServices": [
-            "1002"
-        ],
-        "accountNr": "EE684204212345678907",
-        "prefix": "42",
-        "country": "EE",
-        "utf8length": "bytes",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 15,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 17,
-            "VK_CURR": 3,
-            "VK_REF": 20,
-            "VK_MSG": 70,
-            "VK_RETURN": 200,
-            "VK_CANCEL": 200,
-            "VK_LANG": 3
-        },
-        "deprecated": true,
-        "group": "ipizza"
-    },
-
     "seb": {
         "key": "seb",
         "logo": "/assets/logos/eyp-emu.png",
@@ -270,137 +270,6 @@
             "VK_LANG": 3
         },
         "group": "pangalink"
-    },
-
-    "seb-legacy": {
-        "key": "seb-legacy",
-        "logo": "/assets/logos/eyp-emu.png",
-        "color": "#58C50F",
-        "borderColor": "#634932",
-        "type": "ipizza",
-        "name": "SEB (vana protokoll)",
-        "charset": "VK_CHARSET",
-        "allowedCharsets": [
-            "ISO-8859-1",
-            "UTF-8"
-        ],
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_CANCEL",
-        "rejectAddress": "VK_CANCEL",
-        "id": "EYP",
-        "allowedServices": [
-            "1001", "1002"
-        ],
-        "accountNr": "EE171010123456789017",
-        "prefix": "10",
-        "country": "EE",
-        "utf8length": "bytes",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 15,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 17,
-            "VK_CURR": 3,
-            "VK_ACC": 20,
-            "VK_NAME": 40,
-            "VK_REF": 20,
-            "VK_MSG": 70,
-            "VK_CHARSET": 10,
-            "VK_RETURN": 60,
-            "VK_CANCEL": 60,
-            "VK_LANG": 3
-        },
-        "deprecated": true,
-        "group": "ipizza"
-    },
-
-    "lhv": {
-        "key": "lhv",
-        "logo": "/assets/logos/lhv-emu.png",
-        "color": "#0A0A0A",
-        "borderColor": "#C1C1C1",
-        "type": "ipizza",
-        "name": "LHV",
-        "id": "lhv-legacy",
-        "accountNr": "EE597700771234567897",
-        "prefix": "77",
-
-        "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
-        "defaultCharset": "UTF-8",
-        "utf8length": "symbols",
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_CANCEL",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
-        "forceIban": true,
-        "country": "EE",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 15,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 12,
-            "VK_CURR": 3,
-            "VK_ACC": 34,
-            "VK_NAME": 70,
-            "VK_REF": 35,
-            "VK_MSG": 95,
-            "VK_RETURN": 255,
-            "VK_CANCEL": 255,
-            "VK_ENCODING": 12,
-            "VK_DATETIME": 24,
-            "VK_LANG": 3
-        },
-        "group": "pangalink"
-    },
-
-    "lhv-legacy": {
-        "key": "lhv-legacy",
-        "logo": "/assets/logos/lhv-emu.png",
-        "color": "#0A0A0A",
-        "borderColor": "#C1C1C1",
-        "type": "ipizza",
-        "name": "LHV (vana protokoll)",
-        "charset": "VK_CHARSET",
-        "allowedCharsets": [
-            "ISO-8859-1",
-            "UTF-8",
-            "WINDOWS-1257"
-        ],
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_RETURN",
-        "id": "lhv-legacy",
-        "allowedServices": [
-            "1001", "1002"
-        ],
-        "accountNr": "EE597700771234567897",
-        "prefix": "77",
-        "country": "EE",
-        "utf8length": "bytes",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 15,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 17,
-            "VK_CURR": 3,
-            "VK_ACC": 20,
-            "VK_NAME": 70,
-            "VK_REF": 20,
-            "VK_MSG": 210,
-            "VK_RETURN": 60,
-            "VK_LANG": 3,
-            "VK_CHARSET": 12
-        },
-        "deprecated": true,
-        "group": "ipizza"
     },
 
     "swedbank": {
@@ -449,330 +318,5 @@
         },
         "group": "pangalink",
         "disabled": false
-    },
-
-    "swedbank-legacy": {
-        "key": "swedbank-legacy",
-        "logo": "/assets/logos/hp-emu.png",
-        "color": "#ee844c",
-        "borderColor": "#222222",
-        "type": "ipizza",
-        "name": "Swedbank (vana protokoll)",
-        "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "ISO-8859-1",
-            "ISO-8859-4",
-            "UTF-8"
-        ],
-        "allowedServices": [
-            "1001", "1002"
-        ],
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_RETURN",
-        "returnMethod": "GET",
-        "id": "HP",
-        "accountNr": "EE152200221234567897",
-        "prefix": ["22", "11"],
-        "country": "EE",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 10,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 17,
-            "VK_CURR": 3,
-            "VK_ACC": 20,
-            "VK_NAME": 70,
-            "VK_REF": 20,
-            "VK_MSG": 300,
-            "VK_RETURN": 60,
-            "VK_LANG": 3
-        },
-        "deprecated": true,
-        "group": "ipizza",
-        "disabled": false
-    },
-
-    "nordea": {
-        "key": "nordea",
-        "logo": "/assets/logos/solo-emu.png",
-        "color": "#005284",
-        "borderColor": "#E4E3E3",
-        "type": "solo",
-        "name": "Nordea (solo)",
-        "charset": false,
-        "defaultCharset": "ISO-8859-1",
-        "returnAddress": "RETURN",
-        "cancelAddress": "CANCEL",
-        "rejectAddress": "REJECT",
-        "id": "NORDEA",
-        "accountNr": "EE561700017123456786",
-        "prefix": "17",
-        "country": "EE",
-        "fieldLength": {
-            "VERSION": 4,
-            "STAMP": 20,
-            "RCV_ID": 15,
-            "RCV_ACCOUNT": 21,
-            "RCV_NAME": 30,
-            "LANGUAGE": 1,
-            "AMOUNT": 19,
-            "REF": 16,
-            "TAX_CODE": 28,
-            "DATE": 10,
-            "MSG": 210,
-            "RETURN": 256,
-            "CANCEL": 256,
-            "REJECT": 256,
-            "CONFIRM": 3,
-            "KEYVERS": 4,
-            "CUR": 3
-        },
-        "deprecated": false,
-        "group": "eesti"
-    },
-
-    "ec": {
-        "key": "ec",
-        "logo": "/assets/logos/ec-emu.png",
-        "color": "#0066FF",
-        "borderColor": "#FFFFFF",
-        "type": "ec",
-        "name": "E-Commerce Payment Gateway",
-        "charset": false,
-        "id": "ECOMMERCE",
-        "defaultCharset": "ISO-8859-1",
-        "allowedCharsets": [
-            "ISO-8859-1",
-            "UTF-8"
-        ],
-        "fieldLength": {
-            "action": 3,
-            "ver": 3,
-            "id": 10,
-            "ecuno": 12,
-            "eamount": 12,
-            "cur": 3,
-            "datetime": 14,
-            "lang": 2,
-            "charEncoding": 16,
-            "feedBackUrl": 128,
-            "delivery": 1
-        },
-        "allowGet": true,
-        "group": "eesti",
-        "disabled": false
-    },
-
-    "swedbank.lv": {
-        "key": "swedbank.lv",
-        "logo": "/assets/logos/hp-lv-emu.png",
-        "color": "#ee844c",
-        "borderColor": "#222222",
-        "type": "ipizza",
-        "name": "Swedbank Latvia",
-        "allowedServices": [
-            "1002"
-        ],
-        "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "ISO-8859-13",
-            "UTF-8"
-        ],
-        "defaultCharset": "ISO-8859-13",
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_RETURN",
-        "returnMethod": "GET",
-        "id": "HP",
-        "accountNr": "LV80BANK0000435195001",
-        "country": "LV",
-        "group": "läti",
-        "disabled": false
-    },
-
-    "swedbank.lt": {
-        "key": "swedbank.lt",
-        "logo": "/assets/logos/hp-lt-emu.png",
-        "color": "#ee844c",
-        "borderColor": "#222222",
-        "type": "ipizza",
-        "name": "Swedbank Lithuania",
-        "allowedServices": [
-            "1002"
-        ],
-        "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "ISO-8859-13",
-            "UTF-8"
-        ],
-        "defaultCharset": "ISO-8859-13",
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_RETURN",
-        "returnMethod": "GET",
-        "id": "HP",
-        "accountNr": "LT121000011101001000",
-        "country": "LT",
-        "group": "leedu",
-        "disabled": false
-    },
-
-    "dnb.lt": {
-        "key": "dnb.lt",
-        "type": "ipizza",
-        "name": "DNB LT",
-        "allowedServices": [
-            "1001"
-        ],
-        "charset": false,
-        "returnAddress": "VK_RETURN",
-        "cancelAddress": "VK_RETURN",
-        "id": "ABDNB",
-        "accountNr": "LT514010049500000014",
-        "prefix": "100",
-        "country": "LT",
-        "fieldLength": {
-            "VK_SERVICE": 4,
-            "VK_VERSION": 3,
-            "VK_SND_ID": 20,
-            "VK_STAMP": 20,
-            "VK_AMOUNT": 17,
-            "VK_CURR": 3,
-            "VK_ACC": 20,
-            "VK_PANK": 9,
-            "VK_NAME": 200,
-            "VK_REF": 20,
-            "VK_MSG": 200,
-            "VK_RETURN": 200,
-            "VK_LANG": 3,
-            "VK_TIME_LIMIT": 19
-        },
-        "useVK_PANK": true,
-        "useVK_TIME_LIMIT": true,
-        "deprecated": false,
-        "group": "leedu"
-    },
-
-    "tapiola": {
-        "key": "tapiola",
-        "type": "aab",
-        "name": "Tapiola",
-        "charset": false,
-        "defaultCharset": "ISO-8859-1",
-        "returnAddress": "AAB_RETURN",
-        "cancelAddress": "AAB_CANCEL",
-        "rejectAddress": "AAB_REJECT",
-        "id": "TAPIOLA",
-        "accountNr": "FI3936363002092492",
-        "country": "FI",
-        "fieldLength": {
-            "AAB_VERSION": 4,
-            "AAB_STAMP": 15,
-            "AAB_RCV_ID": 15,
-            "AAB_RCV_ACCOUNT": 15,
-            "AAB_RCV_NAME": 15,
-            "AAB_LANGUAGE": 1,
-            "AAB_AMOUNT": 19,
-            "AAB_REF": 20,
-            "AAB_DATE": 10,
-            "AAB_MSG": 245,
-            "AAB_RETURN": 199,
-            "AAB_CANCEL": 199,
-            "AAB_REJECT": 199,
-            "AAB_CONFIRM": 3,
-            "AAB_KEYVERS": 4,
-            "AAB_CUR": 3
-        },
-        "group": "soome"
-    },
-
-    "handelsbanken": {
-        "key": "handelsbanken",
-        "type": "samlink",
-        "name": "Handelsbanken",
-        "charset": false,
-        "defaultCharset": "ISO-8859-1",
-        "returnAddress": "NET_RETURN",
-        "cancelAddress": "NET_CANCEL",
-        "rejectAddress": "NET_REJECT",
-        "id": "HANDELS",
-        "accountNr": "FI7331313001000058",
-        "country": "FI",
-        "fieldLength": {
-            "NET_VERSION": 3,
-            "NET_STAMP": 20,
-            "NET_SELLER_ID": 13,
-            "NET_AMOUNT": 9,
-            "NET_REF": 20,
-            "NET_DATE": 10,
-            "NET_MSG": 210,
-            "NET_RETURN": 160,
-            "NET_CANCEL": 160,
-            "NET_REJECT": 160,
-            "NET_CONFIRM": 3,
-            "NET_CUR": 3
-        },
-        "group": "soome"
-    },
-
-    "alandsbanken": {
-        "key": "alandsbanken",
-        "type": "aab",
-        "name": "Ålandsbanken",
-        "charset": false,
-        "defaultCharset": "ISO-8859-1",
-        "returnAddress": "AAB_RETURN",
-        "cancelAddress": "AAB_CANCEL",
-        "rejectAddress": "AAB_REJECT",
-        "id": "ALANDSBANKEN",
-        "accountNr": "FI4966010001234567",
-        "country": "FI",
-        "fieldLength": {
-            "AAB_VERSION": 4,
-            "AAB_STAMP": 15,
-            "AAB_RCV_ID": 15,
-            "AAB_RCV_ACCOUNT": 15,
-            "AAB_RCV_NAME": 15,
-            "AAB_LANGUAGE": 1,
-            "AAB_AMOUNT": 19,
-            "AAB_REF": 20,
-            "AAB_DATE": 10,
-            "AAB_MSG": 245,
-            "AAB_RETURN": 199,
-            "AAB_CANCEL": 199,
-            "AAB_REJECT": 199,
-            "AAB_CONFIRM": 3,
-            "AAB_KEYVERS": 4,
-            "AAB_CUR": 3
-        },
-        "group": "soome"
-    },
-
-    "aktiasppop": {
-        "key": "aktiasppop",
-        "type": "samlink",
-        "name": "Aktia/Sp/Pop",
-        "charset": false,
-        "defaultCharset": "ISO-8859-1",
-        "returnAddress": "NET_RETURN",
-        "cancelAddress": "NET_CANCEL",
-        "rejectAddress": "NET_REJECT",
-        "id": "AKTIA",
-        "accountNr": "FI1840551010234569",
-        "country": "FI",
-        "fieldLength": {
-            "NET_VERSION": 3,
-            "NET_STAMP": 20,
-            "NET_SELLER_ID": 17,
-            "NET_AMOUNT": 9,
-            "NET_REF": 20,
-            "NET_DATE": 10,
-            "NET_MSG": 210,
-            "NET_RETURN": 160,
-            "NET_CANCEL": 160,
-            "NET_REJECT": 160,
-            "NET_CONFIRM": 3,
-            "NET_CUR": 3
-        },
-        "group": "soome"
     }
 }

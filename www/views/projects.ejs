@@ -47,7 +47,7 @@
                         <strong><a href="/project/<%= project._id %>"><%= project.name %></a></strong>
                     </td>
                     <td>
-                        <%= banks[project.bank].name %>
+                        <%= banks[project.bank] && banks[project.bank].name %>
                     </td>
                     <td>
                         <%= project.uid %>

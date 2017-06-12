@@ -16,26 +16,21 @@
                     <%
 
                     var groups = {
-                        "ipizza": "Aegunud ipizza protokoll (päringud 1001 ja 1002)",
-                        "pangalink": "Pangalingi protokoll (päringud 1011, 1012, 4011 ja 4012)",
-                        "eesti": "Muud Eesti makseteenused",
-                        "läti": "Läti makseteenused",
-                        "leedu": "Leedu makseteenused",
-                        "soome": "Soome makseteenused"
+                        "pangalink": "Pangalingi protokoll (päringud 1011, 1012, 4011 ja 4012)"
                     };
 
-                    var order = ["pangalink", "eesti", "läti", "leedu", "soome", "ipizza"];
+                    var order = ["pangalink"];
 
                     %>
 
                     <% order.forEach(function(group){ %>
-                        <optgroup label="<%= groups[group] %>">
+                        <!--<optgroup label="<%= groups[group] %>">-->
                             <% Object.keys(banks).forEach(function(key){ %>
                                 <% if(banks[key].group === group){%>
                                 <option value="<%= banks[key].key %>"<% if(banks[key].key == bank){%> selected<%}%><% if(banks[key].disabled){%> disabled<%}%>><%= banks[key].name %></option>
                                 <% } %>
                             <%})%>
-                        </optgroup>
+                        <!--</optgroup>-->
                     <%})%>
 
                 </select>
@@ -82,7 +77,7 @@
         </div>
     </div>
 
-    <div id="soloform" style="<%= ["nordea", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].indexOf(bank) >= 0 ? "display: block;" : "display:none;" %>">
+    <div id="soloform" style="<%= ["tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].includes(bank) ? "display: block;" : "display:none;" %>">
 
         <h3>Täpsemad seaded</h3>
         <hr />
@@ -131,7 +126,7 @@
 
     </div>
 
-    <div id="ipizzaform" style="<%= ["ec", "nordea", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].indexOf(bank) < 0 ? "display: block;" : "display:none;" %>">
+    <div id="ipizzaform" style="<%= !["ec", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].includes(bank) ? "display: block;" : "display:none;" %>">
 
         <h3>Ipizza seaded</h3>
 
@@ -164,37 +159,36 @@
     </div>
 
     <script>
-        function showBankSettings(){
-            var bank = document.getElementById("bank"),
-                ipizzaform = document.getElementById("ipizzaform"),
-                soloform = document.getElementById("soloform"),
-                ecform = document.getElementById("ecform");
+    function showBankSettings() {
+    let bank = document.getElementById('bank'),
+        ipizzaform = document.getElementById('ipizzaform'),
+        soloform = document.getElementById('soloform'),
+        ecform = document.getElementById('ecform');
 
-            if(["ec", "nordea", "tapiola", "alandsbanken", "handelsbanken", "aktiasppop"].indexOf(bank.value) < 0){
-                soloform.style.display = "none";
-                ecform.style.display = "none";
-                ipizzaform.style.display = "block";
-            }else{
-                switch(bank.value){
-                    case "nordea":
-                    case "tapiola":
-                    case "alandsbanken":
-                    case "handelsbanken":
-                    case "aktiasppop":
-                        soloform.style.display = "block";
-                        ecform.style.display = "none";
-                        ipizzaform.style.display = "none";
-                        break;
-                    case "ec":
-                        ecform.style.display = "block";
-                        soloform.style.display = "none";
-                        ipizzaform.style.display = "none";
-                        break;
-                    default:
-                        soloform.style.display = "none";
-                        ecform.style.display = "none";
-                        ipizzaform.style.display = "none";
-                }
-            }
+    if (['ec', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(bank.value) < 0) {
+        soloform.style.display = 'none';
+        ecform.style.display = 'none';
+        ipizzaform.style.display = 'block';
+    } else {
+        switch (bank.value) {
+            case 'tapiola':
+            case 'alandsbanken':
+            case 'handelsbanken':
+            case 'aktiasppop':
+                soloform.style.display = 'block';
+                ecform.style.display = 'none';
+                ipizzaform.style.display = 'none';
+                break;
+            case 'ec':
+                ecform.style.display = 'block';
+                soloform.style.display = 'none';
+                ipizzaform.style.display = 'none';
+                break;
+            default:
+                soloform.style.display = 'none';
+                ecform.style.display = 'none';
+                ipizzaform.style.display = 'none';
         }
-    </script>
+    }
+}
+</script>
