@@ -16,7 +16,7 @@ module.exports = {
     proto: '',
 
     // Name of the service,
-    title: 'Pangalink.net',
+    title: 'Pangalinker',
 
     // HTTP/S server configuration,
     web: {

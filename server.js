@@ -19,6 +19,7 @@ const tools = require('./lib/tools');
 const db = require('./lib/db');
 const st = require('st');
 const log = require('npmlog');
+const packageInfo = require('./package.json');
 
 const mount = st({
     path: pathlib.join(__dirname, 'www', 'static'),
@@ -149,6 +150,21 @@ app.use(
 
 // Use EJS template engine
 app.set('view engine', 'ejs');
+
+app.use((req, res, next) => {
+    res.locals.proto = config.proto || 'http';
+    res.locals.hostname = (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, '');
+    res.locals.messages = {
+        success: req.flash('success'),
+        error: req.flash('error'),
+        info: req.flash('info')
+    };
+    res.locals.user = req.user;
+    res.locals.googleAnalyticsID = config.googleAnalyticsID;
+    res.locals.title = packageInfo.name;
+    res.locals.version = packageInfo.version;
+    next();
+});
 
 // Use routes from routes.js
 routes(app);

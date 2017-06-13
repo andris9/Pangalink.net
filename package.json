@@ -1,8 +1,8 @@
 {
-  "name": "pangalink.net",
+  "name": "Pangalinker",
   "version": "1.0.0",
   "private": true,
-  "description": "Pangalink.net",
+  "description": "Pangalink test application",
   "scripts": {
     "test": "grunt"
   },
