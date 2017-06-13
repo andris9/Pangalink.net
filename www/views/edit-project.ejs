@@ -1,4 +1,5 @@
 <form action="/edit-project" method="post" class="form-horizontal">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="page-header">
         <h1>Muuda makselahenduse andmeid</h1>
@@ -12,7 +13,7 @@
 
     <div class="form-group<% if(validation.keyBitsize){%> has-error<%}%>">
         <label class="col-lg-2 control-label" for="keyBitsize">Allkirjastamise algoritm</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <select class="form-control" name="keyBitsize" id="keyBitsize">
                 <option <% if(keyBitsize == 1024){ %> selected<% } %> value="1024">1024 bitti</option>
                 <option <% if(keyBitsize == 2048 || !keyBitsize){ %> selected<% } %> value="2048">2048 bitti</option>
@@ -27,7 +28,7 @@
 
     <div class="form-group<% if(validation.regenerate){%> has-error<%}%>">
         <div class="col-lg-2"></div>
-        <label class="col-lg-6">
+        <label class="col-lg-8">
             <input type="checkbox" name="regenerate" value="true">
             Genereeri uus sertifikaat (vana sertifikaat kaotab kehtivuse)
         </label>
@@ -35,9 +36,11 @@
 
     <div class="form-group">
         <label class="col-lg-2"></label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
+            <div class="pull-right">
+                <a class="btn btn-danger" href="/delete-project/<%= id %>" onclick="return confirm('Kas oled ikka kindel, seda otsust ei ole võimalik hiljem enam tagasi võtta?')"><span class="glyphicon glyphicon-minus-sign"></span> Kustuta see makselahendus</a>
+            </div>
             <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> Muuda makselahenduse andmeid</button>
-            <a class="btn btn-danger" href="/delete-project/<%= id %>" onclick="return confirm('Kas oled ikka kindel, seda otsust ei ole võimalik hiljem enam tagasi võtta?')"><span class="glyphicon glyphicon-minus-sign"></span> Kustuta see makselahendus</a>
         </div>
     </div>
 </form>

@@ -3,6 +3,7 @@
 </div>
 
 <form action="/login" method="post" class="form-horizontal">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="username">E-posti aadress</label>

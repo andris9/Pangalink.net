@@ -3,6 +3,7 @@
 </div>
 
 <form action="/profile" method="post" class="form-horizontal">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="form-group <% if(validation.name){%>has-error<%}%>">
         <label class="col-lg-2 control-label" for="name">Sinu nimi</label>
@@ -10,16 +11,6 @@
             <input class="form-control" type="text" name="name" id="name" value="<%= name %>" required/>
             <% if(validation.name){%>
                 <span class="help-block"><%= validation.name %></span>
-            <%}%>
-        </div>
-    </div>
-
-    <div class="form-group <% if(validation.company){%>has-error<%}%>">
-        <label class="col-lg-2 control-label" for="company">Ettevõtte nimi</label>
-        <div class="col-lg-6">
-            <input class="form-control" type="text" name="company" id="company" value="<%= company %>" required/>
-            <% if(validation.company){%>
-                <span class="help-block"><%= validation.company %></span>
             <%}%>
         </div>
     </div>

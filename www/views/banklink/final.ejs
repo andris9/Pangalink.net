@@ -89,6 +89,7 @@
 <% if(method == "POST"){%>
 
     <form id="submit-form" method="POST" action="<%= target %>">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <% Object.keys(payment.responseFields).forEach(function(key){%>
             <input type="hidden" name="<%= key %>" value="<%= payment.responseFields[key] %>" />
@@ -103,8 +104,8 @@
 
     <% if(payment.autoSubmit){%>
     <script>
-        document.getElementById("submit-form").submit();
-    </script>
+    document.getElementById('submit-form').submit();
+</script>
     <% } %>
 
 <%}%>

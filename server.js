@@ -21,6 +21,10 @@ const st = require('st');
 const log = require('npmlog');
 const packageInfo = require('./package.json');
 
+const csrf = require('csurf')({
+    cookie: true
+});
+
 const mount = st({
     path: pathlib.join(__dirname, 'www', 'static'),
     url: '/',
@@ -151,7 +155,10 @@ app.use(
 // Use EJS template engine
 app.set('view engine', 'ejs');
 
+app.use(csrf);
+
 app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
     res.locals.proto = config.proto || 'http';
     res.locals.hostname = (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, '');
     res.locals.messages = {

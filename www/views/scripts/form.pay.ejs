@@ -2,6 +2,7 @@
         <p><%= payment.isAuth ?  'Autentimise ' : 'Makse teostamise ' %>näidisrakendus <strong>"<%= project.name %>"</strong></p>
 
         <form method="post" action="<%= proto %>://<%= hostname %>/banklink/<%- bank.key %>">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <!-- include all values as hidden form fields -->
 <?php foreach($fields as $key => $val):?>
             <input type="hidden" name="<?php echo $key; ?>" value="<?php echo htmlspecialchars($val); ?>" />

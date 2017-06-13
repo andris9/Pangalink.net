@@ -60,10 +60,10 @@
       #push,
       #footer {
         height: 60px;
-        color: #fff;
+        /*color: #fff;*/
       }
       #footer a{
-        color: #fff;
+        /*color: #fff;*/
       }
 
       /* Lastly, apply responsive CSS fixes as necessary */
@@ -103,6 +103,7 @@
 
         <h3><%= payment.isAuth ?  'Autentimise ' : 'Makse teostamise ' %>näidisrakendus "<%= project.name %>"</h3>
         <form method="post" action="<%= proto %>://<%= hostname %>/banklink/<%- bank.key %>">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
             <!-- include all values as hidden form fields -->
 <% payment.fields.forEach(function(field, i){ -%>
