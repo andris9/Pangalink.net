@@ -35,6 +35,8 @@ router.get('/delete/:user', tools.requireLogin, tools.requireAdmin, checkUser, s
 
 router.get('/users', tools.requireLogin, tools.requireAdmin, serveUsers);
 
+router.get('/users/add', tools.requireLogin, tools.requireAdmin, serveUsersAdd);
+
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user) => {
         if (err) {
@@ -135,7 +137,7 @@ function checkJoin(req, res, next) {
                     req.flash('danger', 'Andmebaasi viga');
                     return res.redirect('/');
                 }
-                req.flash('info', 'Oled nüüd admin kasutaja');
+                req.flash('info', 'Oled nüüd admin kasutaja!');
                 return res.redirect('/');
             });
         }
@@ -294,13 +296,15 @@ function handleJoin(req, res) {
         return;
     }
 
+    let role = req.ticket && req.ticket.role;
+
     auth.addUser(
         req.body.username,
         req.body.password,
         {
             name: req.body.name,
             agreetos: !!(req.body.agreetos || ''),
-            role: req.ticket && req.ticket.role
+            role
         },
         (err, user, options) => {
             if (err) {
@@ -334,12 +338,18 @@ function handleJoin(req, res) {
                 db.database.collection('tickets').deleteOne({ _id: req.ticket._id }, () => false);
             }
 
+            if (role === 'admin') {
+                req.flash('info', 'Oled nüüd admin kasutaja!');
+            }
+
             req.login(user, err => {
                 if (err) {
                     req.flash('info', 'Kasutaja on loodud, kuid automaatne sisselogimine ebaõnnestus');
                     return res.redirect('/');
                 }
+
                 req.flash('success', 'Kasutaja on loodud ning oled nüüd sisse logitud');
+
                 return res.redirect('/projects/add');
             });
         }
@@ -451,6 +461,16 @@ function serveUsers(req, res, next) {
                 return user;
             })
         });
+    });
+}
+
+function serveUsersAdd(req, res) {
+    res.render('index', {
+        pageTitle: 'Lisa uus kasutaja',
+        page: '/account/users/add',
+        username: req.query.username || '',
+        validation: {},
+        role: 'user'
     });
 }
 

@@ -15,7 +15,7 @@
 <% } %>
 
 <% if(user && user.role === 'admin'){ %>
-    <li<% if(page == "/account/users" || (page == "/account/profile" && userId)){%> class="active"<%}%>><a href="/account/users">Kasutajad</a></li>
+    <li<% if(page.indexOf("/account/users")===0 || (page == "/account/profile" && userId)){%> class="active"<%}%>><a href="/account/users">Kasutajad</a></li>
 <% } %>
 
 <% if(user && user.username){ %>
