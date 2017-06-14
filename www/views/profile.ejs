@@ -1,13 +1,22 @@
 <div class="page-header">
-    <h1>Muuda oma profiili</h1>
+    <h1>
+        <% if(userId) {%>
+            Muuda kasutaja andmeid
+        <%}%>
+        <% if(!userId) {%>
+            Muuda oma profiili
+        <%}%>
+    </h1>
 </div>
 
-<form action="/account/profile" method="post" class="form-horizontal">
+<form action="/account/profile<% if(userId){%>/<%= userId %><%}%>" method="post" class="form-horizontal">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="form-group <% if(validation.name){%>has-error<%}%>">
-        <label class="col-lg-2 control-label" for="name">Sinu nimi</label>
-        <div class="col-lg-6">
+        <label class="col-lg-2 control-label" for="name">
+            Nimi
+        </label>
+        <div class="col-lg-8">
             <input class="form-control" type="text" name="name" id="name" value="<%= name %>" required/>
             <% if(validation.name){%>
                 <span class="help-block"><%= validation.name %></span>
@@ -17,7 +26,7 @@
 
     <div class="form-group <% if(validation.username){%>has-error<%}%>">
         <label class="col-lg-2 control-label" for="username">E-posti aadress</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input class="form-control" type="email" name="username" id="username" value="<%= username %>" disabled/>
             <% if(validation.username){%>
                 <span class="help-block"><%= validation.username %></span>
@@ -25,13 +34,30 @@
         </div>
     </div>
 
+    <% if(userId) {%>
+    <div class="form-group<% if(validation.role){%> has-error<%}%>">
+        <label class="col-lg-2 control-label" for="role">Kasutaja roll</label>
+        <div class="col-lg-8">
+            <select class="form-control" name="role" id="role">
+                <option <% if(role == 'admin'){ %> selected<% } %> value="admin">Admin</option>
+                <option <% if(role == 'user' || !role){ %> selected<% } %> value="user">Tavakasutaja</option>
+                <option <% if(role == 'client'){ %> selected<% } %> value="client">Klient</option>
+            </select>
+            <% if(validation.role){%>
+                <span class="help-block"><%= validation.role %></span>
+            <%}%>
+            <span class="help-block">Kliendikontodel puudub õigus lisada või muuta andmeid. Samuti saavad kliendikontod näha ainult nende makselahenduste andmeid, millele on neile ligipääs antud.</span>
+        </div>
+    </div>
+    <%}%>
+
     <h3>Parooli vahetus</h3>
     <hr/>
     <p>Jäta järgnevad väljad tühjaks, kui ei soovi parooli muuta</p>
 
     <div class="form-group <% if(validation.password){%>has-error<%}%>">
         <label class="col-lg-2 control-label" for="password">Parool</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input class="form-control" type="password" name="password" id="password"/>
             <% if(validation.password){%>
                 <span class="help-block"><%= validation.password %></span>
@@ -41,7 +67,7 @@
 
     <div class="form-group <% if(validation.password2){%>has-error<%}%>">
         <label class="col-lg-2 control-label" for="password2">Korda parooli</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input class="form-control" type="password" name="password2" id="password2"/>
             <% if(validation.password2){%>
                 <span class="help-block"><%= validation.password2 %></span>
@@ -51,7 +77,15 @@
 
     <div class="form-group">
         <label class="col-lg-2"></label>
-        <div class="col-lg-6"><button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> Uuenda profiili andmeid</button></div>
+        <div class="col-lg-8">
+
+            <%if(userId){%>
+                <div class="pull-right">
+                    <a class="btn btn-danger" href="/account/delete/<%= userId %>" onclick="return confirm('Kas oled ikka kindel, seda otsust ei ole võimalik hiljem enam tagasi võtta?')"><span class="glyphicon glyphicon-minus-sign"></span> Kustuta see kasutaja</a>
+                </div>
+            <%}%>
+            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> Uuenda profiili andmeid</button>
+        </div>
     </div>
 
 </form>

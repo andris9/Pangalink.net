@@ -11,7 +11,11 @@
 <li<% if(page == "/docs" && name == "ui-tests"){%> class="active"<%}%>><a href="/docs/ui-tests">UI automaattestid</a></li>
 
 <% if(user && user.username){ %>
-    <li<% if(page == "/account/profile"){%> class="active"<%}%>><a href="/account/profile">Minu profiil</a></li>
+    <li<% if(page == "/account/profile" && !userId){%> class="active"<%}%>><a href="/account/profile">Minu profiil</a></li>
+<% } %>
+
+<% if(user && user.role === 'admin'){ %>
+    <li<% if(page == "/account/users" || (page == "/account/profile" && userId)){%> class="active"<%}%>><a href="/account/users">Kasutajad</a></li>
 <% } %>
 
 <% if(user && user.username){ %>

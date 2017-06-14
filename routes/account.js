@@ -3,9 +3,18 @@
 const passport = require('passport');
 const auth = require('../lib/auth');
 const tools = require('../lib/tools');
+const db = require('../lib/db');
+const ObjectID = require('mongodb').ObjectID;
+const util = require('util');
 
 const express = require('express');
 const router = new express.Router();
+
+const roles = {
+    admin: 'Admin',
+    user: 'Tavakasutaja',
+    client: 'Klient'
+};
 
 router.get('/reset-link', serveResetLink);
 router.post('/reset-link', handleResetLink);
@@ -13,11 +22,18 @@ router.post('/reset-link', handleResetLink);
 router.get('/reset-password', serveResetPassword);
 router.post('/reset-password', handleResetPassword);
 
-router.get('/join', serveJoin);
-router.post('/join', handleJoin);
+router.get('/join', checkJoin, serveJoin);
+router.post('/join', checkJoin, handleJoin);
 
 router.get('/profile', tools.requireLogin, serveProfile);
 router.post('/profile', tools.requireLogin, handleProfile);
+
+router.get('/profile/:user', tools.requireLogin, tools.requireAdmin, checkUser, serveProfile);
+router.post('/profile/:user', tools.requireLogin, tools.requireAdmin, checkUser, handleProfile);
+
+router.get('/delete/:user', tools.requireLogin, tools.requireAdmin, checkUser, serveDeleteProfile);
+
+router.get('/users', tools.requireLogin, tools.requireAdmin, serveUsers);
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user) => {
@@ -98,17 +114,76 @@ function serveJoin(req, res) {
         name: req.query.name || '',
         username: req.query.username || '',
         agreetos: !!(req.query.agreetos || ''),
+        ticket: req.query.ticket || false,
         validation: {}
     });
 }
 
-function serveProfile(req, res) {
-    res.render('index', {
-        pageTitle: 'Konto andmed',
-        page: '/account/profile',
-        name: req.query.name || req.user.name || '',
-        username: req.user.username || '',
-        validation: {}
+function checkJoin(req, res, next) {
+    if (req.query.ticket === 'admin') {
+        if (res.locals.adminUser) {
+            req.flash('info', 'Admin konto on juba loodud');
+            return res.redirect('/');
+        }
+        if (req.user) {
+            return db.database.collection('user').findOneAndUpdate({ username: req.user.username }, {
+                $set: {
+                    role: 'admin'
+                }
+            }, (err, r) => {
+                if (err || !r || !r.value) {
+                    req.flash('danger', 'Andmebaasi viga');
+                    return res.redirect('/');
+                }
+                req.flash('info', 'Oled nüüd admin kasutaja');
+                return res.redirect('/');
+            });
+        }
+        req.ticket = { role: 'admin' };
+        return next();
+    } else if (req.query.ticket) {
+        let ticket = (req.query.ticket || '').toString().trim();
+        if (!/^[a-f0-9]{24}$/.test(ticket)) {
+            req.flash('danger', 'Vigane konto loomise URL');
+            return res.redirect('/');
+        }
+        return db.database.collection('tickets').findOne({ _id: new ObjectID(ticket) }, (err, data) => {
+            if (err) {
+                req.flash('danger', 'Andmebaasi viga');
+                return res.redirect('/');
+            }
+            if (!data) {
+                req.flash('danger', 'Aegunud või vigane konto loomise URL');
+                return res.redirect('/');
+            }
+            req.ticket = data;
+            return next();
+        });
+    } else {
+        req.flash('info', 'Toiming ei ole lubatud');
+        return res.redirect('/');
+    }
+}
+
+function serveProfile(req, res, next) {
+    let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
+    db.database.collection('user').findOne({ _id: userId }, (err, userData) => {
+        if (err) {
+            return next(err);
+        }
+        if (!userData) {
+            return next(new Error('Kasutaja andmeid ei leitud'));
+        }
+
+        res.render('index', {
+            pageTitle: 'Konto andmed',
+            page: '/account/profile',
+            userId: req.params.user,
+            role: userData.role || '',
+            name: req.query.name || userData.name || '',
+            username: userData.username || '',
+            validation: {}
+        });
     });
 }
 
@@ -213,6 +288,7 @@ function handleJoin(req, res) {
             name: req.body.name || '',
             username: req.body.username || '',
             agreetos: !!(req.body.agreetos || ''),
+            ticket: req.query.ticket || false,
             validation: validationErrors
         });
         return;
@@ -223,7 +299,8 @@ function handleJoin(req, res) {
         req.body.password,
         {
             name: req.body.name,
-            agreetos: !!(req.body.agreetos || '')
+            agreetos: !!(req.body.agreetos || ''),
+            role: req.ticket && req.ticket.role
         },
         (err, user, options) => {
             if (err) {
@@ -234,6 +311,7 @@ function handleJoin(req, res) {
                     name: req.body.name || '',
                     username: req.body.username || '',
                     agreetos: !!(req.body.agreetos || ''),
+                    ticket: req.query.ticket || false,
                     validation: validationErrors
                 });
                 return;
@@ -246,9 +324,14 @@ function handleJoin(req, res) {
                     name: req.body.name || '',
                     username: req.body.username || '',
                     agreetos: !!(req.body.agreetos || ''),
+                    ticket: req.query.ticket || false,
                     validation: validationErrors
                 });
                 return;
+            }
+
+            if (req.ticket && req.ticket._id) {
+                db.database.collection('tickets').deleteOne({ _id: req.ticket._id }, () => false);
             }
 
             req.login(user, err => {
@@ -263,51 +346,72 @@ function handleJoin(req, res) {
     );
 }
 
-function handleProfile(req, res) {
-    let validationErrors = {},
-        error = false;
+function handleProfile(req, res, next) {
+    let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
+    let role = (req.body.role || '').toString().toLowerCase().trim();
 
-    req.body.name = (req.body.name || '').toString().trim();
-
-    if (!req.body.name) {
-        error = true;
-        validationErrors.name = 'Nime täitmine on kohustuslik';
+    if (!req.params.user || !['admin', 'user', 'client'].includes(role)) {
+        role = false;
     }
 
-    if (req.body.password && !req.body.password2) {
-        error = true;
-        validationErrors.password2 = 'Parooli korudse täitmine on parooli vahetamisel kohustuslik';
-    }
+    db.database.collection('user').findOne({ _id: userId }, (err, userData) => {
+        if (err) {
+            return next(err);
+        }
+        if (!userData) {
+            return next(new Error('Kasutaja andmeid ei leitud'));
+        }
 
-    if (req.body.password && req.body.password2 && req.body.password !== req.body.password2) {
-        error = true;
-        validationErrors.password2 = 'Paroolid ei kattu';
-    }
+        let validationErrors = {},
+            error = false;
 
-    if (error) {
-        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
-        res.render('index', {
-            pageTitle: 'Konto andmed',
-            page: '/account/profile',
-            name: req.body.name || '',
-            username: req.user.username || '',
-            validation: validationErrors
-        });
-        return;
-    }
+        req.body.name = (req.body.name || '').toString().trim();
 
-    auth.updateUser(
-        req.user.username,
-        req.body.password || undefined,
-        {
+        if (!req.body.name) {
+            error = true;
+            validationErrors.name = 'Nime täitmine on kohustuslik';
+        }
+
+        if (req.body.password && !req.body.password2) {
+            error = true;
+            validationErrors.password2 = 'Parooli korduse täitmine on parooli vahetamisel kohustuslik';
+        }
+
+        if (req.body.password && req.body.password2 && req.body.password !== req.body.password2) {
+            error = true;
+            validationErrors.password2 = 'Paroolid ei kattu';
+        }
+
+        if (error) {
+            req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+            res.render('index', {
+                pageTitle: 'Konto andmed',
+                page: '/account/profile',
+                userId: req.params.user,
+                role: req.body.role || '',
+                name: req.body.name || '',
+                username: req.user.username || '',
+                validation: validationErrors
+            });
+            return;
+        }
+
+        let options = {
             name: req.body.name
-        },
-        (err, user, options) => {
+        };
+
+        if (role) {
+            options.role = role;
+        }
+
+        auth.updateUser(userData.username, req.body.password || undefined, options, (err, user, options) => {
             if (err) {
                 req.flash('error', 'Andmebaasi viga');
                 res.render('index', {
                     pageTitle: 'Konto andmed',
                     page: '/account/profile',
+                    userId: req.params.user,
+                    role: req.body.role || '',
                     name: req.body.name || '',
                     username: req.user.username || '',
                     validation: validationErrors
@@ -319,6 +423,8 @@ function handleProfile(req, res) {
                 res.render('index', {
                     pageTitle: 'Konto andmed',
                     page: '/account/profile',
+                    userId: req.params.user,
+                    role: req.body.role || '',
                     name: req.body.name || '',
                     username: req.user.username || '',
                     validation: validationErrors
@@ -327,9 +433,76 @@ function handleProfile(req, res) {
             }
 
             req.flash('success', 'Profiili andmed on uuendatud');
-            return res.redirect('/account/profile');
+            return res.redirect('/account/profile' + (req.params.user ? '/' + req.params.user : ''));
+        });
+    });
+}
+
+function serveUsers(req, res, next) {
+    db.database.collection('user').find().project({ name: true, username: true, role: true }).sort({ username: 1 }).toArray((err, list) => {
+        if (err) {
+            return next(err);
+        }
+        res.render('index', {
+            pageTitle: 'Kasutajad',
+            page: '/account/users',
+            list: list.map(user => {
+                user.roleStr = roles[user.role];
+                return user;
+            })
+        });
+    });
+}
+
+function serveDeleteProfile(req, res) {
+    let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : false;
+
+    if (!/^[a-fA-F0-9]{24}$/.test(userId)) {
+        req.flash('error', 'Vigane kasutaja identifikaator');
+        res.redirect('/');
+        return;
+    }
+
+    db.findOne(
+        'user',
+        {
+            _id: new ObjectID(userId)
+        },
+        (err, user) => {
+            if (err) {
+                req.flash('error', err.message || err || 'Andmebaasi viga');
+                res.redirect('/');
+                return;
+            }
+            if (!user) {
+                req.flash('error', 'Sellise identifikaatoriga kasutajat ei leitud');
+                res.redirect('/');
+                return;
+            }
+
+            db.remove(
+                'user',
+                {
+                    _id: new ObjectID(userId)
+                },
+                () => {
+                    req.flash('success', util.format('Kasutaja "%s" on kustutatud', user.username));
+                    res.redirect('/account/users');
+                    return;
+                }
+            );
         }
     );
+}
+
+function checkUser(req, res, next) {
+    let userId = (req.params.user || '').toString().trim().toLowerCase();
+
+    if (userId === req.user._id.toString()) {
+        return res.redirect('/account/profile');
+    }
+
+    next();
 }
 
 module.exports = router;
