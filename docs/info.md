@@ -4,7 +4,7 @@
 
 Siin peaks olema info pangalinkide kohta.
 
-Salajase võtme koos sertifikaadipäringuga saad genereerida [siit](/keys).
+Salajase võtme koos sertifikaadipäringuga saad genereerida [siit](/tools/keys).
 
 <h3>Spetsifikatsioonid</h3>
 

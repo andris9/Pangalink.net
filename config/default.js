@@ -90,6 +90,12 @@ module.exports = {
             {
                 collection: 'user',
                 data: {
+                    role: 1
+                }
+            },
+            {
+                collection: 'user',
+                data: {
                     token: 1
                 }
             },

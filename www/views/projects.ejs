@@ -1,7 +1,7 @@
 
 <div class="page-header">
     <div class="pull-right">
-        <a class="btn btn-info" href="/add-project"><span class="glyphicon glyphicon-plus-sign"></span> Lisa uus makselahendus</a>
+        <a class="btn btn-info" href="/projects/add"><span class="glyphicon glyphicon-plus-sign"></span> Lisa uus makselahendus</a>
     </div>
     <h1>Minu makselahendused</h1>
 </div>
@@ -33,7 +33,7 @@
         <% if(!projects || !projects.length){%>
             <tr>
                 <td colspan="6">
-                    Ühtegi makselahendust pole veel loodud, <a href="/add-project">tee üks siin</a>.
+                    Ühtegi makselahendust pole veel loodud, <a href="/projects/add">tee üks siin</a>.
                 </td>
             </tr>
         <% } %>
@@ -56,7 +56,7 @@
                         <%= project.formattedDate || "-- pole veel tehtud --" %>
                     </td>
                     <td>
-                        <a href="/edit-project/<%= project._id %>">Muuda</a>
+                        <a href="/projects/edit/<%= project._id %>">Muuda</a>
                     </td>
                 </tr>
 

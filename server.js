@@ -20,6 +20,9 @@ const db = require('./lib/db');
 const st = require('st');
 const log = require('npmlog');
 const packageInfo = require('./package.json');
+const moment = require('moment');
+
+moment.locale('et');
 
 const csrf = require('csurf')({
     cookie: true
@@ -156,6 +159,16 @@ app.use(
 app.set('view engine', 'ejs');
 
 app.use(csrf);
+
+app.use((req, res, next) => {
+    db.database.collection('user').findOne({ role: 'admin' }, { fields: { _id: true, username: true, role: true } }, (err, admin) => {
+        if (err) {
+            return next(err);
+        }
+        res.locals.adminUser = admin;
+        return next();
+    });
+});
 
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();

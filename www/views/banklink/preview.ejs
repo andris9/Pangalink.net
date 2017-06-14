@@ -37,7 +37,7 @@
         <legend>Autentimisandmed</legend>
     <% } %>
     -->
-    <form method="post" action="/final">
+    <form method="post" action="/banklink/final">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="payment" value="<%= payment._id %>"/>
 
@@ -235,12 +235,19 @@
 
         <% if(!payment.showAuthForm) {%>
 
+<p>
+
+
             <button type="submit" data-button="accept" name="pay" value="pay" class="btn btn-success">Soorita makse</button>
             <button type="submit" data-button="cancel" name="cancel" value="cancel" class="btn btn-danger">Katkesta makse</button>
 
             <% if(bank.rejectAddress){%>
                 <button type="submit" data-button="reject" name="reject" value="reject" class="btn btn-info">Tühista tehnilistel põhjustel</button>
             <% } %>
+</p>
+            <p>
+                <small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Klikkides nupul "Soorita makse" ei tehta reaalset makset, tegu on testkeskkonnaga maksevoo katsetamiseks</small>
+            </p>
 
         <% } %>
 

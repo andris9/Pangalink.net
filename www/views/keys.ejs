@@ -1,4 +1,4 @@
-<form action="/keys" method="post" class="form-horizontal">
+<form action="/tools/keys" method="post" class="form-horizontal">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="page-header">
@@ -10,9 +10,8 @@
     <pre>openssl genrsa -rand /var/log/mail:/var/log/messages -out private_key.pem 1024
 openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
-
-            <div class="alert alert-warning">
-            Kui on võimalik nende käskude abil ise võtmefailid genereerida, siis peaksidki seda tegema - siinset vormi tasub kasutada vaid viimase häda sunnil. <a href="/" class="alert-link"><%= hostname %></a> neid andmeid ei logi ega salvesta, kuid alati on mõistlikum, et sensitiivsete andmetega (milleks on salajase võtme sisu) puutuks kokku võimalikult vähe osapooli.
+            <div class="alert alert-info">
+            Kui on võimalik nende käskude abil ise võtmefailid genereerida, siis peaksidki seda tegema - siinset vormi tasub kasutada vaid viimase häda sunnil. <a href="/" class="alert-link"><%= title %></a> neid andmeid ei logi ega salvesta, kuid alati on mõistlikum, et sensitiivsete andmetega (milleks on salajase võtme sisu) puutuks kokku võimalikult vähe osapooli.
         </div>
 
         <h4>Miks ei tohi salajane võti lekkida?</h4>
@@ -26,7 +25,7 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="keyBitsize">Võtme pikkus</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <select class="form-control" name="keyBitsize" id="keyBitsize" required>
                 <option value="1024">1024 bitti</option>
                 <option value="2048" selected>2048 bitti</option>
@@ -38,7 +37,7 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="hash">Räsi algoritm</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <select class="form-control" name="hash" id="hash" required>
                 <option value="sha1">SHA-1 (vaikimisi)</option>
                 <option value="md5">MD5 (ära seda vali, kui ei ole 100% kindel)</option>
@@ -50,7 +49,7 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="country">Riik</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input type="text" class="form-control" name="country" id="country" value="EE"  maxlength="2" required/>
             <span class="help-block">Kahekohaline riigi kood</span>
         </div>
@@ -58,28 +57,28 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="state">Maakond</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input type="text" class="form-control" name="state" id="state" value="Harju maakond" required/>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="locality">Asula</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input type="text" class="form-control" name="locality" id="locality" value="Tallinn" required/>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="organization">Organisatsioon</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input type="text" class="form-control" name="organization" id="organization" value="Minu ettevõte OÜ" required/>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="organizationUnit">Allasutus (valikuline)</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input type="text" class="form-control" name="organizationUnit" id="organizationUnit" value="banklink"/>
             <span class="help-block">Reeglina soovivad pangad, et selle välja väärtus oleks <code>banklink</code></span>
         </div>
@@ -87,7 +86,7 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="commonName">Domeeninimi</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input class="form-control" type="text" name="commonName" id="commonName" value="example.com" required/>
             <span class="help-block">Sisesta oma veebipoe domeeninimi, millelt eeldatavasti hakatakse makseid tegema</span>
         </div>
@@ -95,7 +94,7 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <label class="col-lg-2 control-label" for="emailAddress">E-posti aadress</label>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <input class="form-control" type="text" name="emailAddress" id="emailAddress" value="info@example.com" required/>
             <span class="help-block">Sisesta sertifikaadi kontaktaadress</span>
         </div>
@@ -103,7 +102,7 @@ openssl req -sha1 -new -key private_key.pem -out csr.pem</pre>
 
     <div class="form-group">
         <div class="col-lg-2"></div>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Genereeri salajane võti ja CSR fail</button>
             <span class="help-block">Genereeritavas ZIP failis on kaks faili - <em>private_key.pem</em>, mis on salajane allkirjastamise võti ning <em>csr.pem</em>, mis on sertifikaadipäring pangale edastamiseks.</span>
         </div>

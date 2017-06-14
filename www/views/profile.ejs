@@ -2,7 +2,7 @@
     <h1>Muuda oma profiili</h1>
 </div>
 
-<form action="/profile" method="post" class="form-horizontal">
+<form action="/account/profile" method="post" class="form-horizontal">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="form-group <% if(validation.name){%>has-error<%}%>">

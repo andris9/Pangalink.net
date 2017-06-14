@@ -62,7 +62,7 @@
                             <span class="label label-<%= labels[payment.state].type %>"><%= labels[payment.state].name %></span>
                         <%}%>
                         <% if(payment.state == "IN PROCESS"){%>
-                            (<a href="/preview/<%= payment._id %>">Jätka</a>)
+                            (<a href="/banklink/preview/<%= payment._id %>">Jätka</a>)
                         <%}%>
                     </td>
                     <td>

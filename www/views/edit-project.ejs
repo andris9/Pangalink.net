@@ -1,4 +1,4 @@
-<form action="/edit-project" method="post" class="form-horizontal">
+<form action="/projects/edit" method="post" class="form-horizontal">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="page-header">
@@ -38,7 +38,7 @@
         <label class="col-lg-2"></label>
         <div class="col-lg-8">
             <div class="pull-right">
-                <a class="btn btn-danger" href="/delete-project/<%= id %>" onclick="return confirm('Kas oled ikka kindel, seda otsust ei ole võimalik hiljem enam tagasi võtta?')"><span class="glyphicon glyphicon-minus-sign"></span> Kustuta see makselahendus</a>
+                <a class="btn btn-danger" href="/projects/delete/<%= id %>" onclick="return confirm('Kas oled ikka kindel, seda otsust ei ole võimalik hiljem enam tagasi võtta?')"><span class="glyphicon glyphicon-minus-sign"></span> Kustuta see makselahendus</a>
             </div>
             <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> Muuda makselahenduse andmeid</button>
         </div>

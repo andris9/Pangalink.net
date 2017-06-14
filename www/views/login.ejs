@@ -2,7 +2,7 @@
     <h1>Logi sisse</h1>
 </div>
 
-<form action="/login" method="post" class="form-horizontal">
+<form action="/account/login" method="post" class="form-horizontal">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <div class="form-group">
@@ -16,7 +16,7 @@
         <label class="col-lg-2 control-label" for="password">Parool</label>
         <div class="col-lg-6">
             <input class="form-control" type="password" name="password" id="password" required/>
-            <span class="help-block">Oled unustanud oma parooli? Telli endale uus parool <a href="/reset-link">siit</a></span>
+            <span class="help-block">Oled unustanud oma parooli? Telli endale uus parool <a href="/account/reset-link">siit</a></span>
         </div>
     </div>
 
