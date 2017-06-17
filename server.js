@@ -21,6 +21,7 @@ const st = require('st');
 const log = require('npmlog');
 const packageInfo = require('./package.json');
 const moment = require('moment');
+const setupIndexes = require('./indexes');
 
 moment.locale('et');
 
@@ -211,9 +212,24 @@ db.init(err => {
         log.err('DB', err);
         process.exit(1);
     } else {
+        let indexpos = 0;
+        let ensureIndexes = err => {
+            if (err) {
+                log.silly('mongo', 'Failed creating index', err.message);
+            }
+            if (indexpos >= setupIndexes.length) {
+                log.info('mongo', 'Setup indexes for %s collections', setupIndexes.length);
+
+                server.listen(app.get('port'), () => {
+                    log.info('SERVER', 'Web server running on port ' + app.get('port'));
+                });
+                return;
+            }
+            let index = setupIndexes[indexpos++];
+            log.silly('mongo', 'Creating index %s %s', indexpos, JSON.stringify(index.indexes));
+            db.database.collection(index.collection).createIndexes(index.indexes, ensureIndexes);
+        };
         log.info('DB', 'Database opened');
-        server.listen(app.get('port'), () => {
-            log.info('SERVER', 'Web server running on port ' + app.get('port'));
-        });
+        ensureIndexes();
     }
 });
