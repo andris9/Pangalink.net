@@ -209,7 +209,7 @@ function handleResetLink(req, res) {
         return;
     }
 
-    auth.initializeResetPassword(req.body.username, err => {
+    auth.initializeResetPassword(req, req.body.username, err => {
         if (err) {
             req.flash('error', 'Andmebaasi viga');
             res.render('index', {
@@ -228,7 +228,7 @@ function handleResetLink(req, res) {
 }
 
 function handleResetPassword(req, res) {
-    auth.resetPassword(req.body.username, req.body.resetToken, (err, status, options) => {
+    auth.resetPassword(req, req.body.username, req.body.resetToken, (err, status, options) => {
         if (err) {
             req.flash('error', 'Andmebaasi viga');
             return res.redirect('/account/login');
@@ -299,6 +299,7 @@ function handleJoin(req, res) {
     let role = req.ticket && req.ticket.role;
 
     auth.addUser(
+        req,
         req.body.username,
         req.body.password,
         {

@@ -172,8 +172,12 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
-    res.locals.proto = config.proto || 'http';
-    res.locals.hostname = (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, '');
+
+    res.locals.proto = req.siteProto = config.proto || req.protocol || 'http';
+    res.locals.hostname = req.siteHostname = (config.hostname || req.hostname || (req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, '');
+    res.locals.title = req.siteTitle = config.title || packageInfo.name;
+    res.locals.packageTitle = packageInfo.name;
+
     res.locals.messages = {
         success: req.flash('success'),
         error: req.flash('error'),
@@ -181,7 +185,7 @@ app.use((req, res, next) => {
     };
     res.locals.user = req.user;
     res.locals.googleAnalyticsID = config.googleAnalyticsID;
-    res.locals.title = packageInfo.name;
+
     res.locals.version = packageInfo.version;
     next();
 });
