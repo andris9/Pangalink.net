@@ -19,21 +19,22 @@ router.post('/project', serveAPIPostProject);
 router.delete('/project/:project', serveAPIDeleteProject);
 
 function serveAPI(req, res) {
-    let query,
+    let query = {},
         hostname = res.locals.hostname,
         apiHost = config.apiHost || hostname + '/api';
 
     if (req.user) {
-        query = {
-            $or: [
+        if (req.user.role !== 'admin') {
+            query.$or = [
                 {
                     owner: req.user.username
                 },
                 {
                     authorized: req.user.username.toLowerCase().trim()
                 }
-            ]
-        };
+            ];
+        }
+
         db.find(
             'project',
             query,
@@ -236,7 +237,7 @@ function apiActionGet(req, user, projectId, callback) {
                 return callback(new Error('Sellise identifikaatoriga makselahendust ei leitud'));
             }
 
-            if (project.owner !== user.username && project.authorized.indexOf(user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, project)) {
                 return callback(new Error('Sul ei ole õigusi selle makselahenduse kasutamiseks'));
             }
 
@@ -285,16 +286,17 @@ function apiActionList(req, user, start, callback) {
         return callback(new Error('Määramata kasutaja'));
     }
 
-    let query = {
-        $or: [
+    let query = {};
+    if (req.user.role !== 'admin') {
+        query.$or = [
             {
-                owner: user.username
+                owner: req.user.username
             },
             {
-                authorized: user.username.toLowerCase().trim()
+                authorized: req.user.username.toLowerCase().trim()
             }
-        ]
-    };
+        ];
+    }
 
     db.count('project', query, (err, total) => {
         if (err) {
@@ -482,7 +484,7 @@ function apiActionDelete(req, user, projectId, callback) {
                 return callback(new Error('Sellise identifikaatoriga makselahendust ei leitud'));
             }
 
-            if (project.owner !== user.username && project.authorized.indexOf(user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, project)) {
                 return callback(new Error('Sul ei ole õigusi selle makselahenduse kasutamiseks'));
             }
 

@@ -52,7 +52,8 @@ function serveProject(req, res) {
                 res.redirect('/');
                 return;
             }
-            if (record.owner !== req.user.username && record.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+
+            if (!tools.checkAuthorized(req, record)) {
                 req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                 res.redirect('/');
                 return;
@@ -151,7 +152,7 @@ function serveExamplePayment(req, res) {
     let urlPrefix = (config.proto || 'http') + '://' + (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, '');
     let isAuth = req.params.type === 'auth';
 
-    banklink.samplePayment(id, req.user.username, urlPrefix, isAuth, req.query, (err, paymentObj, charset) => {
+    banklink.samplePayment(req, id, req.user.username, urlPrefix, isAuth, req.query, (err, paymentObj, charset) => {
         if (err) {
             req.flash('error', err.message);
             res.redirect('/');
@@ -226,7 +227,7 @@ function serveKey(req, res) {
                 res.redirect('/');
                 return;
             }
-            if (record.owner !== req.user.username && record.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, record)) {
                 req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                 res.redirect('/');
                 return;
@@ -289,7 +290,7 @@ function handleRegenerateProjectCertificate(req, res) {
                 res.redirect('/');
                 return;
             }
-            if (record.owner !== req.user.username && record.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, record)) {
                 req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                 res.redirect('/');
                 return;

@@ -9,10 +9,10 @@
         <label class="col-lg-2 control-label" for="username">E-posti aadress</label>
         <div class="col-lg-8">
             <input class="form-control" type="email" name="username" id="username" value="<%= username %>" placeholder="user@example.com" required/>
-            <span class="help-block">Selle vormi kaudu saad saata kontaktile konto aktiveerimise lingi. Link on kasutatav ühekordselt ning seda ei saa jagada.</span>
+            <span class="help-block">Selle vormi kaudu saad saata kontaktile ühekordse konto aktiveerimise lingi. Link aegub 7 päeva pärast.</span>
         </div>
     </div>
-    
+
     <div class="form-group<% if(validation.role){%> has-error<%}%>">
         <label class="col-lg-2 control-label" for="role">Kasutaja roll</label>
         <div class="col-lg-8">

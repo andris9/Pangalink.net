@@ -63,7 +63,7 @@ function servePayment(req, res) {
                         return;
                     }
 
-                    if (project.owner !== req.user.username && project.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+                    if (!tools.checkAuthorized(req, project)) {
                         req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                         res.redirect('/');
                         return;

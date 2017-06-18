@@ -30,7 +30,7 @@
     "he": "^1.1.1",
     "highlight.js": "^9.12.0",
     "iban": "0.0.8",
-    "joi": "^10.5.2",
+    "joi": "^10.6.0",
     "marked": "^0.3.6",
     "moment": "^2.18.1",
     "mongodb": "^2.2.28",
@@ -43,13 +43,13 @@
     "pem": "^1.9.7",
     "random-string": "^0.2.0",
     "st": "^1.2.0",
-    "zip-stream": "^1.1.1"
+    "zip-stream": "^1.2.0"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-nodemailer": "^1.0.0",
+    "eslint": "^4.0.0",
+    "eslint-config-nodemailer": "^1.2.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-eslint": "^19.0.0"
+    "grunt-eslint": "^20.0.0"
   }
 }

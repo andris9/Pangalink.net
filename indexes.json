@@ -33,9 +33,10 @@
     {
         "collection": "project",
         "indexes": [{
-            "name": "project_owner",
+            "name": "project_owner_by_name",
             "key": {
-                "owner": 1
+                "owner": 1,
+                "name": 1
             },
             "background": true
         }]
@@ -43,9 +44,32 @@
     {
         "collection": "project",
         "indexes": [{
-            "name": "project_viewer",
+            "name": "project_viewer_by_name",
             "key": {
-                "authorized": 1
+                "authorized": 1,
+                "name": 1
+            },
+            "background": true
+        }]
+    },
+    {
+        "collection": "project",
+        "indexes": [{
+            "name": "project_owner_by_created",
+            "key": {
+                "owner": 1,
+                "created": -1
+            },
+            "background": true
+        }]
+    },
+    {
+        "collection": "project",
+        "indexes": [{
+            "name": "project_viewer_by_created",
+            "key": {
+                "authorized": 1,
+                "created": -1
             },
             "background": true
         }]

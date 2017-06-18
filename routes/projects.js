@@ -50,16 +50,17 @@ function serveAddProject(req, res) {
 function serveProjects(req, res) {
     let pageNumber = Number(req.params.pageNumber || req.query.pageNumber) || 1;
 
-    let query = {
-        $or: [
+    let query = {};
+    if (req.user.role !== 'admin') {
+        query.$or = [
             {
                 owner: req.user.username
             },
             {
                 authorized: req.user.username.toLowerCase().trim()
             }
-        ]
-    };
+        ];
+    }
 
     db.count('project', query, (err, total) => {
         if (err) {
@@ -132,7 +133,7 @@ function serveEditProject(req, res) {
                 res.redirect('/');
                 return;
             }
-            if (record.owner !== req.user.username && record.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, record)) {
                 req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                 res.redirect('/');
                 return;
@@ -186,7 +187,7 @@ function serveDeleteProject(req, res) {
                 res.redirect('/');
                 return;
             }
-            if (project.owner !== req.user.username && project.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, project)) {
                 req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                 res.redirect('/');
                 return;
@@ -482,7 +483,7 @@ function handleEditProject(req, res) {
                 res.redirect('/');
                 return;
             }
-            if (record.owner !== req.user.username && record.authorized.indexOf(req.user.username.toLowerCase().trim()) < 0) {
+            if (!tools.checkAuthorized(req, record)) {
                 req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
                 res.redirect('/');
                 return;
