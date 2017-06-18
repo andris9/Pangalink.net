@@ -31,9 +31,7 @@ echo "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu $CODENAME/mongodb-or
 
 curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
-apt-get -q -y install mongodb-org nodejs ssmtp
-
-sed -i -E "s/hostname=.*/hostname=$HOSTNAME/" /etc/ssmtp/ssmtp.conf
+apt-get -q -y install mongodb-org nodejs
 
 apt-get clean
 
@@ -60,6 +58,13 @@ cat >> config/production.json <<EOT
     "group": "pangalink",
     "web": {
         "port": 80
+    },
+    "mail": {
+        "smtp": {
+            "sendmail": false,
+            "host": "localhost",
+            "port": 25
+        }
     }
 }
 EOT
@@ -80,7 +85,85 @@ else
     sed "s~node index.js~$NODE index.js~" setup/service-scripts/upstart/pangalink.conf > /etc/init/pangalink.conf
 fi
 
-# Start the service
+# Fetch ZoneMTA files
+mkdir -p /opt/zone-mta
+cd /opt/zone-mta
+git clone git://github.com/zone-eu/zone-mta.git .
+git checkout v1.0.0-beta.60
+
+if [ ! -f config/production.json ]; then
+# Setup installation configuration
+cat >> config/production.json <<EOT
+{
+    "name": "Pangalink MTA",
+    "user": "pangalink",
+    "group": "pangalink",
+    "queue": {
+        "mongodb": "mongodb://127.0.0.1:27017/zone-mta",
+        "gfs": "mail",
+        "collection": "zone-queue",
+        "disableGC": true
+    },
+    "smtpInterfaces": {
+        "feeder": {
+            "port": 25,
+            "processes": 1,
+            "authentication": false,
+            "host": "127.0.0.1"
+        },
+        "bounces": {
+            "disabled": true
+        }
+    },
+    "api": {
+        "maildrop": false
+    },
+    "log": {
+        "level": "error",
+        "syslog": false
+    },
+    "plugins": {
+        "core/email-bounce": false,
+        "core/http-bounce": false,
+        "core/default-headers": {
+            "enabled": ["receiver", "main", "sender"],
+            "futureDate": false,
+            "xOriginatingIP": false
+        },
+        "core/rcpt-mx": false
+    },
+    "pools": {
+        "default": [{
+            "address": "0.0.0.0",
+            "name": "$HOSTNAME"
+        }]
+    },
+    "zones": {
+        "default": {
+            "processes": 1,
+            "connections": 5,
+            "throttling": false,
+            "pool": "default"
+        }
+    }
+}
+EOT
+fi
+
+# Install required node packages
+npm install --no-progress --no-optional --production
+
+if [ -d "/run/systemd/system" ]; then
+    # Set up systemd service script
+    cp setup/zone-mta.service /etc/systemd/system/
+    systemctl enable zone-mta.service
+else
+    # Set up upstart service script
+    cp setup/zone-mta.conf /etc/init/
+fi
+
+# Start the services
 service pangalink start
+service zone-mta start
 
 echo "Success! Open http://$HOSTNAME/ and create an admin account";
