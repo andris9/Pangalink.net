@@ -52,6 +52,7 @@ useradd pangalink || true
 # Install required node packages
 cd /opt/pangalink
 
+if [ ! -f config/production.json ]; then
 # Setup installation configuration
 cat >> config/production.json <<EOT
 {
@@ -62,6 +63,7 @@ cat >> config/production.json <<EOT
     }
 }
 EOT
+fi
 
 npm install --no-progress --production
 chown -R pangalink:pangalink .
