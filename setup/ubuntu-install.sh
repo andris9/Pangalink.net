@@ -16,13 +16,6 @@ apt-get update
 apt-get upgrade -y
 apt-get install -y curl lsb-release ufw build-essential python software-properties-common dnsutils
 
-HTTP_RESPONSE=$(curl --write-out %{http_code} --silent --output /dev/null 127.0.0.1)
-
-if [ HTTP_RESPONSE -eq "000" ] then
-    echo "HTTP server already installed"
-    exit 1
-fi
-
 CODENAME=`lsb_release -c -s`
 
 PUBLIC_IP=`curl -s https://api.ipify.org`
@@ -50,7 +43,7 @@ ufw allow 80/tcp
 ufw --force enable
 
 # Fetch Mailtrain files
-mkdir -p /opt/pangalink
+mkdir -p /opt/pangalink/config
 cp -r . /opt/pangalink
 
 # Add new user for the mailtrain daemon to run as
