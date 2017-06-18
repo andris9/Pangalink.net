@@ -17,7 +17,7 @@ router.use(tools.requireLogin);
 
 router.get('/:project/example/render/:type.php', serveRenderedExamplePayment);
 router.get('/:project/example/:type.php', serveExamplePayment);
-router.get('/:project/regenerate', handleRegenerateProjectCertificate);
+router.get('/:project/regenerate', tools.requireUser, handleRegenerateProjectCertificate);
 router.get('/:project/:key([^.]+).pem', serveKey);
 
 router.get('/:project/page/:pageNumber', serveProject);

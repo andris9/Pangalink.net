@@ -21,6 +21,9 @@
                 Roll
             </th>
             <th>
+                Kirjeldus
+            </th>
+            <th>
                 &nbsp;
             </th>
         </tr>
@@ -28,7 +31,7 @@
     <tbody>
         <% if(!list || !list.length){%>
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     Ühtegi kasutajat pole veel lisatud</a>.
                 </td>
             </tr>
@@ -47,6 +50,9 @@
                     </td>
                     <td>
                         <%= user.roleStr %>
+                    </td>
+                    <td>
+                        <%= user.description %>
                     </td>
                     <td>
                         <a href="/account/profile/<%= user._id %>">Muuda</a>

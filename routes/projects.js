@@ -16,13 +16,13 @@ router.use(tools.requireLogin);
 
 router.get('/', serveProjects);
 
-router.get('/add', serveAddProject);
-router.post('/add', handleAddProject);
+router.get('/add', tools.requireUser, serveAddProject);
+router.post('/add', tools.requireUser, handleAddProject);
 
-router.get('/edit/:project', serveEditProject);
-router.post('/edit', handleEditProject);
+router.get('/edit/:project', tools.requireUser, serveEditProject);
+router.post('/edit', tools.requireUser, handleEditProject);
 
-router.get('/delete/:project', serveDeleteProject);
+router.get('/delete/:project', tools.requireUser, serveDeleteProject);
 
 router.get('/:pageNumber', serveProjects);
 

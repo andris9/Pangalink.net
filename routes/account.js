@@ -36,6 +36,7 @@ router.get('/delete/:user', tools.requireLogin, tools.requireAdmin, checkUser, s
 router.get('/users', tools.requireLogin, tools.requireAdmin, serveUsers);
 
 router.get('/users/add', tools.requireLogin, tools.requireAdmin, serveUsersAdd);
+router.post('/users/add', tools.requireLogin, tools.requireAdmin, handleUsersAdd);
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user) => {
@@ -297,6 +298,7 @@ function handleJoin(req, res) {
     }
 
     let role = req.ticket && req.ticket.role;
+    let description = (req.ticket && req.ticket.decription) || '';
 
     auth.addUser(
         req,
@@ -305,7 +307,8 @@ function handleJoin(req, res) {
         {
             name: req.body.name,
             agreetos: !!(req.body.agreetos || ''),
-            role
+            role,
+            description
         },
         (err, user, options) => {
             if (err) {
@@ -469,7 +472,8 @@ function serveUsersAdd(req, res) {
     res.render('index', {
         pageTitle: 'Lisa uus kasutaja',
         page: '/account/users/add',
-        username: req.query.username || '',
+        address: req.query.address || '',
+        description: req.query.description || '',
         validation: {},
         role: 'user'
     });
@@ -524,6 +528,92 @@ function checkUser(req, res, next) {
     }
 
     next();
+}
+
+function handleUsersAdd(req, res) {
+    let validationErrors = {},
+        error = false;
+
+    req.body.name = (req.body.name || '').toString().trim();
+
+    if (!req.body.address) {
+        error = true;
+        validationErrors.name = 'E-posti aadressi täitmine on kohustuslik';
+    }
+
+    if (!req.body.role || !['admin', 'user', 'client'].includes(req.body.role)) {
+        error = true;
+        validationErrors.role = 'Kasutaja rolli valimine on kohustuslik';
+    }
+
+    if (error) {
+        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+        res.render('index', {
+            pageTitle: 'Lisa uus kasutaja',
+            page: '/account/users/add',
+            address: req.body.address || '',
+            role: req.body.role || '',
+            description: req.body.description || '',
+            validation: validationErrors
+        });
+        return;
+    }
+
+    auth.addUser(
+        req,
+        req.body.username,
+        req.body.password,
+        {
+            name: req.body.name,
+            agreetos: !!(req.body.agreetos || ''),
+            role
+        },
+        (err, user, options) => {
+            if (err) {
+                req.flash('error', 'Andmebaasi viga');
+                res.render('index', {
+                    pageTitle: 'Lisa uus kasutaja',
+                    page: '/account/users/add',
+                    address: req.body.address || '',
+                    role: req.body.role || '',
+                    description: req.body.description || '',
+                    validation: validationErrors
+                });
+                return;
+            }
+            if (!user) {
+                validationErrors.username = options.message || 'Ei õnnestunud kasutajat luua';
+                res.render('index', {
+                    pageTitle: 'Lisa uus kasutaja',
+                    page: '/account/users/add',
+                    address: req.body.address || '',
+                    role: req.body.role || '',
+                    description: req.body.description || '',
+                    validation: validationErrors
+                });
+                return;
+            }
+
+            if (req.ticket && req.ticket._id) {
+                db.database.collection('tickets').deleteOne({ _id: req.ticket._id }, () => false);
+            }
+
+            if (role === 'admin') {
+                req.flash('info', 'Oled nüüd admin kasutaja!');
+            }
+
+            req.login(user, err => {
+                if (err) {
+                    req.flash('info', 'Kasutaja on loodud, kuid automaatne sisselogimine ebaõnnestus');
+                    return res.redirect('/');
+                }
+
+                req.flash('success', 'Kasutaja on loodud ning oled nüüd sisse logitud');
+
+                return res.redirect('/projects/add');
+            });
+        }
+    );
 }
 
 module.exports = router;

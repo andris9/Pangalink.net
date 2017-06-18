@@ -10,13 +10,20 @@ const randomString = require('random-string');
 const express = require('express');
 const router = new express.Router();
 
+let requireUser = (req, res, next) => {
+    if (!req.user || req.user.role === 'client') {
+        return apiResponse(req, res, new Error('Not allowed'));
+    }
+    next();
+};
+
 router.get('/', serveAPI);
 
 router.get('/banks', serveAPIListBanks);
 router.get('/project', serveAPIListProject);
 router.get('/project/:project', serveAPIGetProject);
-router.post('/project', serveAPIPostProject);
-router.delete('/project/:project', serveAPIDeleteProject);
+router.post('/project', requireUser, serveAPIPostProject);
+router.delete('/project/:project', requireUser, serveAPIDeleteProject);
 
 function serveAPI(req, res) {
     let query = {},

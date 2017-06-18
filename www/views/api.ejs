@@ -84,16 +84,16 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
     "success": true,
     "data": [
         {
-            "type": "aktiasppop",
-            "name": "Aktia/Sp/Pop Emulaator (beta)"
+            "type": "swedbank",
+            "name": "Swedbank Emulaator"
         },
         {
-            "type": "alandsbanken",
-            "name": "Ålandsbanken Emulaator (beta)"
+            "type": "krediidipank",
+            "name": "Krediidipank Emulaator"
         },
         {
             "type": "ec",
-            "name": "Pankade Kaardikeskuse Emulaator"
+            "name": "Nets Emulaator"
         },
         ...
     ]
@@ -170,7 +170,7 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
             {
                 "id": "51cc029c69d3730000000003",
                 "name": "Testkonto 1",
-                "type": "ipizza"
+                "type": "seb"
             },
             {
                 "id": "51cc026c69d3730000000002",
@@ -220,8 +220,8 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
     "data": {
         "id": "516e93fd9f89270f97000001",
         "client_id": "uid402268",
-        "payment_url": "<%= proto %>://<%= hostname %>/banklink/ipizza",
-        "type": "ipizza",
+        "payment_url": "<%= proto %>://<%= hostname %>/banklink/seb",
+        "type": "seb",
         "name": "Testkonto",
         "private_key": "-----BEGIN RSA PRIVATE KEY----- ...",
         "bank_certificate": "-----BEGIN CERTIFICATE----- ..."
@@ -230,7 +230,7 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
 
 <h3>Uue makselahenduse loomine</h3>
 
-<p>Selle meetodiga saad luua uusi makselahendusi. Edastades makselahenduse andmed, saad vastu loodud makselahenduse kasutajatunnuse ja võtmed.</p>
+<p>Selle meetodiga saad luua uusi makselahendusi. Edastades makselahenduse andmed, saad vastu loodud makselahenduse kasutajatunnuse ja võtmed. Makselahenduse loomiseks on vaja kasutaja privileege.</p>
 
 <h4>POST /project</h4>
 
@@ -240,8 +240,8 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
     <li><code>type</code> – panga tüüp</li>
     <li><code>name</code> – makselahenduse nimi</li>
     <li><code>description</code> – makselahenduse kirjeldus (pole kohustuslik)</li>
-    <li><code>account_owner</code> – konto omaniku nimi. Vajalik ipizza tüüpi pankade puhul teenuse 1002 kasutamiseks (pole kohustuslik, vaikimisi kasutatakse makselahenduse nime)</li>
-    <li><code>account_nr</code> – konto number. Vajalik ipizza tüüpi pankade puhul teenuse 1002 kasutamiseks (pole kohustuslik, vaikimisi genereeritakse suvaline number)</li>
+    <li><code>account_owner</code> – konto omaniku nimi. Vajalik teenuse 1012 kasutamiseks (pole kohustuslik, vaikimisi kasutatakse makselahenduse nime)</li>
+    <li><code>account_nr</code> – konto number. Vajalik teenuse 1012 kasutamiseks (pole kohustuslik, vaikimisi genereeritakse suvaline number)</li>
     <li><code>key_size</code> – avaliku võtme süsteemi kasutavate pankade puhul privaatvõtme suurus (pole kohustuslik, vaikimisi kasutatakse 1024)</li>
     <li><code>return_url</code> – tagasisuunamise aadress pärast makse sooritamist. Kohustuslik vaid Pankade Kaardikeskuse valiku korral, muudel juhtudel ei kasutata.</li>
     <li><code>algo</code> – allkirjastamise algoritm (pole kohustuslik). Vajalik vaid osade pankade puhul (Nordea, Soome pangad). Kui on määramata, kasutatakse väärtust "md5". Võimalikud väärtused "md5", "sha1" ja "sha256".</li>
@@ -274,7 +274,7 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
 
 <pre>curl -XPOST "<%= proto %>://<%= apiHost %>/project?access_token=<%= user && user.token || 12345%>" \
     --data '{
-        "type": "ipizza",
+        "type": "seb",
         "name": "Testkonto"
     }'</pre>
 
@@ -285,8 +285,8 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
     "data": {
         "id": "51cc0559fa66e5522c000003",
         "client_id": "uid402268",
-        "payment_url": "<%= proto %>://<%= hostname %>/banklink/ipizza",
-        "type": "ipizza",
+        "payment_url": "<%= proto %>://<%= hostname %>/banklink/seb",
+        "type": "seb",
         "name": "Testkonto",
         "private_key": "-----BEGIN RSA PRIVATE KEY----- ...",
         "bank_certificate": "-----BEGIN CERTIFICATE----- ..."
@@ -295,7 +295,7 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
 
 <h3>Makselahenduse kustutamine</h3>
 
-<p>Selle meetodiga saab kustutada makselahenduse ja sellega seotud andmed.</p>
+<p>Selle meetodiga saab kustutada makselahenduse ja sellega seotud andmed. Makselahenduse kustutamiseks on vaja kasutaja privileege.</p>
 
 <h4>DELETE /project/:id</h4>
 
@@ -311,13 +311,3 @@ Tagastusväärtuseks on massiiv emulaatorite andmetega.
     "success": true,
     "data": true
 }</pre>
-
-<h3>API muudatuste ajalugu</h3>
-
-<ul>
-    <li><strong>04.12.2014</strong> – Juba tükk aega ei ole Mashape API proksi kasutamine enam vajalik</li>
-    <li><strong>16.08.2013</strong> – API päringud peavad käima läbi <a href="https://www.mashape.com/">Mashape</a> API proksi</li>
-    <li><strong>01.07.2013</strong> – lisatud lisaparameetrite võimalus (PANGALINK_NAME, PANGALINK_ACCOUNT, PANGALINK_AUTOPAY)</li>
-    <li><strong>29.06.2013</strong> – parameeter <code>expiration_time</code> kustutatud makselahenduse andmetest</li>
-    <li><strong>27.06.2013</strong> – lisatud esimene API versioon</li>
-</ul>

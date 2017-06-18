@@ -5,11 +5,25 @@
 <form action="/account/users/add" method="post" class="form-horizontal">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-    <div class="form-group">
-        <label class="col-lg-2 control-label" for="username">E-posti aadress</label>
+    <div class="form-group<% if(validation.address){%> has-error<%}%>">
+        <label class="col-lg-2 control-label" for="address">E-posti aadress</label>
         <div class="col-lg-8">
-            <input class="form-control" type="email" name="username" id="username" value="<%= username %>" placeholder="user@example.com" required/>
+            <input class="form-control" type="email" name="address" id="address" value="<%= address %>" placeholder="user@example.com" required/>
+            <% if(validation.address){%>
+                <span class="help-block"><%= validation.address %></span>
+            <%}%>
             <span class="help-block">Selle vormi kaudu saad saata kontaktile ühekordse konto aktiveerimise lingi. Link aegub 7 päeva pärast.</span>
+        </div>
+    </div>
+
+    <div class="form-group<% if(validation.description){%> has-error<%}%>">
+        <label class="col-lg-2 control-label" for="description">Kirjeldus</label>
+        <div class="col-lg-8">
+            <input class="form-control" type="text" name="description" id="description" value="<%= description %>" placeholder=""/>
+            <% if(validation.description){%>
+                <span class="help-block"><%= validation.description %></span>
+            <%}%>
+            <span class="help-block">Valikuline lisainfo kasutaja kohta, näiteks "Ettevõtte X projektijuht"</span>
         </div>
     </div>
 
@@ -24,7 +38,7 @@
             <% if(validation.role){%>
                 <span class="help-block"><%= validation.role %></span>
             <%}%>
-            <span class="help-block">Kliendikontodel puudub õigus lisada või muuta andmeid. Samuti saavad kliendikontod näha ainult nende makselahenduste andmeid, millele on neile ligipääs antud.</span>
+            <span class="help-block">Kliendikonto kasutajatel puudub õigus lisada või muuta andmeid. Samuti saavad kliendikontod näha ainult nende makselahenduste andmeid, millele on neile ligipääs antud.</span>
         </div>
     </div>
 
