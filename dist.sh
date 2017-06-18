@@ -3,7 +3,9 @@
 rm -rf node_modules
 rm -rf npm-debug.log*
 
+VERSION=`jq -r .version package.json`
+
 npm install --no-optional --production
-tar czf --exclude ".git" --exclude "dist.sh" ../pangalink-`jq -r .version package.json`.tar.gz .
+tar czf --exclude ".git" --exclude "dist.sh" -f ../pangalink-$VERSION.tar.gz .
 
 echo "done"
