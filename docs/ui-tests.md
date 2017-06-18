@@ -2,7 +2,7 @@
   <h1>UI automaattestid</h1>
 </div>
 
-Pangalink.net on automaattestisõbralik, kõik olulisemad väärtused on kirjeldatud `data-*` atribuutidega. UI automaatteste on võimalik läbi viia näiteks [Seleniumi](http://docs.seleniumhq.org/) abil.
+Pangalinker on automaattestisõbralik, kõik olulisemad väärtused on kirjeldatud `data-*` atribuutidega. UI automaatteste on võimalik läbi viia näiteks [Seleniumi](http://docs.seleniumhq.org/) abil.
 
 ### Makse staatus
 

@@ -7,10 +7,6 @@
     "test": "grunt"
   },
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/andris9/pangalink.net.git"
-  },
   "author": "Andris Reinman",
   "license": "UNLICENSED",
   "dependencies": {

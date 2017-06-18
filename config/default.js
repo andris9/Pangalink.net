@@ -27,7 +27,7 @@ module.exports = {
         port: 3480,
 
         // If behind proxy, then the protocol the user sees is not what pangalink.net actually uses.,
-        // Pangalink.net might be using HTTP internally but user should only use HTTPS addresses,
+        // Pangalinker might be using HTTP internally but user should only use HTTPS addresses,
 
         // forceProtocol: 'https:',
         forceProtocol: false,
