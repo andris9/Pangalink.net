@@ -76,14 +76,9 @@ chmod o-rwx config
 
 NODE=`which node`
 
-if [ -d "/run/systemd/system" ]; then
-    # Set up systemd service script
-    sed "s~node index.js~$NODE index.js~" setup/service-scripts/systemd/pangalink.service > /etc/systemd/system/pangalink.service
-    systemctl enable pangalink.service
-else
-    # Set up upstart service script
-    sed "s~node index.js~$NODE index.js~" setup/service-scripts/upstart/pangalink.conf > /etc/init/pangalink.conf
-fi
+# Set up systemd service script
+sed "s~node index.js~$NODE index.js~" setup/service-scripts/systemd/pangalink.service > /etc/systemd/system/pangalink.service
+systemctl enable pangalink.service
 
 # Fetch ZoneMTA files
 mkdir -p /opt/zone-mta
@@ -153,14 +148,10 @@ fi
 # Install required node packages
 npm install --no-progress --no-optional --production
 
-if [ -d "/run/systemd/system" ]; then
-    # Set up systemd service script
-    cp setup/zone-mta.service /etc/systemd/system/
-    systemctl enable zone-mta.service
-else
-    # Set up upstart service script
-    cp setup/zone-mta.conf /etc/init/
-fi
+# Set up systemd service script
+cp setup/zone-mta.service /etc/systemd/system/
+sed "s~ExecStart=.*~ExecStart=$NODE app.js~" setup/zone-mta.service > /etc/systemd/system/zone-mta.service
+systemctl enable zone-mta.service
 
 # Start the services
 service pangalink start
