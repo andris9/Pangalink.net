@@ -1,7 +1,7 @@
 [Unit]
 Description=Pangalink server
 Requires=mongodb.service
-After=syslog.target network.target mongodb.service
+After=syslog.target network.target mongod.service
 
 [Service]
 Environment="NODE_ENV=production"
