@@ -1,22 +1,18 @@
-> **PANGALINK.NET LÄHTEKOOD ON SIIN AINULT ARHIVEERIMISE MÕTTES. SELLEGA EI KAASNE MITTE MINGISUGUST KASUTAJATUGE. KUI KOODIFAILID ON UUENENUD, SIIS REEGLINA MINGI HALDUSTEGEVUSE TAGAJÄRJEL, REAALSELT EI OLE KOODIS MIDAGI MUUTUNUD ALATES ARENDUSE LÕPETAMISEST 2015 AASTA MÄRTSIS**
-
 # Pangalink.net
 
 ## Eeldused
 
   * [Node.js](http://nodejs.org/), vähemalt versioon 5.0.0
   * [MongoDB](http://www.mongodb.org/)
-  * GIT (valikuline. Vajalik koodi alla laadimiseks ja uuendamiseks, kuid mitte rakenduse tööks)
+  * OpenSSL käsurea utiliit. Linux põhistes süsteemides reeglina vaikimisi olemas, Windowsis tuleb see ise [paigaldada](https://blog.didierstevens.com/2015/03/30/howto-make-your-own-cert-with-openssl-on-windows/)
 
 ## Install
 
-    git clone git://github.com/andris9/Pangalink.net.git
-    cd Pangalink.net
-    npm install
+    npm install --production
 
 ## Windowsi kasutajatele
 
-Pangalink.net genereerib sertifikaadid `openssl` käsu abil. *nix süsteemides on `openssl` reeglina vaikimisi installitud, kuid Windowsis ei ole. Seega Pangalink.net kasutamiseks kontrolli, et OpenSSL oleks installitud ja Node.js jaoks saadaval, vastasel korral ei ole võimalik genereerida serte ja teenus ei hakka korralikult tööle.
+Pangalink.net genereerib sertifikaadid `openssl` käsu abil. Linux/Unix põhistes süsteemides on `openssl` reeglina vaikimisi installitud, kuid Windowsis ei ole. Seega Pangalink.net kasutamiseks kontrolli, et OpenSSL oleks installitud ja Node.js jaoks saadaval, vastasel korral ei ole võimalik genereerida serte ja teenus ei hakka korralikult tööle.
 
 ## Konfiguratsioon
 
@@ -31,7 +27,3 @@ Näiteks kui tahad, et konfiguratsioon laetaks failidest *default.js* + *product
     node index.js
 
 Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurkasutaja õigustes.
-
-## Litsents
-
-**MIT**
