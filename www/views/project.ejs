@@ -186,7 +186,9 @@
             <tr>
                 <td>&nbsp;</td>
                 <td>
+                    <% if(user.role!=='client'){%>
                     <a class="btn btn-info" href="/projects/edit/<%= project._id %>">Muuda makselahenduse andmeid</a>
+                    <%}%>
                 </td>
             </tr>
         </tbody>

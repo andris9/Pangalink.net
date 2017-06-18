@@ -298,7 +298,7 @@ function handleJoin(req, res) {
     }
 
     let role = req.ticket && req.ticket.role;
-    let description = (req.ticket && req.ticket.decription) || '';
+    let description = (req.ticket && req.ticket.description) || '';
 
     auth.addUser(
         req,
@@ -354,7 +354,11 @@ function handleJoin(req, res) {
 
                 req.flash('success', 'Kasutaja on loodud ning oled nüüd sisse logitud');
 
-                return res.redirect('/projects/add');
+                if (role !== 'client') {
+                    return res.redirect('/projects/add');
+                } else {
+                    return res.redirect('/projects');
+                }
             });
         }
     );
@@ -457,13 +461,26 @@ function serveUsers(req, res, next) {
         if (err) {
             return next(err);
         }
-        res.render('index', {
-            pageTitle: 'Kasutajad',
-            page: '/account/users',
-            list: list.map(user => {
-                user.roleStr = roles[user.role];
-                return user;
-            })
+        db.database.collection('tickets').find().sort({ address: 1 }).toArray((err, tickets) => {
+            if (err) {
+                return next(err);
+            }
+            res.render('index', {
+                pageTitle: 'Kasutajad',
+                page: '/account/users',
+                tab: req.query.ticket ? 'tickets' : 'users',
+                list: list.map(user => {
+                    user.roleStr = roles[user.role];
+                    return user;
+                }),
+                tickets: tickets.map(ticket => {
+                    ticket.roleStr = roles[ticket.role];
+                    if (req.query.ticket === ticket._id.toString()) {
+                        ticket.highlight = true;
+                    }
+                    return ticket;
+                })
+            });
         });
     });
 }
@@ -559,61 +576,35 @@ function handleUsersAdd(req, res) {
         return;
     }
 
-    auth.addUser(
-        req,
-        req.body.username,
-        req.body.password,
-        {
-            name: req.body.name,
-            agreetos: !!(req.body.agreetos || ''),
-            role
-        },
-        (err, user, options) => {
-            if (err) {
-                req.flash('error', 'Andmebaasi viga');
-                res.render('index', {
-                    pageTitle: 'Lisa uus kasutaja',
-                    page: '/account/users/add',
-                    address: req.body.address || '',
-                    role: req.body.role || '',
-                    description: req.body.description || '',
-                    validation: validationErrors
-                });
-                return;
-            }
-            if (!user) {
-                validationErrors.username = options.message || 'Ei õnnestunud kasutajat luua';
-                res.render('index', {
-                    pageTitle: 'Lisa uus kasutaja',
-                    page: '/account/users/add',
-                    address: req.body.address || '',
-                    role: req.body.role || '',
-                    description: req.body.description || '',
-                    validation: validationErrors
-                });
-                return;
-            }
-
-            if (req.ticket && req.ticket._id) {
-                db.database.collection('tickets').deleteOne({ _id: req.ticket._id }, () => false);
-            }
-
-            if (role === 'admin') {
-                req.flash('info', 'Oled nüüd admin kasutaja!');
-            }
-
-            req.login(user, err => {
-                if (err) {
-                    req.flash('info', 'Kasutaja on loodud, kuid automaatne sisselogimine ebaõnnestus');
-                    return res.redirect('/');
-                }
-
-                req.flash('success', 'Kasutaja on loodud ning oled nüüd sisse logitud');
-
-                return res.redirect('/projects/add');
+    auth.initializeAccountTicket(req, req.body.address, req.body.description, req.body.role, (err, ticket, options) => {
+        if (err) {
+            req.flash('error', 'Andmebaasi viga');
+            res.render('index', {
+                pageTitle: 'Lisa uus kasutaja',
+                page: '/account/users/add',
+                address: req.body.address || '',
+                role: req.body.role || '',
+                description: req.body.description || '',
+                validation: validationErrors
             });
+            return;
         }
-    );
+        if (!ticket) {
+            validationErrors.address = options.message || 'Ei õnnestunud kasutajat luua';
+            res.render('index', {
+                pageTitle: 'Lisa uus kasutaja',
+                page: '/account/users/add',
+                address: req.body.address || '',
+                role: req.body.role || '',
+                description: req.body.description || '',
+                validation: validationErrors
+            });
+            return;
+        }
+        req.flash('success', 'Konto loomise link saadeti kasutajale');
+
+        return res.redirect('/account/users?ticket=' + ticket._id);
+    });
 }
 
 module.exports = router;

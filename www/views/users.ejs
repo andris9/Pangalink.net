@@ -5,61 +5,119 @@
     <h1>Kasutajad</h1>
 </div>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>
-                #
-            </th>
-            <th>
-                Nimi
-            </th>
-            <th>
-                E-posti aadress
-            </th>
-            <th>
-                Roll
-            </th>
-            <th>
-                Kirjeldus
-            </th>
-            <th>
-                &nbsp;
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <% if(!list || !list.length){%>
-            <tr>
-                <td colspan="6">
-                    Ühtegi kasutajat pole veel lisatud</a>.
-                </td>
-            </tr>
-        <% } %>
-        <% if(list && list.length){%>
-            <% list.forEach(function(user, i){%>
-                <tr>
-                    <td>
-                        <%= i + 1 %>
-                    </td>
-                    <td>
-                        <%= user.name %>
-                    </td>
-                    <td>
-                        <%= user.username %>
-                    </td>
-                    <td>
-                        <%= user.roleStr %>
-                    </td>
-                    <td>
-                        <%= user.description %>
-                    </td>
-                    <td>
-                        <a href="/account/profile/<%= user._id %>">Muuda</a>
-                    </td>
-                </tr>
+<ul class="nav nav-tabs">
+    <li class="<%= !tab || tab == "users" ? "active":"" %>"><a href="#users" data-toggle="tab">Kasutajate nimekiri</a></li>
+    <li class="<%= tab == "tickets" ? "active":"" %>"><a href="#tickets" data-toggle="tab">Ootel kontod</a></li>
+</ul>
 
-            <% }) %>
-        <% } %>
-    </tbody>
-</table>
+<div class="tab-content">
+    <div class="tab-pane <%= !tab || tab == "users" ? "active":"" %>" id="users">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Nimi
+                    </th>
+                    <th>
+                        E-posti aadress
+                    </th>
+                    <th>
+                        Roll
+                    </th>
+                    <th>
+                        Kirjeldus
+                    </th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(!list || !list.length){%>
+                    <tr>
+                        <td colspan="6">
+                            Ühtegi kasutajat pole veel lisatud</a>.
+                        </td>
+                    </tr>
+                <% } %>
+                <% if(list && list.length){%>
+                    <% list.forEach(function(user, i){%>
+                        <tr>
+                            <td>
+                                <%= i + 1 %>
+                            </td>
+                            <td>
+                                <%= user.name %>
+                            </td>
+                            <td>
+                                <%= user.username %>
+                            </td>
+                            <td>
+                                <%= user.roleStr %>
+                            </td>
+                            <td>
+                                <%= user.description %>
+                            </td>
+                            <td>
+                                <a href="/account/profile/<%= user._id %>">Muuda</a>
+                            </td>
+                        </tr>
+
+                    <% }) %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane <%= tab == "tickets" ? "active":"" %>" id="tickets">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        E-posti aadress
+                    </th>
+                    <th>
+                        Roll
+                    </th>
+                    <th>
+                        Kirjeldus
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(!tickets || !tickets.length){%>
+                    <tr>
+                        <td colspan="4">
+                            Ühtegi ootel kasutajat pole veel lisatud</a>.
+                        </td>
+                    </tr>
+                <% } %>
+                <% if(tickets && tickets.length){%>
+                    <% tickets.forEach(function(ticket, i){%>
+                        <tr <% if(ticket.highlight){%>class="success"<%}%>>
+                            <td>
+                                <%= i + 1 %>
+                            </td>
+                            <td>
+                                <%= ticket.address %>
+                            </td>
+                            <td>
+                                <%= ticket.roleStr %>
+                            </td>
+                            <td>
+                                <%= ticket.description %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

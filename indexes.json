@@ -124,5 +124,14 @@
             },
             "background": true
         }]
+    }, {
+        "collection": "tickets",
+        "indexes": [{
+            "name": "sort_by_address",
+            "key": {
+                "address": 1
+            },
+            "background": true
+        }]
     }
 ]

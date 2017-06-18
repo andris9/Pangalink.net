@@ -1,8 +1,10 @@
 
 <div class="page-header">
+    <% if(user.role!=='client'){%>
     <div class="pull-right">
         <a class="btn btn-info" href="/projects/add"><span class="glyphicon glyphicon-plus-sign"></span> Lisa uus makselahendus</a>
     </div>
+    <%}%>
     <h1>Minu makselahendused</h1>
 </div>
 
@@ -33,7 +35,7 @@
         <% if(!projects || !projects.length){%>
             <tr>
                 <td colspan="6">
-                    Ühtegi makselahendust pole veel loodud, <a href="/projects/add">tee üks siin</a>.
+                    Ühtegi makselahendust pole veel loodud<% if(user.role!=='client'){%>, <a href="/projects/add">tee üks siin</a><%}%>.
                 </td>
             </tr>
         <% } %>
@@ -56,7 +58,9 @@
                         <%= project.formattedDate || "-- pole veel tehtud --" %>
                     </td>
                     <td>
-                        <a href="/projects/edit/<%= project._id %>">Muuda</a>
+                        <% if(user.role!=='client'){%>
+                            <a href="/projects/edit/<%= project._id %>">Muuda</a>
+                        <% } %>
                     </td>
                 </tr>
 
