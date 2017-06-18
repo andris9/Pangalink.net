@@ -99,7 +99,14 @@
     <div id="wrap">
         <div class="container">
 
-        <h1><a href="<%= proto %>://<%= hostname %>/"><span class="glyphicon glyphicon-link"></span> <%= title %></a></h1>
+        <% if (logoUrl){ %>
+            <div>
+                <a href="/"><img src="<%= logoUrl%>" title="<%= title %>"></a>
+            </div>
+        <% } %>
+        <% if (!logoUrl){ %>
+            <h1><a href="/"><span class="glyphicon glyphicon-link"></span> <%= title %></a> <small>pangalinkide testimiskeskkond</small></h1>
+        <%}%>
 
         <h3><%= payment.isAuth ?  'Autentimise ' : 'Makse teostamise ' %>näidisrakendus "<%= project.name %>"</h3>
         <form method="post" action="<%= proto %>://<%= hostname %>/banklink/<%- bank.key %>">

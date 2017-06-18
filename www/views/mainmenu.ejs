@@ -8,13 +8,14 @@
 
 <li<% if(page == "/api" || page=="/api" || page=="/api"){%> class="active"<%}%>><a href="/api">API</a></li>
 
-<li<% if(page == "/docs" && name == "ui-tests"){%> class="active"<%}%>><a href="/docs/ui-tests">UI automaattestid</a></li>
-
 <% if(user && user.username){ %>
     <li<% if(page == "/account/profile" && !userId){%> class="active"<%}%>><a href="/account/profile">Minu profiil</a></li>
 <% } %>
 
 <% if(user && user.role === 'admin'){ %>
+
+    <li<% if(page.indexOf("/account/settings")===0){%> class="active"<%}%>><a href="/account/settings">Seaded</a></li>
+
     <li<% if(page.indexOf("/account/users")===0 || (page == "/account/profile" && userId)){%> class="active"<%}%>><a href="/account/users">Kasutajad</a></li>
 <% } %>
 

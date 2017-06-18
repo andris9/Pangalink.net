@@ -2,9 +2,10 @@
     <h1>Pangalink.net Info</h1>
 </div>
 
-Siin peaks olema info pangalinkide kohta.
-
-Salajase võtme koos sertifikaadipäringuga saad genereerida [siit](/tools/keys).
+<ul>
+    <li><a href="/docs/ui-tests">UI automaattestid</a>
+    <li><a href="/tools/keys">Salajase võtme genereerimine</a>
+</ul>
 
 <h3>Spetsifikatsioonid</h3>
 
