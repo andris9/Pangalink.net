@@ -34,7 +34,7 @@ router.get('/users/add', tools.requireLogin, tools.requireAdmin, serveUsersAdd);
 router.post('/users/add', tools.requireLogin, tools.requireAdmin, handleUsersAdd);
 
 router.get('/settings', tools.requireLogin, tools.requireAdmin, serveSettings);
-router.post('/settings', tools.requireLogin, tools.requireAdmin, serveSettings);
+router.post('/settings', tools.requireLogin, tools.requireAdmin, handleSettings);
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user) => {
@@ -618,7 +618,7 @@ function handleUsersAdd(req, res) {
 }
 
 function serveSettings(req, res, next) {
-    db.database.collection('settings').find({}, (err, settings) => {
+    db.database.collection('settings').findOne({ env: process.env.NODE_ENV || 'development' }, (err, settings) => {
         if (err) {
             return next(err);
         }
@@ -638,12 +638,64 @@ function serveSettings(req, res, next) {
         res.render('index', {
             pageTitle: 'Teenuse seaded',
             page: '/account/settings',
-            userId: req.params.user,
             title: settings.title || req.siteTitle,
             url: urllib.format(urlParts),
             logo,
             validation: {}
         });
+    });
+}
+
+function handleSettings(req, res, next) {
+    let validationErrors = {},
+        error = false;
+
+    req.body.title = (req.body.title || '').toString().trim();
+    req.body.url = (req.body.url || '').toString().trim();
+    req.body.logo = (req.body.logo || '').toString().trim();
+
+    if (!req.body.title) {
+        error = true;
+        validationErrors.title = 'Teenuse pealkirja täitmine on kohustuslik';
+    }
+
+    if (req.body.url && !tools.validateUrl(req.body.url)) {
+        error = true;
+        validationErrors.url = 'Teenuse veebiaadress peab olema korrektne URL';
+    }
+
+    if (req.body.logo && !tools.validateUrl(req.body.logo)) {
+        error = true;
+        validationErrors.logo = 'Teenuse logo aadress peab olema korrektne URL';
+    }
+
+    if (error) {
+        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+        res.render('index', {
+            pageTitle: 'Teenuse seaded',
+            page: '/account/settings',
+            title: req.body.title,
+            url: req.body.url,
+            logo: req.body.url,
+            validation: validationErrors
+        });
+        return;
+    }
+
+    let settings = {
+        env: process.env.NODE_ENV || 'development',
+        title: req.body.title,
+        url: req.body.url,
+        logo: req.body.logo
+    };
+
+    db.database.collection('settings').findOneAndUpdate({ env: settings.env }, { $set: settings }, { upsert: true, returnOriginal: false }, err => {
+        if (err) {
+            return next(err);
+        }
+
+        req.flash('success', 'Teenuse seaded on uuendatud');
+        return res.redirect('/account/settings');
     });
 }
 

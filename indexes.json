@@ -134,5 +134,14 @@
             },
             "background": true
         }]
+    }, {
+        "collection": "settings",
+        "indexes": [{
+            "name": "site_settings",
+            "key": {
+                "env": 1
+            },
+            "background": true
+        }]
     }
 ]

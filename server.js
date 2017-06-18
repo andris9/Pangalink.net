@@ -22,6 +22,7 @@ const log = require('npmlog');
 const packageInfo = require('./package.json');
 const moment = require('moment');
 const setupIndexes = require('./indexes');
+const urllib = require('url');
 
 moment.locale('et');
 
@@ -174,23 +175,34 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
 
-    res.locals.logoUrl = req.logoUrl = config.logoUrl;
+    db.database.collection('settings').findOne({ env: process.env.NODE_ENV || 'development' }, (err, settings) => {
+        if (err) {
+            return next(err);
+        }
 
-    res.locals.proto = req.siteProto = config.proto || req.protocol || 'http';
-    res.locals.hostname = req.siteHostname = (config.hostname || (req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, '');
-    res.locals.title = req.siteTitle = config.title || packageInfo.name;
-    res.locals.packageTitle = packageInfo.name;
+        let urlParts = urllib.parse(settings.url || '/');
 
-    res.locals.messages = {
-        success: req.flash('success'),
-        error: req.flash('error'),
-        info: req.flash('info')
-    };
-    res.locals.user = req.user;
-    res.locals.googleAnalyticsID = config.googleAnalyticsID;
+        res.locals.logoUrl = req.logoUrl = settings.logo;
 
-    res.locals.version = packageInfo.version;
-    next();
+        res.locals.proto = req.siteProto =
+            (urlParts.protocol ? urlParts.protocol.substr(0, urlParts.protocol.length - 1) : '') || config.proto || req.protocol || 'http';
+        res.locals.hostname = req.siteHostname = (urlParts.host || config.hostname || (req.headers && req.headers.host) || 'localhost')
+            .replace(/:(80|443)$/, '');
+        res.locals.title = req.siteTitle = settings.title || config.title || packageInfo.name;
+
+        res.locals.packageTitle = packageInfo.name;
+
+        res.locals.messages = {
+            success: req.flash('success'),
+            error: req.flash('error'),
+            info: req.flash('info')
+        };
+        res.locals.user = req.user;
+        res.locals.googleAnalyticsID = config.googleAnalyticsID;
+
+        res.locals.version = packageInfo.version;
+        next();
+    });
 });
 
 // Use routes from routes.js
