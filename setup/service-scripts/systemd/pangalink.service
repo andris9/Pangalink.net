@@ -1,0 +1,15 @@
+[Unit]
+Description=Pangalink server
+Requires=mongodb.service
+After=syslog.target network.target mongodb.service
+
+[Service]
+Environment="NODE_ENV=production"
+WorkingDirectory=/opt/pangalink
+ExecStart=node index.js
+Type=simple
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

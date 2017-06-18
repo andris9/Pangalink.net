@@ -247,6 +247,25 @@ db.init(err => {
 
                 server.listen(app.get('port'), () => {
                     log.info('SERVER', 'Web server running on port ' + app.get('port'));
+                    // downgrade user and group if needed
+                    if (config.group) {
+                        try {
+                            process.setgid(config.group);
+                            log.info('App', 'Changed group to "%s" (%s)', config.group, process.getgid());
+                        } catch (E) {
+                            log.error('App', 'Failed to change group to "%s" (%s)', config.group, E.message);
+                            return process.exit(1);
+                        }
+                    }
+                    if (config.user) {
+                        try {
+                            process.setuid(config.user);
+                            log.info('App', 'Changed user to "%s" (%s)', config.user, process.getuid());
+                        } catch (E) {
+                            log.error('App', 'Failed to change user to "%s" (%s)', config.user, E.message);
+                            return process.exit(1);
+                        }
+                    }
                 });
                 return;
             }
