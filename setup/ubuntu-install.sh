@@ -67,13 +67,15 @@ npm install --no-progress --production
 chown -R pangalink:pangalink .
 chmod o-rwx config
 
+NODE=`which node`
+
 if [ -d "/run/systemd/system" ]; then
     # Set up systemd service script
-    cp setup/service-scripts/systemd/pangalink.service /etc/systemd/system/
+    sed "s~node index.js~$NODE index.js~" setup/service-scripts/systemd/pangalink.service > /etc/systemd/system/pangalink.service
     systemctl enable pangalink.service
 else
     # Set up upstart service script
-    cp setup/service-scripts/upstart/pangalink.conf /etc/init/
+    sed "s~node index.js~$NODE index.js~" setup/service-scripts/upstart/pangalink.conf > /etc/init/pangalink.conf
 fi
 
 # Start the service
