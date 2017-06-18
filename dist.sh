@@ -7,6 +7,6 @@ VERSION=`jq -r .version package.json`
 
 npm install --no-optional --production
 rm -rf ../pangalink-$VERSION.tar.gz
-tar czf --exclude ".git" --exclude "dist.sh" -f ../pangalink-$VERSION.tar.gz .
+tar -zcv --exclude='.git' --exclude='.gitignore' -f ../pangalink-$VERSION.tar.gz .
 
 echo "done"
