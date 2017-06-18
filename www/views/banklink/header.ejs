@@ -99,4 +99,11 @@
     <div id="wrap">
         <div class="container">
 
-        <h1><a href="/"><span class="glyphicon glyphicon-link"></span> <%= title %></a> <small>pangalinkide testimiskeskkond</small></h1>
+        <% if (logoUrl){ %>
+            <div>
+                <a href="/"><img src="<%= logoUrl%>" title="<%= title %>"></a>
+            </div>
+        <% } %>
+        <% if (!logoUrl){ %>
+            <h1><a href="/"><span class="glyphicon glyphicon-link"></span> <%= title %></a> <small>pangalinkide testimiskeskkond</small></h1>
+        <%}%>

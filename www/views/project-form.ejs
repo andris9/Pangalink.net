@@ -68,11 +68,15 @@
     <div class="form-group<% if(validation.authorized){%> has-error<%}%>">
         <label class="col-lg-2 control-label" for="authorized">Kasutajad</label>
         <div class="col-lg-8">
-            <textarea class="form-control" rows="3" id="authorized" name="authorized"><%= authorized && authorized.join("\n") || "" %></textarea>
+            <select multiple name="authorized[]" id="authorized" class="form-control">
+                <% authorized.forEach(user=>{%>
+                    <option value="<%= user._id %>" <% if(user.selected){%>selected<%}%>><%= user.username %> – <%= user.roleStr %><% if(user.description){%> – <%= user.description %><%}%></option>
+                <%})%>
+            </select>
             <% if(validation.authorized){%>
                 <span class="help-block"><%= validation.authorized %></span>
             <%}%>
-            <span class="help-block">Sisesta eraldi ridadele nende kasutajate e-posti aadressid, kes tohivad selle makselahendusega toimetada (muuta andmeid, näha maksete infot jne)</span>
+            <span class="help-block">Märgi nimekirjas need kasutajad, kes tohivad selle makselahendusega toimetada</span>
         </div>
     </div>
 

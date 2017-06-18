@@ -10,13 +10,16 @@ module.exports = {
     },
 
     // Domain name to be used all around the page,
-    hostname: 'localhost:3480',
+    hostname: '',
 
     // Protocol to be used (if behind proxy might not autodetect correctly),
     proto: '',
 
     // Name of the service,
-    title: 'PangalinkerZZ',
+    title: 'Pangalinker',
+
+    // www/public/images/
+    logoUrl: '/images/logo.png',
 
     // HTTP/S server configuration,
     web: {

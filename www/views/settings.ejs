@@ -1,0 +1,55 @@
+<div class="page-header">
+    <h1>
+        Muuda teenuse seadeid
+    </h1>
+</div>
+
+<form action="/account/settings" method="post" class="form-horizontal">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="form-group <% if(validation.title){%>has-error<%}%>">
+        <label class="col-lg-2 control-label" for="title">
+            Teenuse nimetus
+        </label>
+        <div class="col-lg-8">
+            <input class="form-control" type="text" name="title" id="title" value="<%= title %>" required/>
+            <% if(validation.title){%>
+                <span class="help-block"><%= validation.title %></span>
+            <%}%>
+        </div>
+    </div>
+
+    <div class="form-group <% if(validation.title){%>has-error<%}%>">
+        <label class="col-lg-2 control-label" for="title">
+            Teenuse aadress
+        </label>
+        <div class="col-lg-8">
+            <input class="form-control" type="url" name="url" id="url" value="<%= url %>" required/>
+            <% if(validation.url){%>
+                <span class="help-block"><%= validation.url %></span>
+            <%}%>
+            <span class="help-block">Seda aadressi kasutatakse e-posti linkides jms.</span>
+        </div>
+    </div>
+
+    <div class="form-group <% if(validation.logo){%>has-error<%}%>">
+        <label class="col-lg-2 control-label" for="title">
+            Logo aadress
+        </label>
+        <div class="col-lg-8">
+            <input class="form-control" type="url" name="logo" id="logo" value="<%= logo %>" required/>
+            <% if(validation.logo){%>
+                <span class="help-block"><%= validation.logo %></span>
+            <%}%>
+            <span class="help-block">Jäta tühjaks, kui ei soovi logo kuvada</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2"></label>
+        <div class="col-lg-8">
+            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-edit"></span> Uuenda seadeid</button>
+        </div>
+    </div>
+
+</form>

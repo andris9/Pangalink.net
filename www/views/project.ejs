@@ -58,13 +58,13 @@
                 </td>
             </tr>
 
-            <% if(project.authorized && project.authorized.length){%>
+            <% if(authorized && authorized.length && user.role !== 'client'){%>
             <tr>
                 <th>
                     Lubatud kasutajad
                 </th>
                 <td>
-                    <%= project.authorized.join(", ") %>
+                    <%= authorized.join(", ") %>
                 </td>
             </tr>
             <% } %>

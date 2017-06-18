@@ -35,20 +35,33 @@
     </div>
 
     <% if(userId) {%>
-    <div class="form-group<% if(validation.role){%> has-error<%}%>">
-        <label class="col-lg-2 control-label" for="role">Kasutaja roll</label>
-        <div class="col-lg-8">
-            <select class="form-control" name="role" id="role">
-                <option <% if(role == 'admin'){ %> selected<% } %> value="admin">Admin</option>
-                <option <% if(role == 'user' || !role){ %> selected<% } %> value="user">Tavakasutaja</option>
-                <option <% if(role == 'client'){ %> selected<% } %> value="client">Klient</option>
-            </select>
-            <% if(validation.role){%>
-                <span class="help-block"><%= validation.role %></span>
-            <%}%>
-            <span class="help-block">Kliendikontodel puudub õigus lisada või muuta andmeid. Samuti saavad kliendikontod näha ainult nende makselahenduste andmeid, millele on neile ligipääs antud.</span>
+        <div class="form-group <% if(validation.description){%>has-error<%}%>">
+            <label class="col-lg-2 control-label" for="description">
+                Kirjeldus
+            </label>
+            <div class="col-lg-8">
+                <input class="form-control" type="text" name="description" id="description" value="<%= description %>" required/>
+                <% if(validation.description){%>
+                    <span class="help-block"><%= validation.description %></span>
+                <%}%>
+                <span class="help-block">Valikuline lisainfo kasutaja kohta, näiteks "Ettevõtte X projektijuht"</span>
+            </div>
         </div>
-    </div>
+
+        <div class="form-group<% if(validation.role){%> has-error<%}%>">
+            <label class="col-lg-2 control-label" for="role">Kasutaja roll</label>
+            <div class="col-lg-8">
+                <select class="form-control" name="role" id="role">
+                    <option <% if(role == 'admin'){ %> selected<% } %> value="admin">Admin</option>
+                    <option <% if(role == 'user' || !role){ %> selected<% } %> value="user">Tavakasutaja</option>
+                    <option <% if(role == 'client'){ %> selected<% } %> value="client">Klient</option>
+                </select>
+                <% if(validation.role){%>
+                    <span class="help-block"><%= validation.role %></span>
+                <%}%>
+                <span class="help-block">Kliendikontodel puudub õigus lisada või muuta andmeid. Samuti saavad kliendikontod näha ainult nende makselahenduste andmeid, millele on neile ligipääs antud.</span>
+            </div>
+        </div>
     <%}%>
 
     <h3>Parooli vahetus</h3>

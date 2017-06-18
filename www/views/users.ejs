@@ -89,12 +89,15 @@
                     <th>
                         Kirjeldus
                     </th>
+                    <th>
+                        Aktiveerimise link
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <% if(!tickets || !tickets.length){%>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             Ühtegi ootel kasutajat pole veel lisatud</a>.
                         </td>
                     </tr>
@@ -113,6 +116,9 @@
                             </td>
                             <td>
                                 <%= ticket.description %>
+                            </td>
+                            <td class="text-right">
+                                <input class="form-control input-sm" id="disabledInput" type="text" value="<%= proto %>://<%=hostname%>/account/join?username=<%= encodeURIComponent(ticket.address) %>&amp;ticket=<%= encodeURIComponent(ticket._id) %>"  style="font-family: monospace;" onfocus="this.select()" onclick="this.select()" readonly>
                             </td>
                         </tr>
                     <% }) %>

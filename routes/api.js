@@ -37,7 +37,7 @@ function serveAPI(req, res) {
                     owner: req.user.username
                 },
                 {
-                    authorized: req.user.username.toLowerCase().trim()
+                    authorized: new ObjectID(req.user._id)
                 }
             ];
         }
@@ -300,7 +300,7 @@ function apiActionList(req, user, start, callback) {
                 owner: req.user.username
             },
             {
-                authorized: req.user.username.toLowerCase().trim()
+                authorized: new ObjectID(req.user._id)
             }
         ];
     }

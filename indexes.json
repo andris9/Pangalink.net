@@ -14,7 +14,8 @@
         "indexes": [{
             "name": "account_role",
             "key": {
-                "role": 1
+                "role": 1,
+                "username": 1
             },
             "background": true
         }]

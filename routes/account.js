@@ -6,15 +6,10 @@ const tools = require('../lib/tools');
 const db = require('../lib/db');
 const ObjectID = require('mongodb').ObjectID;
 const util = require('util');
+const urllib = require('url');
 
 const express = require('express');
 const router = new express.Router();
-
-const roles = {
-    admin: 'Admin',
-    user: 'Tavakasutaja',
-    client: 'Klient'
-};
 
 router.get('/reset-link', serveResetLink);
 router.post('/reset-link', handleResetLink);
@@ -37,6 +32,9 @@ router.get('/users', tools.requireLogin, tools.requireAdmin, serveUsers);
 
 router.get('/users/add', tools.requireLogin, tools.requireAdmin, serveUsersAdd);
 router.post('/users/add', tools.requireLogin, tools.requireAdmin, handleUsersAdd);
+
+router.get('/settings', tools.requireLogin, tools.requireAdmin, serveSettings);
+router.post('/settings', tools.requireLogin, tools.requireAdmin, serveSettings);
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user) => {
@@ -183,6 +181,7 @@ function serveProfile(req, res, next) {
             page: '/account/profile',
             userId: req.params.user,
             role: userData.role || '',
+            description: userData.description || '',
             name: req.query.name || userData.name || '',
             username: userData.username || '',
             validation: {}
@@ -367,9 +366,13 @@ function handleJoin(req, res) {
 function handleProfile(req, res, next) {
     let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
     let role = (req.body.role || '').toString().toLowerCase().trim();
+    let description = (req.body.description || '').toString().trim();
 
-    if (!req.params.user || !['admin', 'user', 'client'].includes(role)) {
-        role = false;
+    if (!req.params.user) {
+        if (!['admin', 'user', 'client'].includes(role)) {
+            role = false;
+        }
+        description = false;
     }
 
     db.database.collection('user').findOne({ _id: userId }, (err, userData) => {
@@ -407,6 +410,7 @@ function handleProfile(req, res, next) {
                 page: '/account/profile',
                 userId: req.params.user,
                 role: req.body.role || '',
+                description: req.body.description || '',
                 name: req.body.name || '',
                 username: req.user.username || '',
                 validation: validationErrors
@@ -422,6 +426,10 @@ function handleProfile(req, res, next) {
             options.role = role;
         }
 
+        if (req.params.user) {
+            options.description = description;
+        }
+
         auth.updateUser(userData.username, req.body.password || undefined, options, (err, user, options) => {
             if (err) {
                 req.flash('error', 'Andmebaasi viga');
@@ -430,6 +438,7 @@ function handleProfile(req, res, next) {
                     page: '/account/profile',
                     userId: req.params.user,
                     role: req.body.role || '',
+                    description: req.body.description || '',
                     name: req.body.name || '',
                     username: req.user.username || '',
                     validation: validationErrors
@@ -443,6 +452,7 @@ function handleProfile(req, res, next) {
                     page: '/account/profile',
                     userId: req.params.user,
                     role: req.body.role || '',
+                    description: req.body.description || '',
                     name: req.body.name || '',
                     username: req.user.username || '',
                     validation: validationErrors
@@ -457,7 +467,7 @@ function handleProfile(req, res, next) {
 }
 
 function serveUsers(req, res, next) {
-    db.database.collection('user').find().project({ name: true, username: true, role: true }).sort({ username: 1 }).toArray((err, list) => {
+    db.database.collection('user').find().project({ name: true, username: true, role: true, description: true }).sort({ username: 1 }).toArray((err, list) => {
         if (err) {
             return next(err);
         }
@@ -470,11 +480,11 @@ function serveUsers(req, res, next) {
                 page: '/account/users',
                 tab: req.query.ticket ? 'tickets' : 'users',
                 list: list.map(user => {
-                    user.roleStr = roles[user.role];
+                    user.roleStr = tools.roles[user.role];
                     return user;
                 }),
                 tickets: tickets.map(ticket => {
-                    ticket.roleStr = roles[ticket.role];
+                    ticket.roleStr = tools.roles[ticket.role];
                     if (req.query.ticket === ticket._id.toString()) {
                         ticket.highlight = true;
                     }
@@ -604,6 +614,36 @@ function handleUsersAdd(req, res) {
         req.flash('success', 'Konto loomise link saadeti kasutajale');
 
         return res.redirect('/account/users?ticket=' + ticket._id);
+    });
+}
+
+function serveSettings(req, res, next) {
+    db.database.collection('settings').find({}, (err, settings) => {
+        if (err) {
+            return next(err);
+        }
+
+        let logo = '';
+        if (settings.logo || req.logoUrl) {
+            let logoUrlParts = urllib.parse(settings.logo || req.logoUrl);
+            logoUrlParts.protocol = logoUrlParts.protocol || req.siteProto + ':';
+            logoUrlParts.host = logoUrlParts.host || req.siteHostname;
+            logo = urllib.format(logoUrlParts);
+        }
+
+        let urlParts = urllib.parse(settings.url || '/');
+        urlParts.protocol = urlParts.protocol || req.siteProto + ':';
+        urlParts.host = urlParts.host || req.siteHostname;
+
+        res.render('index', {
+            pageTitle: 'Teenuse seaded',
+            page: '/account/settings',
+            userId: req.params.user,
+            title: settings.title || req.siteTitle,
+            url: urllib.format(urlParts),
+            logo,
+            validation: {}
+        });
     });
 }
 
