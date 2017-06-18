@@ -14,7 +14,14 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 apt-get upgrade -y
-apt-get install -y lsb-release ufw build-essential python software-properties-common dnsutils
+apt-get install -y curl lsb-release ufw build-essential python software-properties-common dnsutils
+
+HTTP_RESPONSE=$(curl --write-out %{http_code} --silent --output /dev/null 127.0.0.1)
+
+if [ HTTP_RESPONSE -eq "000" ] then
+    echo "HTTP server already installed"
+    exit 1
+fi
 
 CODENAME=`lsb_release -c -s`
 
@@ -31,10 +38,9 @@ echo "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu $CODENAME/mongodb-or
 
 curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
-debconf-set-selections <<< "postfix postfix/mailname string $HOSTNAME"
-debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
+apt-get -q -y install mongodb-org nodejs ssmtp
 
-apt-get -q -y install mongodb-org nodejs postfix
+sed -i -E "s/hostname=.*/hostname=$HOSTNAME/" /etc/ssmtp/ssmtp.conf
 
 apt-get clean
 
