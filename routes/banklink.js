@@ -4,7 +4,7 @@ const config = require('config');
 const express = require('express');
 const router = new express.Router();
 const banklink = require('../lib/banklink');
-const db = require('../lib/db');
+const tools = require('../lib/tools');
 
 router.get('/preview/:payment', banklink.servePaymentPreview);
 
@@ -33,35 +33,19 @@ function servePaymentFinal(req, res) {
             return;
         }
 
-        db.findOne(
-            'user',
-            {
-                id: data.project.owner
-            },
-            (err, user) => {
-                if (err) {
-                    req.flash('error', err.message || err || 'Andmebaasi viga');
-                    res.redirect('/');
-                    return;
-                }
+        res.forceCharset = data.forceCharset;
+        res.set('content-type', 'text/html; charset=' + res.forceCharset);
 
-                res.forceCharset = data.forceCharset;
-                res.set('content-type', 'text/html; charset=' + res.forceCharset);
+        data.title =
+            config.title ||
+            (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:\d+$/, '').toLowerCase().replace(/^./, s => s.toUpperCase());
+        data.proto = config.proto || 'http';
+        data.hostname = config.hostname || (req && req.headers && req.headers.host) || 'localhost';
+        data.googleAnalyticsID = config.googleAnalyticsID;
 
-                data.title =
-                    config.title ||
-                    (config.hostname || (req && req.headers && req.headers.host) || 'localhost')
-                        .replace(/:\d+$/, '')
-                        .toLowerCase()
-                        .replace(/^./, s => s.toUpperCase());
-                data.proto = config.proto || 'http';
-                data.hostname = config.hostname || (req && req.headers && req.headers.host) || 'localhost';
-                data.googleAnalyticsID = config.googleAnalyticsID;
-                data.user = user;
+        data.isAuthorized = tools.checkAuthorized(req, data.project);
 
-                res.render('banklink/final', data);
-            }
-        );
+        res.render('banklink/final', data);
     });
 }
 

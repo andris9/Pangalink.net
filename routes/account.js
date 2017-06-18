@@ -114,7 +114,6 @@ function serveJoin(req, res) {
         page: '/account/join',
         name: req.query.name || '',
         username: req.query.username || '',
-        agreetos: !!(req.query.agreetos || ''),
         ticket: req.query.ticket || false,
         validation: {}
     });
@@ -275,13 +274,6 @@ function handleJoin(req, res) {
         validationErrors.password2 = 'Paroolid ei kattu';
     }
 
-    req.body.agreetos = !!(req.body.agreetos || '');
-
-    if (!req.body.agreetos) {
-        error = true;
-        validationErrors.agreetos = 'Konto loomiseks peab nõustuma kasutustingimustega';
-    }
-
     if (error) {
         req.flash('error', 'Andmete valideerimisel ilmnesid vead');
         res.render('index', {
@@ -289,7 +281,6 @@ function handleJoin(req, res) {
             page: '/account/join',
             name: req.body.name || '',
             username: req.body.username || '',
-            agreetos: !!(req.body.agreetos || ''),
             ticket: req.query.ticket || false,
             validation: validationErrors
         });
@@ -305,7 +296,6 @@ function handleJoin(req, res) {
         req.body.password,
         {
             name: req.body.name,
-            agreetos: !!(req.body.agreetos || ''),
             role,
             description
         },
@@ -317,7 +307,6 @@ function handleJoin(req, res) {
                     page: '/account/join',
                     name: req.body.name || '',
                     username: req.body.username || '',
-                    agreetos: !!(req.body.agreetos || ''),
                     ticket: req.query.ticket || false,
                     validation: validationErrors
                 });
@@ -330,7 +319,6 @@ function handleJoin(req, res) {
                     page: '/account/join',
                     name: req.body.name || '',
                     username: req.body.username || '',
-                    agreetos: !!(req.body.agreetos || ''),
                     ticket: req.query.ticket || false,
                     validation: validationErrors
                 });
@@ -622,6 +610,8 @@ function serveSettings(req, res, next) {
         if (err) {
             return next(err);
         }
+
+        settings = settings || {};
 
         let logo = '';
         if (settings.logo || req.logoUrl) {

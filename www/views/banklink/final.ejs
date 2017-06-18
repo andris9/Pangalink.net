@@ -96,7 +96,7 @@
         <% }) %>
 
         <button data-button="return" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-arrow-right"></span> Tagasi kaupmehe juurde</button>
-        <% if(uid && (uid == project.owner || project.authorized.indexOf(uid.toLowerCase().trim()) >= 0)){ %>
+        <% if(isAuthorized){ %>
             <a href="/payment/<%= payment._id %>/scripts/receive.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Allkirja kontrolli PHP lähtekood</a>
         <% } %>
 
@@ -113,7 +113,7 @@
 <% if(method == "GET"){%>
     <p>
         <a data-button="return" href="<%= target %>" class="btn btn-success"><span class="glyphicon glyphicon-arrow-right"></span> Tagasi kaupmehe juurde</a>
-        <% if(uid && (uid == project.owner || project.authorized.indexOf(uid.toLowerCase().trim()) >= 0)){ %>
+        <% if(isAuthorized){ %>
             <a href="/payment/<%= payment._id %>/scripts/receive.php" class="btn btn-warning"><span class="glyphicon glyphicon-download"></span> Allkirja kontrolli PHP lähtekood</a>
         <% } %>
     </p>

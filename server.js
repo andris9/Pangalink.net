@@ -160,7 +160,13 @@ app.use(
 // Use EJS template engine
 app.set('view engine', 'ejs');
 
-app.use(csrf);
+app.use((...args) => {
+    if (/^\/api\//.test(args[0].url)) {
+        // skip CSRF check for api calls
+        return args[2]();
+    }
+    return csrf(...args);
+});
 
 app.use((req, res, next) => {
     db.database.collection('user').findOne({ role: 'admin' }, { fields: { _id: true, username: true, role: true } }, (err, admin) => {
@@ -173,12 +179,14 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    res.locals.csrfToken = req.csrfToken();
+    res.locals.csrfToken = req.csrfToken && req.csrfToken();
 
     db.database.collection('settings').findOne({ env: process.env.NODE_ENV || 'development' }, (err, settings) => {
         if (err) {
             return next(err);
         }
+
+        settings = settings || {};
 
         let urlParts = urllib.parse(settings.url || '/');
 

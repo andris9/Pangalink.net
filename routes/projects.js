@@ -62,7 +62,7 @@ function serveProjects(req, res) {
     if (req.user.role !== 'admin') {
         query.$or = [
             {
-                owner: req.user.username
+                owner: req.user._id
             },
             {
                 authorized: new ObjectID(req.user._id)
@@ -358,7 +358,7 @@ function handleAddProject(req, res, next) {
             let project = {
                 name: req.body.name,
                 description: req.body.description,
-                owner: req.user.username,
+                owner: req.user._id,
                 keyBitsize: req.body.keyBitsize,
                 soloAlgo: req.body.soloAlgo,
                 soloAutoResponse: !!(req.body.soloAutoResponse || ''),
@@ -399,7 +399,7 @@ function handleAddProject(req, res, next) {
                     return;
                 }
 
-                if (['nordea', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
+                if (['tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
                     project.uid = (10000000 + Number(tools.getReferenceCode(id))).toString();
                 } else {
                     project.uid = 'uid' + tools.getReferenceCode(id);

@@ -10,6 +10,21 @@ const randomString = require('random-string');
 const express = require('express');
 const router = new express.Router();
 
+let authorize = (req, res, next) => {
+    let accessToken = (req.query.access_token || req.headers.access_token || '').toString().trim();
+
+    apiAuthorizeToken(req, accessToken, (err, user) => {
+        if (err) {
+            return apiResponse(req, res, err);
+        }
+        if (!user) {
+            return apiResponse(req, res, new Error('Invalid or expired token'));
+        }
+        req.user = user;
+        next();
+    });
+};
+
 let requireUser = (req, res, next) => {
     if (!req.user || req.user.role === 'client') {
         return apiResponse(req, res, new Error('Not allowed'));
@@ -19,11 +34,11 @@ let requireUser = (req, res, next) => {
 
 router.get('/', serveAPI);
 
-router.get('/banks', serveAPIListBanks);
-router.get('/project', serveAPIListProject);
-router.get('/project/:project', serveAPIGetProject);
-router.post('/project', requireUser, serveAPIPostProject);
-router.delete('/project/:project', requireUser, serveAPIDeleteProject);
+router.get('/banks', authorize, serveAPIListBanks);
+router.get('/project', authorize, serveAPIListProject);
+router.get('/project/:project', authorize, serveAPIGetProject);
+router.post('/project', authorize, requireUser, serveAPIPostProject);
+router.delete('/project/:project', authorize, requireUser, serveAPIDeleteProject);
 
 function serveAPI(req, res) {
     let query = {},
@@ -34,10 +49,10 @@ function serveAPI(req, res) {
         if (req.user.role !== 'admin') {
             query.$or = [
                 {
-                    owner: req.user.username
+                    owner: req.user._id
                 },
                 {
-                    authorized: new ObjectID(req.user._id)
+                    authorized: req.user._id
                 }
             ];
         }
@@ -99,53 +114,53 @@ function apiResponse(req, res, err, data) {
 }
 
 function serveAPIListBanks(req, res) {
-    let accessToken = (req.query.access_token || req.headers.access_token || '').toString().trim();
-
-    apiAuthorizeToken(req, accessToken, err => {
-        if (err) {
-            return apiResponse(req, res, err);
-        }
-
-        apiResponse(
-            req,
-            res,
-            false,
-            Object.keys(banks).sort().map(bank => ({
-                type: bank,
-                name: banks[bank].name
-            }))
-        );
-    });
+    apiResponse(
+        req,
+        res,
+        false,
+        Object.keys(banks).sort().map(bank => ({
+            type: bank,
+            name: banks[bank].name
+        }))
+    );
 }
 
 function serveAPIListProject(req, res) {
-    let accessToken = (req.query.access_token || req.headers.access_token || '').toString().trim(),
-        start = Number((req.query.start_index || '0').toString().trim()) || 0;
+    let start = Number((req.query.start_index || '0').toString().trim()) || 0;
 
-    apiAuthorizeToken(req, accessToken, (err, user) => {
+    apiActionList(req, start, (err, list) => {
         if (err) {
             return apiResponse(req, res, err);
         }
-
-        apiActionList(req, user, start, (err, list) => {
-            if (err) {
-                return apiResponse(req, res, err);
-            }
-            apiResponse(req, res, false, list);
-        });
+        apiResponse(req, res, false, list);
     });
 }
 
 function serveAPIGetProject(req, res) {
-    let accessToken = (req.query.access_token || req.headers.access_token || '').toString().trim(),
-        projectId = (req.params.project || '').toString().trim();
+    let projectId = (req.params.project || '').toString().trim();
 
-    apiAuthorizeToken(req, accessToken, (err, user) => {
+    apiActionGet(req, projectId, (err, project) => {
         if (err) {
             return apiResponse(req, res, err);
         }
+        apiResponse(req, res, false, project);
+    });
+}
 
-        apiActionGet(req, user, projectId, (err, project) => {
+function serveAPIPostProject(req, res) {
+    let project;
+
+    try {
+        project = JSON.parse(req.rawBody.toString('utf-8'));
+    } catch (E) {
+        return apiResponse(req, res, new Error('Vigane sisend'));
+    }
+
+    apiActionPost(req, project, (err, projectId) => {
+        if (err) {
+            return apiResponse(req, res, err);
+        }
+        apiActionGet(req, projectId, (err, project) => {
             if (err) {
                 return apiResponse(req, res, err);
             }
@@ -154,51 +169,13 @@ function serveAPIGetProject(req, res) {
     });
 }
 
-function serveAPIPostProject(req, res) {
-    let accessToken = (req.query.access_token || req.headers.access_token || '').toString().trim();
-
-    apiAuthorizeToken(req, accessToken, (err, user) => {
-        if (err) {
-            return apiResponse(req, res, err);
-        }
-
-        let project;
-
-        try {
-            project = JSON.parse(req.rawBody.toString('utf-8'));
-        } catch (E) {
-            return apiResponse(req, res, new Error('Vigane sisend'));
-        }
-
-        apiActionPost(req, user, project, (err, projectId) => {
-            if (err) {
-                return apiResponse(req, res, err);
-            }
-            apiActionGet(req, user, projectId, (err, project) => {
-                if (err) {
-                    return apiResponse(req, res, err);
-                }
-                apiResponse(req, res, false, project);
-            });
-        });
-    });
-}
-
 function serveAPIDeleteProject(req, res) {
-    let accessToken = (req.query.access_token || req.headers.access_token || '').toString().trim(),
-        projectId = (req.params.project || '').toString().trim();
-
-    apiAuthorizeToken(req, accessToken, (err, user) => {
+    let projectId = (req.params.project || '').toString().trim();
+    apiActionDelete(req, projectId, (err, deleted) => {
         if (err) {
             return apiResponse(req, res, err);
         }
-
-        apiActionDelete(req, user, projectId, (err, deleted) => {
-            if (err) {
-                return apiResponse(req, res, err);
-            }
-            apiResponse(req, res, false, deleted);
-        });
+        apiResponse(req, res, false, deleted);
     });
 }
 
@@ -218,12 +195,8 @@ function apiAuthorizeToken(req, accessToken, callback) {
     );
 }
 
-function apiActionGet(req, user, projectId, callback) {
+function apiActionGet(req, projectId, callback) {
     projectId = (projectId || '').toString().trim();
-
-    if (!user) {
-        return callback(new Error('Määramata kasutaja'));
-    }
 
     if (!projectId.match(/^[a-fA-F0-9]{24}$/)) {
         return callback(new Error('Vigane makselahenduse identifikaator'));
@@ -286,21 +259,17 @@ function apiActionGet(req, user, projectId, callback) {
     );
 }
 
-function apiActionList(req, user, start, callback) {
+function apiActionList(req, start, callback) {
     start = start || 0;
-
-    if (!user) {
-        return callback(new Error('Määramata kasutaja'));
-    }
 
     let query = {};
     if (req.user.role !== 'admin') {
         query.$or = [
             {
-                owner: req.user.username
+                owner: req.user._id
             },
             {
-                authorized: new ObjectID(req.user._id)
+                authorized: req.user._id
             }
         ];
     }
@@ -350,11 +319,7 @@ function apiActionList(req, user, start, callback) {
     });
 }
 
-function apiActionPost(req, user, project, callback) {
-    if (!user) {
-        return callback(new Error('Määramata kasutaja'));
-    }
-
+function apiActionPost(req, project, callback) {
     let validationErrors = {},
         error = false;
 
@@ -416,7 +381,7 @@ function apiActionPost(req, user, project, callback) {
         return callback(error);
     }
 
-    tools.generateKeys(user, 20 * 365, Number(project.key_size) || 1024, (err, userCertificate, bankCertificate) => {
+    tools.generateKeys(req.user, 20 * 365, Number(project.key_size) || 1024, (err, userCertificate, bankCertificate) => {
         if (err) {
             return callback(new Error('Sertifikaadi genereerimisel tekkis viga'));
         }
@@ -424,7 +389,7 @@ function apiActionPost(req, user, project, callback) {
         let record = {
             name: project.name,
             description: project.description,
-            owner: user.username,
+            owner: req.user._id,
             keyBitsize: project.key_size,
             soloAlgo: project.algo,
             soloAutoResponse: !!project.auto_response,
@@ -446,7 +411,7 @@ function apiActionPost(req, user, project, callback) {
                 return callback(new Error('Andmebaasi viga'));
             }
 
-            if (['nordea', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
+            if (['tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
                 record.uid = (10000000 + Number(tools.getReferenceCode(id))).toString();
             } else {
                 record.uid = 'uid' + tools.getReferenceCode(id);
@@ -466,12 +431,8 @@ function apiActionPost(req, user, project, callback) {
     });
 }
 
-function apiActionDelete(req, user, projectId, callback) {
+function apiActionDelete(req, projectId, callback) {
     projectId = (projectId || '').toString().trim();
-
-    if (!user) {
-        return callback(new Error('Määramata kasutaja'));
-    }
 
     if (!projectId.match(/^[a-fA-F0-9]{24}$/)) {
         return callback(new Error('Vigane makselahenduse identifikaator'));

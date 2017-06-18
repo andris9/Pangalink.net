@@ -33,12 +33,12 @@
         </td>
     </tr>
 
-    <% if(uid && (uid == project.owner || project.authorized.indexOf(uid.toLowerCase().trim()) >=0)){ %>
+    <% if(isAuthorized){ %>
         <tr>
             <td colspan="2"><i class="icon icon-share"></i> <a href="/payment/<%= payment._id %>" target="_blank">Maksekorralduse detailsed andmed</a> (avaneb uues aknas)</td>
         </tr>
     <% } %>
-    <% if(!uid || !(uid == project.owner || project.authorized.indexOf(uid.toLowerCase().trim()) >=0)){ %>
+    <% if(!isAuthorized){ %>
         <tr>
             <td colspan="2">Maksekorralduse detailivaadet kuvatakse sisseloginud kasutajale, kellel on õigus vastava makselahenduse andmetega toimetada</td>
         </tr>
