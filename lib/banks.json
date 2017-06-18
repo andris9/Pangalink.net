@@ -15,7 +15,7 @@
         "forceCharset": "Krediidipanga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
         "allowedCharsets": [
             "UTF-8",
-            "ISO-8859-1",
+            "ISO-8859-13",
             "WINDOWS-1257"
         ],
         "defaultCharset": "UTF-8",
@@ -147,7 +147,7 @@
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
-        "returnMethod": "GET",
+        "returnMethod": "POST",
         "allowedServices": [
             "1011", "1012", "4011", "4012"
         ],

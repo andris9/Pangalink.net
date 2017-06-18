@@ -33,7 +33,7 @@
     </div>
 
     <div class="form-group <% if(validation.logo){%>has-error<%}%>">
-        <label class="col-lg-2 control-label" for="title">
+        <label class="col-lg-2 control-label" for="logo">
             Logo aadress
         </label>
         <div class="col-lg-8">
@@ -42,6 +42,32 @@
                 <span class="help-block"><%= validation.logo %></span>
             <%}%>
             <span class="help-block">Jäta tühjaks, kui ei soovi logo kasutada</span>
+        </div>
+    </div>
+
+    <div class="form-group <% if(validation.emailName){%>has-error<%}%>">
+        <label class="col-lg-2 control-label" for="emailName">
+            E-posti saatja nimi
+        </label>
+        <div class="col-lg-8">
+            <input class="form-control" type="text" name="emailName" id="emailName" value="<%= emailName %>"/>
+            <% if(validation.emailName){%>
+                <span class="help-block"><%= validation.emailName %></span>
+            <%}%>
+            <span class="help-block">Jäta tühjaks, kui ei soovi e-posti saatja real nime kasutada</span>
+        </div>
+    </div>
+
+    <div class="form-group <% if(validation.emailAddress){%>has-error<%}%>">
+        <label class="col-lg-2 control-label" for="emailAddress">
+            E-posti aadress
+        </label>
+        <div class="col-lg-8">
+            <input class="form-control" type="email" name="emailAddress" id="emailAddress" value="<%= emailAddress %>" required/>
+            <% if(validation.emailAddress){%>
+                <span class="help-block"><%= validation.emailAddress %></span>
+            <%}%>
+            <span class="help-block">Sellelt aadressilt saadetakse kõik e-kirjad</span>
         </div>
     </div>
 

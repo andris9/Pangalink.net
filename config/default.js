@@ -72,10 +72,6 @@ module.exports = {
 
         defaults: {
             // Sender address
-            from: {
-                name: 'Pangalink.net',
-                address: 'pangalink@localhost'
-            }
         }
     },
 

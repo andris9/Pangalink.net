@@ -190,7 +190,7 @@ app.use((req, res, next) => {
 
         let urlParts = urllib.parse(settings.url || '/');
 
-        res.locals.logoUrl = req.logoUrl = settings.logo;
+        res.locals.logoUrl = req.logoUrl = 'logo' in settings ? settings.logo : config.logoUrl;
 
         res.locals.proto = req.siteProto =
             (urlParts.protocol ? urlParts.protocol.substr(0, urlParts.protocol.length - 1) : '') || config.proto || req.protocol || 'http';
@@ -207,6 +207,9 @@ app.use((req, res, next) => {
         };
         res.locals.user = req.user;
         res.locals.googleAnalyticsID = config.googleAnalyticsID;
+
+        req.emailName = 'emailName' in settings ? settings.emailName : settings.title || req.siteTitle;
+        req.emailAddress = settings.emailAddress || 'pangalink@' + urlParts.host.replace(/:\d+/, '');
 
         res.locals.version = packageInfo.version;
         next();

@@ -631,6 +631,8 @@ function serveSettings(req, res, next) {
             title: settings.title || req.siteTitle,
             url: urllib.format(urlParts),
             logo,
+            emailName: 'emailName' in settings ? settings.emailName : settings.title || req.siteTitle,
+            emailAddress: settings.emailAddress || 'pangalink@' + urlParts.host.replace(/:\d+/, ''),
             validation: {}
         });
     });
@@ -647,6 +649,11 @@ function handleSettings(req, res, next) {
     if (!req.body.title) {
         error = true;
         validationErrors.title = 'Teenuse pealkirja täitmine on kohustuslik';
+    }
+
+    if (!req.body.emailAddress) {
+        error = true;
+        validationErrors.title = 'Teenuse e-posti aadressi täitmine on kohustuslik';
     }
 
     if (req.body.url && !tools.validateUrl(req.body.url)) {
@@ -667,6 +674,8 @@ function handleSettings(req, res, next) {
             title: req.body.title,
             url: req.body.url,
             logo: req.body.url,
+            emailName: req.body.emailName,
+            emailAddress: req.body.emailAddress,
             validation: validationErrors
         });
         return;
@@ -676,7 +685,9 @@ function handleSettings(req, res, next) {
         env: process.env.NODE_ENV || 'development',
         title: req.body.title,
         url: req.body.url,
-        logo: req.body.logo
+        logo: req.body.logo,
+        emailName: req.body.emailName,
+        emailAddress: req.body.emailAddress
     };
 
     db.database.collection('settings').findOneAndUpdate({ env: settings.env }, { $set: settings }, { upsert: true, returnOriginal: false }, err => {
