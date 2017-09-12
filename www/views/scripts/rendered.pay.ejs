@@ -110,7 +110,6 @@
 
         <h3><%= payment.isAuth ?  'Autentimise ' : 'Makse teostamise ' %>näidisrakendus "<%= project.name %>"</h3>
         <form method="post" action="<%= proto %>://<%= hostname %>/banklink/<%- bank.key %>">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
             <!-- include all values as hidden form fields -->
 <% payment.fields.forEach(function(field, i){ -%>
@@ -185,7 +184,8 @@
         i[r] ||
         function() {
             (i[r].q = i[r].q || []).push(arguments);
-        }), (i[r].l = 1 * new Date());
+        }),
+        (i[r].l = 1 * new Date());
     (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
     a.async = 1;
     a.src = g;

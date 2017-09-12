@@ -161,8 +161,11 @@ app.use(
 app.set('view engine', 'ejs');
 
 app.use((...args) => {
-    if (/^\/api\//.test(args[0].url)) {
+    if (/^\/(api|banklink)\//.test(args[0].url)) {
         // skip CSRF check for api calls
+        return args[2]();
+    }
+    if (args[0].method === 'POST' && /^\/project\/[a-f0-9]{24}\b/.test(args[0].url)) {
         return args[2]();
     }
     return csrf(...args);
