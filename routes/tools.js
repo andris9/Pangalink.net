@@ -24,7 +24,14 @@ function handleKeys(req, res) {
         req.body[key] = req.body[key].trim();
 
         if (key === 'commonName') {
-            req.body[key] = punycode.toASCII(req.body[key].replace(/^https?:\/+/i, '').split('/').shift().toLowerCase().trim());
+            req.body[key] = punycode.toASCII(
+                req.body[key]
+                    .replace(/^https?:\/+/i, '')
+                    .split('/')
+                    .shift()
+                    .toLowerCase()
+                    .trim()
+            );
         }
 
         if (key === 'hash') {
@@ -41,7 +48,18 @@ function handleKeys(req, res) {
         }
 
         if (key === 'emailAddress') {
-            req.body[key] = req.body[key].replace(/@(.*)$/, (o, domain) => '@' + punycode.toASCII(domain.split('/').shift().toLowerCase().trim()));
+            req.body[key] = req.body[key].replace(
+                /@(.*)$/,
+                (o, domain) =>
+                    '@' +
+                    punycode.toASCII(
+                        domain
+                            .split('/')
+                            .shift()
+                            .toLowerCase()
+                            .trim()
+                    )
+            );
         }
 
         if (typeof req.body[key] === 'string') {

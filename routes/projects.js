@@ -27,32 +27,36 @@ router.get('/delete/:project', tools.requireUser, serveDeleteProject);
 router.get('/:pageNumber', serveProjects);
 
 function serveAddProject(req, res, next) {
-    db.database.collection('user').find({ role: { $ne: 'admin' } }).sort({ username: 1 }).toArray((err, users) => {
-        if (err) {
-            return next(err);
-        }
+    db.database
+        .collection('user')
+        .find({ role: { $ne: 'admin' } })
+        .sort({ username: 1 })
+        .toArray((err, users) => {
+            if (err) {
+                return next(err);
+            }
 
-        let authorized = tools.processAuthorized(users);
+            let authorized = tools.processAuthorized(users);
 
-        res.render('index', {
-            pageTitle: 'Lisa makselahendus',
-            page: '/add-project',
-            name: req.query.name || '',
-            description: req.query.description || '',
-            keyBitsize: Number(req.query.keyBitsize) || 2048,
-            soloAlgo: req.query.soloAlgo || '',
-            soloAutoResponse: !!(req.query.soloAutoResponse || ''),
-            ecUrl: req.query.ecUrl || '',
-            authorized,
-            ipizzaReceiverName: req.query.ipizzaReceiverName || '',
-            ipizzaReceiverAccount: req.query.ipizzaReceiverAccount || '',
-            id: req.query.id || '',
-            action: 'add',
-            bank: req.query.bank || '',
-            banks,
-            validation: {}
+            res.render('index', {
+                pageTitle: 'Lisa makselahendus',
+                page: '/add-project',
+                name: req.query.name || '',
+                description: req.query.description || '',
+                keyBitsize: Number(req.query.keyBitsize) || 2048,
+                soloAlgo: req.query.soloAlgo || '',
+                soloAutoResponse: !!(req.query.soloAutoResponse || ''),
+                ecUrl: req.query.ecUrl || '',
+                authorized,
+                ipizzaReceiverName: req.query.ipizzaReceiverName || '',
+                ipizzaReceiverAccount: req.query.ipizzaReceiverAccount || '',
+                id: req.query.id || '',
+                action: 'add',
+                bank: req.query.bank || '',
+                banks,
+                validation: {}
+            });
         });
-    });
 }
 
 function serveProjects(req, res) {
@@ -125,57 +129,61 @@ function serveEditProject(req, res, next) {
         return;
     }
 
-    db.database.collection('user').find({ role: { $ne: 'admin' } }).sort({ username: 1 }).toArray((err, users) => {
-        if (err) {
-            return next(err);
-        }
-
-        db.findOne(
-            'project',
-            {
-                _id: new ObjectID(id)
-            },
-            (err, record) => {
-                if (err) {
-                    req.flash('error', err.message || err || 'Andmebaasi viga');
-                    res.redirect('/');
-                    return;
-                }
-                if (!record) {
-                    req.flash('error', 'Sellise identifikaatoriga makselahendust ei leitud');
-                    res.redirect('/');
-                    return;
-                }
-                if (!tools.checkAuthorized(req, record)) {
-                    req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
-                    res.redirect('/');
-                    return;
-                }
-
-                let authorized = tools.processAuthorized(users, record.authorized);
-
-                res.render('index', {
-                    pageTitle: 'Muuda makselahendust',
-                    page: '/edit-project',
-                    name: req.body.name || record.name || '',
-                    description: req.body.description || record.description || '',
-                    id,
-                    keyBitsize: Number(req.body.keyBitsize) || Number(record.keyBitsize) || 1024,
-                    soloAlgo: req.body.soloAlgo || record.soloAlgo || '',
-                    soloAutoResponse: !!(req.body.soloAutoResponse || record.soloAutoResponse || ''),
-                    ecUrl: req.body.ecUrl || record.ecUrl || '',
-                    authorized,
-                    ipizzaReceiverName: req.body.ipizzaReceiverName || record.ipizzaReceiverName || '',
-                    ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || record.ipizzaReceiverAccount || '',
-                    action: 'modify',
-                    userCertificate: record.userCertificate,
-                    bank: req.body.bank || record.bank || '',
-                    banks,
-                    validation: {}
-                });
+    db.database
+        .collection('user')
+        .find({ role: { $ne: 'admin' } })
+        .sort({ username: 1 })
+        .toArray((err, users) => {
+            if (err) {
+                return next(err);
             }
-        );
-    });
+
+            db.findOne(
+                'project',
+                {
+                    _id: new ObjectID(id)
+                },
+                (err, record) => {
+                    if (err) {
+                        req.flash('error', err.message || err || 'Andmebaasi viga');
+                        res.redirect('/');
+                        return;
+                    }
+                    if (!record) {
+                        req.flash('error', 'Sellise identifikaatoriga makselahendust ei leitud');
+                        res.redirect('/');
+                        return;
+                    }
+                    if (!tools.checkAuthorized(req, record)) {
+                        req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
+                        res.redirect('/');
+                        return;
+                    }
+
+                    let authorized = tools.processAuthorized(users, record.authorized);
+
+                    res.render('index', {
+                        pageTitle: 'Muuda makselahendust',
+                        page: '/edit-project',
+                        name: req.body.name || record.name || '',
+                        description: req.body.description || record.description || '',
+                        id,
+                        keyBitsize: Number(req.body.keyBitsize) || Number(record.keyBitsize) || 1024,
+                        soloAlgo: req.body.soloAlgo || record.soloAlgo || '',
+                        soloAutoResponse: !!(req.body.soloAutoResponse || record.soloAutoResponse || ''),
+                        ecUrl: req.body.ecUrl || record.ecUrl || '',
+                        authorized,
+                        ipizzaReceiverName: req.body.ipizzaReceiverName || record.ipizzaReceiverName || '',
+                        ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || record.ipizzaReceiverAccount || '',
+                        action: 'modify',
+                        userCertificate: record.userCertificate,
+                        bank: req.body.bank || record.bank || '',
+                        banks,
+                        validation: {}
+                    });
+                }
+            );
+        });
 }
 
 function serveDeleteProject(req, res) {
@@ -244,140 +252,103 @@ function handleAddProject(req, res, next) {
     let validationErrors = {},
         error = false;
 
-    db.database.collection('user').find({ role: { $ne: 'admin' } }).sort({ username: 1 }).toArray((err, users) => {
-        if (err) {
-            return next(err);
-        }
-
-        req.body.id = (req.body.id || '').toString().trim();
-        req.body.name = (req.body.name || '').toString().trim();
-        req.body.description = (req.body.description || '').toString().trim();
-        req.body.bank = (req.body.bank || '').toString().trim();
-
-        req.body.keyBitsize = Number(req.body.keyBitsize) || 1024;
-
-        req.body.soloAlgo = (req.body.soloAlgo || '').toString().toLowerCase().trim();
-        req.body.soloAutoResponse = !!(req.body.soloAutoResponse || '').toString().trim();
-
-        req.body.ecUrl = (req.body.ecUrl || '').toString().trim();
-
-        let authorized = tools.processAuthorized(users, req.body.authorized);
-
-        req.body.ipizzaReceiverName = (req.body.ipizzaReceiverName || '').toString().trim();
-        req.body.ipizzaReceiverAccount = (req.body.ipizzaReceiverAccount || '').toString().trim();
-
-        if (!req.body.name) {
-            error = true;
-            validationErrors.name = 'Makselahenduse nimetuse täitmine on kohustuslik';
-        }
-
-        if (!banks[req.body.bank]) {
-            error = true;
-            validationErrors.bank = 'Panga tüüp on valimata';
-        }
-
-        if (req.body.keyBitsize && [1024, 2048, 4096].indexOf(req.body.keyBitsize) < 0) {
-            error = true;
-            validationErrors.keyBitsize = 'Vigane võtme pikkus';
-        }
-
-        if (
-            ['nordea', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0 &&
-            (!req.body.soloAlgo || ['md5', 'sha1', 'sha256'].indexOf(req.body.soloAlgo) < 0)
-        ) {
-            error = true;
-            validationErrors.soloAlgo = 'Vigane algoritm';
-        }
-
-        if (req.body.bank === 'ec' && req.body.ecUrl && !tools.validateUrl(req.body.ecUrl)) {
-            error = true;
-            validationErrors.ecUrl = 'Vigane tagasisuunamise aadress, peab olema korrektne URL';
-        }
-
-        if (req.body.ipizzaReceiverAccount && !IBAN.isValid(req.body.ipizzaReceiverAccount)) {
-            error = true;
-            validationErrors.ipizzaReceiverAccount = 'Saaja konto peab olema IBAN formaadis';
-        }
-
-        if (['nordea', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) < 0) {
-            req.body.soloAlgo = '';
-            req.body.soloAutoReturn = '';
-        }
-
-        if (req.body.bank !== 'ec') {
-            req.body.ecUrl = '';
-        }
-
-        if (error) {
-            req.flash('error', 'Andmete valideerimisel ilmnesid vead');
-            res.render('index', {
-                pageTitle: 'Lisa uus makselahendus',
-                page: '/add-project',
-                name: req.body.name || '',
-                description: req.body.description || '',
-                keyBitsize: Number(req.body.keyBitsize) || 1024,
-                soloAlgo: req.body.soloAlgo || '',
-                soloAutoResponse: !!(req.body.soloAutoResponse || ''),
-                ecUrl: req.body.ecUrl || '',
-                authorized,
-                ipizzaReceiverName: req.body.ipizzaReceiverName || '',
-                ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
-                id: req.body.id || '',
-                action: 'add',
-                bank: req.body.bank || '',
-                banks,
-                validation: validationErrors
-            });
-            return;
-        }
-
-        tools.generateKeys(req.user, 20 * 365, Number(req.body.keyBitsize) || 1024, (err, userCertificate, bankCertificate) => {
+    db.database
+        .collection('user')
+        .find({ role: { $ne: 'admin' } })
+        .sort({ username: 1 })
+        .toArray((err, users) => {
             if (err) {
-                req.flash('error', 'Sertifikaadi genereerimisel tekkis viga');
+                return next(err);
+            }
+
+            req.body.id = (req.body.id || '').toString().trim();
+            req.body.name = (req.body.name || '').toString().trim();
+            req.body.description = (req.body.description || '').toString().trim();
+            req.body.bank = (req.body.bank || '').toString().trim();
+
+            req.body.keyBitsize = Number(req.body.keyBitsize) || 1024;
+
+            req.body.soloAlgo = (req.body.soloAlgo || '')
+                .toString()
+                .toLowerCase()
+                .trim();
+            req.body.soloAutoResponse = !!(req.body.soloAutoResponse || '').toString().trim();
+
+            req.body.ecUrl = (req.body.ecUrl || '').toString().trim();
+
+            let authorized = tools.processAuthorized(users, req.body.authorized);
+
+            req.body.ipizzaReceiverName = (req.body.ipizzaReceiverName || '').toString().trim();
+            req.body.ipizzaReceiverAccount = (req.body.ipizzaReceiverAccount || '').toString().trim();
+
+            if (!req.body.name) {
+                error = true;
+                validationErrors.name = 'Makselahenduse nimetuse täitmine on kohustuslik';
+            }
+
+            if (!banks[req.body.bank]) {
+                error = true;
+                validationErrors.bank = 'Panga tüüp on valimata';
+            }
+
+            if (req.body.keyBitsize && [1024, 2048, 4096].indexOf(req.body.keyBitsize) < 0) {
+                error = true;
+                validationErrors.keyBitsize = 'Vigane võtme pikkus';
+            }
+
+            if (
+                ['nordea', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0 &&
+                (!req.body.soloAlgo || ['md5', 'sha1', 'sha256'].indexOf(req.body.soloAlgo) < 0)
+            ) {
+                error = true;
+                validationErrors.soloAlgo = 'Vigane algoritm';
+            }
+
+            if (req.body.bank === 'ec' && req.body.ecUrl && !tools.validateUrl(req.body.ecUrl)) {
+                error = true;
+                validationErrors.ecUrl = 'Vigane tagasisuunamise aadress, peab olema korrektne URL';
+            }
+
+            if (req.body.ipizzaReceiverAccount && !IBAN.isValid(req.body.ipizzaReceiverAccount)) {
+                error = true;
+                validationErrors.ipizzaReceiverAccount = 'Saaja konto peab olema IBAN formaadis';
+            }
+
+            if (['nordea', 'tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) < 0) {
+                req.body.soloAlgo = '';
+                req.body.soloAutoReturn = '';
+            }
+
+            if (req.body.bank !== 'ec') {
+                req.body.ecUrl = '';
+            }
+
+            if (error) {
+                req.flash('error', 'Andmete valideerimisel ilmnesid vead');
                 res.render('index', {
                     pageTitle: 'Lisa uus makselahendus',
                     page: '/add-project',
                     name: req.body.name || '',
                     description: req.body.description || '',
-                    id: req.body.id || '',
                     keyBitsize: Number(req.body.keyBitsize) || 1024,
                     soloAlgo: req.body.soloAlgo || '',
                     soloAutoResponse: !!(req.body.soloAutoResponse || ''),
-                    bank: req.body.bank || '',
-                    banks,
                     ecUrl: req.body.ecUrl || '',
                     authorized,
                     ipizzaReceiverName: req.body.ipizzaReceiverName || '',
                     ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
+                    id: req.body.id || '',
                     action: 'add',
+                    bank: req.body.bank || '',
+                    banks,
                     validation: validationErrors
                 });
                 return;
             }
 
-            let project = {
-                name: req.body.name,
-                description: req.body.description,
-                owner: req.user._id,
-                keyBitsize: req.body.keyBitsize,
-                soloAlgo: req.body.soloAlgo,
-                soloAutoResponse: !!(req.body.soloAutoResponse || ''),
-                bank: req.body.bank,
-                ecUrl: req.body.ecUrl,
-                authorized: authorized.filter(user => user.selected).map(user => user._id),
-                ipizzaReceiverName: req.body.ipizzaReceiverName,
-                ipizzaReceiverAccount: req.body.ipizzaReceiverAccount,
-                created: new Date(),
-                userCertificate,
-                bankCertificate,
-                secret: randomString({
-                    length: 32
-                })
-            };
-
-            tools.incrIdCounter((err, id) => {
+            tools.generateKeys(req.user, 20 * 365, Number(req.body.keyBitsize) || 1024, (err, userCertificate, bankCertificate) => {
                 if (err) {
-                    req.flash('error', 'Andmebaasi viga');
+                    req.flash('error', 'Sertifikaadi genereerimisel tekkis viga');
                     res.render('index', {
                         pageTitle: 'Lisa uus makselahendus',
                         page: '/add-project',
@@ -399,13 +370,27 @@ function handleAddProject(req, res, next) {
                     return;
                 }
 
-                if (['tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
-                    project.uid = (10000000 + Number(tools.getReferenceCode(id))).toString();
-                } else {
-                    project.uid = 'uid' + tools.getReferenceCode(id);
-                }
+                let project = {
+                    name: req.body.name,
+                    description: req.body.description,
+                    owner: req.user._id,
+                    keyBitsize: req.body.keyBitsize,
+                    soloAlgo: req.body.soloAlgo,
+                    soloAutoResponse: !!(req.body.soloAutoResponse || ''),
+                    bank: req.body.bank,
+                    ecUrl: req.body.ecUrl,
+                    authorized: authorized.filter(user => user.selected).map(user => user._id),
+                    ipizzaReceiverName: req.body.ipizzaReceiverName,
+                    ipizzaReceiverAccount: req.body.ipizzaReceiverAccount,
+                    created: new Date(),
+                    userCertificate,
+                    bankCertificate,
+                    secret: randomString({
+                        length: 32
+                    })
+                };
 
-                db.save('project', project, (err, id) => {
+                tools.incrIdCounter((err, id) => {
                     if (err) {
                         req.flash('error', 'Andmebaasi viga');
                         res.render('index', {
@@ -429,155 +414,167 @@ function handleAddProject(req, res, next) {
                         return;
                     }
 
-                    if (id) {
-                        req.flash('success', 'Makselahendus on loodud');
-                        res.redirect('/project/' + id.toString() + '/certs');
+                    if (['tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
+                        project.uid = (10000000 + Number(tools.getReferenceCode(id))).toString();
                     } else {
-                        req.flash('error', 'Makselahenduse loomine ebaõnnestus');
-                        res.render('index', {
-                            pageTitle: 'Lisa uus makselahendus',
-                            page: '/add-project',
-                            name: req.body.name || '',
-                            description: req.body.description || '',
-                            id: req.body.id || '',
-                            keyBitsize: Number(req.body.soloAlgo) || 1024,
-                            soloAlgo: req.body.soloAlgo || '',
-                            soloAutoResponse: !!(req.body.soloAutoResponse || ''),
-                            bank: req.body.bank || '',
-                            banks,
-                            ecUrl: req.body.ecUrl || '',
-                            authorized,
-                            ipizzaReceiverName: req.body.ipizzaReceiverName || '',
-                            ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
-                            action: 'add',
-                            validation: validationErrors
-                        });
-                        return;
+                        project.uid = 'uid' + tools.getReferenceCode(id);
                     }
+
+                    db.save('project', project, (err, id) => {
+                        if (err) {
+                            req.flash('error', 'Andmebaasi viga');
+                            res.render('index', {
+                                pageTitle: 'Lisa uus makselahendus',
+                                page: '/add-project',
+                                name: req.body.name || '',
+                                description: req.body.description || '',
+                                id: req.body.id || '',
+                                keyBitsize: Number(req.body.keyBitsize) || 1024,
+                                soloAlgo: req.body.soloAlgo || '',
+                                soloAutoResponse: !!(req.body.soloAutoResponse || ''),
+                                bank: req.body.bank || '',
+                                banks,
+                                ecUrl: req.body.ecUrl || '',
+                                authorized,
+                                ipizzaReceiverName: req.body.ipizzaReceiverName || '',
+                                ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
+                                action: 'add',
+                                validation: validationErrors
+                            });
+                            return;
+                        }
+
+                        if (id) {
+                            req.flash('success', 'Makselahendus on loodud');
+                            res.redirect('/project/' + id.toString() + '/certs');
+                        } else {
+                            req.flash('error', 'Makselahenduse loomine ebaõnnestus');
+                            res.render('index', {
+                                pageTitle: 'Lisa uus makselahendus',
+                                page: '/add-project',
+                                name: req.body.name || '',
+                                description: req.body.description || '',
+                                id: req.body.id || '',
+                                keyBitsize: Number(req.body.soloAlgo) || 1024,
+                                soloAlgo: req.body.soloAlgo || '',
+                                soloAutoResponse: !!(req.body.soloAutoResponse || ''),
+                                bank: req.body.bank || '',
+                                banks,
+                                ecUrl: req.body.ecUrl || '',
+                                authorized,
+                                ipizzaReceiverName: req.body.ipizzaReceiverName || '',
+                                ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
+                                action: 'add',
+                                validation: validationErrors
+                            });
+                            return;
+                        }
+                    });
                 });
             });
         });
-    });
 }
 
 function handleEditProject(req, res, next) {
     let validationErrors = {},
         error = false;
 
-    db.database.collection('user').find({ role: { $ne: 'admin' } }).sort({ username: 1 }).toArray((err, users) => {
-        if (err) {
-            return next(err);
-        }
+    db.database
+        .collection('user')
+        .find({ role: { $ne: 'admin' } })
+        .sort({ username: 1 })
+        .toArray((err, users) => {
+            if (err) {
+                return next(err);
+            }
 
-        req.body.id = (req.body.id || '').toString().trim();
-        req.body.name = (req.body.name || '').toString().trim();
-        req.body.description = (req.body.description || '').toString().trim();
+            req.body.id = (req.body.id || '').toString().trim();
+            req.body.name = (req.body.name || '').toString().trim();
+            req.body.description = (req.body.description || '').toString().trim();
 
-        req.body.keyBitsize = Number(req.body.keyBitsize) || 1024;
+            req.body.keyBitsize = Number(req.body.keyBitsize) || 1024;
 
-        req.body.soloAlgo = (req.body.soloAlgo || '').toString().toLowerCase().trim();
-        req.body.soloAutoResponse = !!(req.body.soloAutoResponse || '').toString().trim();
+            req.body.soloAlgo = (req.body.soloAlgo || '')
+                .toString()
+                .toLowerCase()
+                .trim();
+            req.body.soloAutoResponse = !!(req.body.soloAutoResponse || '').toString().trim();
 
-        req.body.ecUrl = (req.body.ecUrl || '').toString().trim();
+            req.body.ecUrl = (req.body.ecUrl || '').toString().trim();
 
-        let authorized = tools.processAuthorized(users, req.body.authorized);
+            let authorized = tools.processAuthorized(users, req.body.authorized);
 
-        req.body.ipizzaReceiverName = (req.body.ipizzaReceiverName || '').toString().trim();
-        req.body.ipizzaReceiverAccount = (req.body.ipizzaReceiverAccount || '').toString().trim();
+            req.body.ipizzaReceiverName = (req.body.ipizzaReceiverName || '').toString().trim();
+            req.body.ipizzaReceiverAccount = (req.body.ipizzaReceiverAccount || '').toString().trim();
 
-        if (!req.body.id.match(/^[a-fA-F0-9]{24}$/)) {
-            req.flash('error', 'Vigane makselahenduse identifikaator');
-            res.redirect('/');
-            return;
-        }
+            if (!req.body.id.match(/^[a-fA-F0-9]{24}$/)) {
+                req.flash('error', 'Vigane makselahenduse identifikaator');
+                res.redirect('/');
+                return;
+            }
 
-        if (!req.body.name) {
-            error = true;
-            validationErrors.name = 'Makselahenduse nimetuse täitmine on kohustuslik';
-        }
+            if (!req.body.name) {
+                error = true;
+                validationErrors.name = 'Makselahenduse nimetuse täitmine on kohustuslik';
+            }
 
-        db.findOne(
-            'project',
-            {
-                _id: new ObjectID(req.body.id)
-            },
-            (err, record) => {
-                if (err) {
-                    req.flash('error', err.message || err || 'Andmebaasi viga');
-                    res.redirect('/');
-                    return;
-                }
-                if (!record) {
-                    req.flash('error', 'Sellise identifikaatoriga makselahendust ei leitud');
-                    res.redirect('/');
-                    return;
-                }
-                if (!tools.checkAuthorized(req, record)) {
-                    req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
-                    res.redirect('/');
-                    return;
-                }
+            db.findOne(
+                'project',
+                {
+                    _id: new ObjectID(req.body.id)
+                },
+                (err, record) => {
+                    if (err) {
+                        req.flash('error', err.message || err || 'Andmebaasi viga');
+                        res.redirect('/');
+                        return;
+                    }
+                    if (!record) {
+                        req.flash('error', 'Sellise identifikaatoriga makselahendust ei leitud');
+                        res.redirect('/');
+                        return;
+                    }
+                    if (!tools.checkAuthorized(req, record)) {
+                        req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
+                        res.redirect('/');
+                        return;
+                    }
 
-                if (req.body.keyBitsize && [1024, 2048, 4096].indexOf(req.body.keyBitsize) < 0) {
-                    error = true;
-                    validationErrors.keyBitsize = 'Vigane võtme pikkus';
-                }
+                    if (req.body.keyBitsize && [1024, 2048, 4096].indexOf(req.body.keyBitsize) < 0) {
+                        error = true;
+                        validationErrors.keyBitsize = 'Vigane võtme pikkus';
+                    }
 
-                if (record.bank === 'nordea' && (!req.body.soloAlgo || ['md5', 'sha1', 'sha256'].indexOf(req.body.soloAlgo) < 0)) {
-                    error = true;
-                    validationErrors.soloAlgo = 'Vigane algoritm';
-                }
+                    if (record.bank === 'nordea' && (!req.body.soloAlgo || ['md5', 'sha1', 'sha256'].indexOf(req.body.soloAlgo) < 0)) {
+                        error = true;
+                        validationErrors.soloAlgo = 'Vigane algoritm';
+                    }
 
-                if (record.bank === 'ec' && req.body.ecUrl && !tools.validateUrl(req.body.ecUrl)) {
-                    error = true;
-                    validationErrors.ecUrl = 'Vigane tagasisuunamise aadress, peab olema korrektne URL';
-                }
+                    if (record.bank === 'ec' && req.body.ecUrl && !tools.validateUrl(req.body.ecUrl)) {
+                        error = true;
+                        validationErrors.ecUrl = 'Vigane tagasisuunamise aadress, peab olema korrektne URL';
+                    }
 
-                if (
-                    req.body.ipizzaReceiverAccount &&
-                    req.body.ipizzaReceiverAccount !== record.ipizzaReceiverAccount &&
-                    !IBAN.isValid(req.body.ipizzaReceiverAccount)
-                ) {
-                    error = true;
-                    validationErrors.ipizzaReceiverAccount = 'Saaja konto peab olema IBAN formaadis';
-                }
+                    if (
+                        req.body.ipizzaReceiverAccount &&
+                        req.body.ipizzaReceiverAccount !== record.ipizzaReceiverAccount &&
+                        !IBAN.isValid(req.body.ipizzaReceiverAccount)
+                    ) {
+                        error = true;
+                        validationErrors.ipizzaReceiverAccount = 'Saaja konto peab olema IBAN formaadis';
+                    }
 
-                if (record.bank !== 'nordea') {
-                    req.body.soloAlgo = '';
-                    req.body.soloAutoResponse = '';
-                }
+                    if (record.bank !== 'nordea') {
+                        req.body.soloAlgo = '';
+                        req.body.soloAutoResponse = '';
+                    }
 
-                if (record.bank !== 'ec') {
-                    req.body.ecUrl = '';
-                }
+                    if (record.bank !== 'ec') {
+                        req.body.ecUrl = '';
+                    }
 
-                if (error) {
-                    req.flash('error', 'Andmete valideerimisel ilmnesid vead');
-                    res.render('index', {
-                        pageTitle: 'Muuda makselahendust',
-                        page: '/edit-project',
-                        name: req.body.name || '',
-                        description: req.body.description || '',
-                        id: req.body.id || '',
-                        keyBitsize: Number(req.body.keyBitsize) || 1024,
-                        soloAlgo: req.body.soloAlgo || '',
-                        soloAutoResponse: !!(req.body.soloAutoResponse || ''),
-                        ecUrl: req.body.ecUrl || '',
-                        authorized,
-                        ipizzaReceiverName: req.body.ipizzaReceiverName || '',
-                        ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
-                        action: 'modify',
-                        bank: req.body.bank || '',
-                        banks,
-                        userCertificate: record.userCertificate,
-                        validation: validationErrors
-                    });
-                    return;
-                }
-
-                tools.generateKeys(req.user, 20 * 365, Number(req.body.keyBitsize) || 1024, (err, userCertificate, bankCertificate) => {
-                    if (err && req.body.regenerate) {
-                        req.flash('error', 'Sertifikaadi genereerimisel tekkis viga');
+                    if (error) {
+                        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
                         res.render('index', {
                             pageTitle: 'Muuda makselahendust',
                             page: '/edit-project',
@@ -600,33 +597,12 @@ function handleEditProject(req, res, next) {
                         return;
                     }
 
-                    record.name = req.body.name;
-                    record.description = req.body.description;
-                    record.updated = new Date();
-                    record.keyBitsize = Number(req.body.keyBitsize) || 1024;
-                    record.soloAlgo = req.body.soloAlgo || '';
-                    record.soloAutoResponse = !!(req.body.soloAutoResponse || '');
-
-                    record.ecUrl = req.body.ecUrl || '';
-                    record.authorized = authorized.filter(user => user.selected).map(user => user._id);
-                    record.ipizzaReceiverName = req.body.ipizzaReceiverName || '';
-                    record.ipizzaReceiverAccount = req.body.ipizzaReceiverAccount || '';
-
-                    if (req.body.regenerate) {
-                        record.userCertificate = userCertificate;
-                        record.bankCertificate = bankCertificate;
-                        record.secret = randomString({
-                            length: 32
-                        });
-                    }
-
-                    db.save('project', record, (err, id) => {
-                        if (err) {
-                            req.flash('error', 'Andmebaasi viga');
+                    tools.generateKeys(req.user, 20 * 365, Number(req.body.keyBitsize) || 1024, (err, userCertificate, bankCertificate) => {
+                        if (err && req.body.regenerate) {
+                            req.flash('error', 'Sertifikaadi genereerimisel tekkis viga');
                             res.render('index', {
                                 pageTitle: 'Muuda makselahendust',
                                 page: '/edit-project',
-
                                 name: req.body.name || '',
                                 description: req.body.description || '',
                                 id: req.body.id || '',
@@ -645,41 +621,87 @@ function handleEditProject(req, res, next) {
                             });
                             return;
                         }
-                        if (id) {
-                            req.flash('success', 'Makselahenduse andmed on uuendatud');
-                            if (req.body.regenerate) {
-                                req.flash('success', 'Genereeriti uus sertifikaat');
+
+                        record.name = req.body.name;
+                        record.description = req.body.description;
+                        record.updated = new Date();
+                        record.keyBitsize = Number(req.body.keyBitsize) || 1024;
+                        record.soloAlgo = req.body.soloAlgo || '';
+                        record.soloAutoResponse = !!(req.body.soloAutoResponse || '');
+
+                        record.ecUrl = req.body.ecUrl || '';
+                        record.authorized = authorized.filter(user => user.selected).map(user => user._id);
+                        record.ipizzaReceiverName = req.body.ipizzaReceiverName || '';
+                        record.ipizzaReceiverAccount = req.body.ipizzaReceiverAccount || '';
+
+                        if (req.body.regenerate) {
+                            record.userCertificate = userCertificate;
+                            record.bankCertificate = bankCertificate;
+                            record.secret = randomString({
+                                length: 32
+                            });
+                        }
+
+                        db.save('project', record, (err, id) => {
+                            if (err) {
+                                req.flash('error', 'Andmebaasi viga');
+                                res.render('index', {
+                                    pageTitle: 'Muuda makselahendust',
+                                    page: '/edit-project',
+
+                                    name: req.body.name || '',
+                                    description: req.body.description || '',
+                                    id: req.body.id || '',
+                                    keyBitsize: Number(req.body.keyBitsize) || 1024,
+                                    soloAlgo: req.body.soloAlgo || '',
+                                    soloAutoResponse: !!(req.body.soloAutoResponse || ''),
+                                    ecUrl: req.body.ecUrl || '',
+                                    authorized,
+                                    ipizzaReceiverName: req.body.ipizzaReceiverName || '',
+                                    ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
+                                    action: 'modify',
+                                    bank: req.body.bank || '',
+                                    banks,
+                                    userCertificate: record.userCertificate,
+                                    validation: validationErrors
+                                });
+                                return;
                             }
-                            res.redirect('/project/' + id.toString() + '/certs');
-                        } else {
-                            req.flash('error', 'Makselahenduse andmete uuendamine ebaõnnestus');
-                            res.render('index', {
-                                pageTitle: 'Muuda makselahendust',
-                                page: '/edit-project',
+                            if (id) {
+                                req.flash('success', 'Makselahenduse andmed on uuendatud');
+                                if (req.body.regenerate) {
+                                    req.flash('success', 'Genereeriti uus sertifikaat');
+                                }
+                                res.redirect('/project/' + id.toString() + '/certs');
+                            } else {
+                                req.flash('error', 'Makselahenduse andmete uuendamine ebaõnnestus');
+                                res.render('index', {
+                                    pageTitle: 'Muuda makselahendust',
+                                    page: '/edit-project',
 
-                                name: req.body.name || '',
-                                description: req.body.description || '',
-                                id: req.body.id || '',
-                                keyBitsize: Number(req.body.keyBitsize) || 1024,
-                                soloAlgo: req.body.soloAlgo || '',
-                                soloAutoResponse: !!(req.body.soloAutoResponse || ''),
-                                ecUrl: req.body.ecUrl || '',
-                                authorized,
-                                ipizzaReceiverName: req.body.ipizzaReceiverName || '',
-                                ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
-                                action: 'modify',
-                                bank: req.body.bank || '',
-                                banks,
-                                userCertificate: record.userCertificate,
-                                validation: validationErrors
-                            });
-                            return;
-                        }
+                                    name: req.body.name || '',
+                                    description: req.body.description || '',
+                                    id: req.body.id || '',
+                                    keyBitsize: Number(req.body.keyBitsize) || 1024,
+                                    soloAlgo: req.body.soloAlgo || '',
+                                    soloAutoResponse: !!(req.body.soloAutoResponse || ''),
+                                    ecUrl: req.body.ecUrl || '',
+                                    authorized,
+                                    ipizzaReceiverName: req.body.ipizzaReceiverName || '',
+                                    ipizzaReceiverAccount: req.body.ipizzaReceiverAccount || '',
+                                    action: 'modify',
+                                    bank: req.body.bank || '',
+                                    banks,
+                                    userCertificate: record.userCertificate,
+                                    validation: validationErrors
+                                });
+                                return;
+                            }
+                        });
                     });
-                });
-            }
-        );
-    });
+                }
+            );
+        });
 }
 
 module.exports = router;

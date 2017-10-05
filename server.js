@@ -197,8 +197,10 @@ app.use((req, res, next) => {
 
         res.locals.proto = req.siteProto =
             (urlParts.protocol ? urlParts.protocol.substr(0, urlParts.protocol.length - 1) : '') || config.proto || req.protocol || 'http';
-        res.locals.hostname = req.siteHostname = (urlParts.host || config.hostname || (req.headers && req.headers.host) || 'localhost')
-            .replace(/:(80|443)$/, '');
+        res.locals.hostname = req.siteHostname = (urlParts.host || config.hostname || (req.headers && req.headers.host) || 'localhost').replace(
+            /:(80|443)$/,
+            ''
+        );
         res.locals.title = req.siteTitle = settings.title || config.title || packageInfo.name;
 
         res.locals.packageTitle = packageInfo.name;

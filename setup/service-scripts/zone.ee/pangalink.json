@@ -1,11 +1,13 @@
 {
-    "apps": [{
-        "name": "pangalink",
-        "script": "./pangalink/index.js",
-        "cwd": "./pangalink",
-        "watch": false,
-        "env": {
-            "NODE_ENV": "production",
+    "apps": [
+        {
+            "name": "pangalink",
+            "script": "./pangalink/index.js",
+            "cwd": "./pangalink",
+            "watch": false,
+            "env": {
+                "NODE_ENV": "production"
+            }
         }
-    }]
+    ]
 }

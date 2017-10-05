@@ -1,30 +1,24 @@
 {
-
     "krediidipank": {
         "key": "krediidipank",
-        "logo": "/assets/logos/krep-emu.png",
-        "color": "#9A0030",
-        "borderColor": "#E4E3E3",
+        "logo": "/assets/logos/coop-emu.png",
+        "color": "#137DC0",
+        "borderColor": "#1B0E51",
         "type": "ipizza",
-        "name": "Krediidipank",
+        "name": "Coop Pank",
         "id": "KREP",
         "accountNr": "EE684204212345678907",
         "prefix": "42",
 
         "charset": "VK_ENCODING",
-        "forceCharset": "Krediidipanga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-13",
-            "WINDOWS-1257"
-        ],
+        "forceCharset":
+            "Coop Panga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
+        "allowedCharsets": ["UTF-8", "ISO-8859-13", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
+        "allowedServices": ["1011", "1012", "4011", "4012"],
         "forceIban": true,
         "country": "EE",
         "fieldLength": {
@@ -45,7 +39,6 @@
             "VK_LANG": 3
         },
         "group": "pangalink"
-
     },
 
     "lhv": {
@@ -60,18 +53,12 @@
         "prefix": "77",
 
         "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
+        "allowedCharsets": ["UTF-8", "ISO-8859-1", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
+        "allowedServices": ["1011", "1012", "4011", "4012"],
         "forceIban": true,
         "country": "EE",
         "fieldLength": {
@@ -104,10 +91,7 @@
         "charset": false,
         "id": "ECOMMERCE",
         "defaultCharset": "ISO-8859-1",
-        "allowedCharsets": [
-            "ISO-8859-1",
-            "UTF-8"
-        ],
+        "allowedCharsets": ["ISO-8859-1", "UTF-8"],
         "fieldLength": {
             "action": 3,
             "ver": 3,
@@ -132,25 +116,19 @@
         "color": "#005284",
         "borderColor": "#E4E3E3",
         "type": "ipizza",
-        "name": "Nordea",
+        "name": "Luminor Bank",
         "id": "NORDEA",
         "accountNr": "EE561700017123456786",
         "prefix": "17",
         "country": "EE",
         "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
+        "allowedCharsets": ["UTF-8", "ISO-8859-1", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
         "returnMethod": "POST",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
+        "allowedServices": ["1011", "1012", "4011", "4012"],
         "forceIban": true,
         "fieldLength": {
             "VK_SERVICE": 4,
@@ -171,7 +149,46 @@
         },
         "group": "pangalink",
         "disabled": false
+    },
 
+    "pocopay": {
+        "key": "pocopay",
+        "logo": "/assets/logos/pocopay-emu.png",
+        "color": "#663EB3",
+        "borderColor": "#663EB3",
+        "type": "ipizza",
+        "name": "Pocopay",
+        "id": "POCOPAY",
+        "accountNr": "EE129900001234567897",
+        "prefix": "99",
+
+        "charset": "VK_ENCODING",
+        "allowedCharsets": ["UTF-8", "ISO-8859-13", "WINDOWS-1257"],
+        "defaultCharset": "UTF-8",
+        "utf8length": "symbols",
+        "returnAddress": "VK_RETURN",
+        "cancelAddress": "VK_CANCEL",
+        "allowedServices": ["1011"],
+        "forceIban": true,
+        "country": "EE",
+        "fieldLength": {
+            "VK_SERVICE": 4,
+            "VK_VERSION": 3,
+            "VK_SND_ID": 15,
+            "VK_STAMP": 20,
+            "VK_AMOUNT": 12,
+            "VK_CURR": 3,
+            "VK_ACC": 34,
+            "VK_NAME": 70,
+            "VK_REF": 35,
+            "VK_MSG": 95,
+            "VK_RETURN": 255,
+            "VK_CANCEL": 255,
+            "VK_ENCODING": 12,
+            "VK_DATETIME": 24,
+            "VK_LANG": 3
+        },
+        "group": "pangalink"
     },
 
     "sampo": {
@@ -182,18 +199,12 @@
         "type": "ipizza",
         "name": "Danske",
         "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
+        "allowedCharsets": ["UTF-8", "ISO-8859-1", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
+        "allowedServices": ["1011", "1012", "4011", "4012"],
         "id": "SAMPOPANK",
         "forceIban": true,
         "accountNr": "EE823300331234567897",
@@ -237,18 +248,12 @@
         "prefix": "10",
 
         "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
+        "allowedCharsets": ["UTF-8", "ISO-8859-1", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
+        "allowedServices": ["1011", "1012", "4011", "4012"],
         "forceIban": true,
         "country": "EE",
         "fieldLength": {
@@ -283,19 +288,13 @@
         "prefix": ["22", "11"],
 
         "charset": "VK_ENCODING",
-        "allowedCharsets": [
-            "UTF-8",
-            "ISO-8859-1",
-            "WINDOWS-1257"
-        ],
+        "allowedCharsets": ["UTF-8", "ISO-8859-1", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",
         "returnAddress": "VK_RETURN",
         "cancelAddress": "VK_CANCEL",
         "returnMethod": "GET",
-        "allowedServices": [
-            "1011", "1012", "4011", "4012"
-        ],
+        "allowedServices": ["1011", "1012", "4011", "4012"],
         "forceIban": true,
         "country": "EE",
         "fieldLength": {

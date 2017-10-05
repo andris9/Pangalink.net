@@ -166,7 +166,14 @@ function checkJoin(req, res, next) {
 }
 
 function serveProfile(req, res, next) {
-    let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
+    let userId = req.params.user
+        ? new ObjectID(
+            (req.params.user || '')
+                .toString()
+                .trim()
+                .toLowerCase()
+        )
+        : req.user._id;
     db.database.collection('user').findOne({ _id: userId }, (err, userData) => {
         if (err) {
             return next(err);
@@ -352,8 +359,18 @@ function handleJoin(req, res) {
 }
 
 function handleProfile(req, res, next) {
-    let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
-    let role = (req.body.role || '').toString().toLowerCase().trim();
+    let userId = req.params.user
+        ? new ObjectID(
+            (req.params.user || '')
+                .toString()
+                .trim()
+                .toLowerCase()
+        )
+        : req.user._id;
+    let role = (req.body.role || '')
+        .toString()
+        .toLowerCase()
+        .trim();
     let description = (req.body.description || '').toString().trim();
 
     if (!req.params.user) {
@@ -455,32 +472,41 @@ function handleProfile(req, res, next) {
 }
 
 function serveUsers(req, res, next) {
-    db.database.collection('user').find().project({ name: true, username: true, role: true, description: true }).sort({ username: 1 }).toArray((err, list) => {
-        if (err) {
-            return next(err);
-        }
-        db.database.collection('tickets').find().sort({ address: 1 }).toArray((err, tickets) => {
+    db.database
+        .collection('user')
+        .find()
+        .project({ name: true, username: true, role: true, description: true })
+        .sort({ username: 1 })
+        .toArray((err, list) => {
             if (err) {
                 return next(err);
             }
-            res.render('index', {
-                pageTitle: 'Kasutajad',
-                page: '/account/users',
-                tab: req.query.ticket ? 'tickets' : 'users',
-                list: list.map(user => {
-                    user.roleStr = tools.roles[user.role];
-                    return user;
-                }),
-                tickets: tickets.map(ticket => {
-                    ticket.roleStr = tools.roles[ticket.role];
-                    if (req.query.ticket === ticket._id.toString()) {
-                        ticket.highlight = true;
+            db.database
+                .collection('tickets')
+                .find()
+                .sort({ address: 1 })
+                .toArray((err, tickets) => {
+                    if (err) {
+                        return next(err);
                     }
-                    return ticket;
-                })
-            });
+                    res.render('index', {
+                        pageTitle: 'Kasutajad',
+                        page: '/account/users',
+                        tab: req.query.ticket ? 'tickets' : 'users',
+                        list: list.map(user => {
+                            user.roleStr = tools.roles[user.role];
+                            return user;
+                        }),
+                        tickets: tickets.map(ticket => {
+                            ticket.roleStr = tools.roles[ticket.role];
+                            if (req.query.ticket === ticket._id.toString()) {
+                                ticket.highlight = true;
+                            }
+                            return ticket;
+                        })
+                    });
+                });
         });
-    });
 }
 
 function serveUsersAdd(req, res) {
@@ -495,7 +521,14 @@ function serveUsersAdd(req, res) {
 }
 
 function serveDeleteProfile(req, res) {
-    let userId = req.params.user ? new ObjectID((req.params.user || '').toString().trim().toLowerCase()) : false;
+    let userId = req.params.user
+        ? new ObjectID(
+            (req.params.user || '')
+                .toString()
+                .trim()
+                .toLowerCase()
+        )
+        : false;
 
     if (!/^[a-fA-F0-9]{24}$/.test(userId)) {
         req.flash('error', 'Vigane kasutaja identifikaator');
@@ -536,7 +569,10 @@ function serveDeleteProfile(req, res) {
 }
 
 function checkUser(req, res, next) {
-    let userId = (req.params.user || '').toString().trim().toLowerCase();
+    let userId = (req.params.user || '')
+        .toString()
+        .trim()
+        .toLowerCase();
 
     if (userId === req.user._id.toString()) {
         return res.redirect('/account/profile');

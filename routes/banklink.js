@@ -38,7 +38,10 @@ function servePaymentFinal(req, res) {
 
         data.title =
             config.title ||
-            (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:\d+$/, '').toLowerCase().replace(/^./, s => s.toUpperCase());
+            (config.hostname || (req && req.headers && req.headers.host) || 'localhost')
+                .replace(/:\d+$/, '')
+                .toLowerCase()
+                .replace(/^./, s => s.toUpperCase());
         data.proto = config.proto || 'http';
         data.hostname = config.hostname || (req && req.headers && req.headers.host) || 'localhost';
         data.googleAnalyticsID = config.googleAnalyticsID;

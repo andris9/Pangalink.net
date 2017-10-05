@@ -36,107 +36,111 @@ function serveProject(req, res, next) {
         return;
     }
 
-    db.database.collection('user').find({ role: { $ne: 'admin' }, username: { $ne: req.user.username } }).sort({ username: 1 }).toArray((err, users) => {
-        if (err) {
-            return next(err);
-        }
-
-        db.findOne(
-            'project',
-            {
-                _id: new ObjectID(id)
-            },
-            (err, record) => {
-                if (err) {
-                    req.flash('error', err.message || err || 'Andmebaasi viga');
-                    res.redirect('/');
-                    return;
-                }
-                if (!record) {
-                    req.flash('error', 'Sellise identifikaatoriga makselahendust ei leitud');
-                    res.redirect('/');
-                    return;
-                }
-
-                if (!tools.checkAuthorized(req, record)) {
-                    req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
-                    res.redirect('/');
-                    return;
-                }
-
-                let authorizedIds = [].concat(record.authorized || []).map(id => id.toString());
-
-                let authorized = users.filter(user => authorizedIds.includes(user._id.toString())).map(user => user.username);
-                db.count(
-                    'payment',
-                    {
-                        project: id
-                    },
-                    (err, total) => {
-                        if (err) {
-                            //
-                        }
-                        let pageCount = Math.ceil(total / config.pagingCount);
-
-                        if (pageNumber > pageCount) {
-                            pageNumber = pageCount || 1;
-                        }
-
-                        let start_index = (pageNumber - 1) * config.pagingCount;
-
-                        db.find(
-                            'payment',
-                            {
-                                project: id
-                            },
-                            {},
-                            {
-                                sort: [['date', 'desc']],
-                                limit: config.pagingCount,
-                                skip: start_index
-                            },
-                            (err, records) => {
-                                if (err) {
-                                    req.flash('error', err.message || err || 'Andmebaasi viga');
-                                    res.redirect('/');
-                                    return;
-                                }
-
-                                res.render('index', {
-                                    pageTitle: record.name,
-                                    page: '/project',
-                                    project: record,
-                                    authorized,
-                                    banks,
-                                    tab: req.params.tab || 'payments',
-                                    id,
-
-                                    start_index,
-                                    pageNumber,
-                                    pageCount,
-                                    pagePath: '/project/' + id + '/page',
-                                    paging: tools.paging(pageNumber, pageCount),
-                                    payments: (records || []).map(payment => {
-                                        payment.date = moment(payment.date).calendar();
-                                        payment.amount = tools.formatCurrency(payment.amount, payment.currency || 'EUR');
-                                        payment.typeName =
-                                            {
-                                                PAYMENT: 'Maksekorraldus',
-                                                IDENTIFICATION: 'Autentimine'
-                                            }[payment.type] || '';
-                                        return payment;
-                                    }),
-                                    languages: tools.languageNames,
-                                    countries: tools.countryCodes,
-                                    labels: tools.processLabels
-                                });
-                            }
-                        );
-                    }
-                );
+    db.database
+        .collection('user')
+        .find({ role: { $ne: 'admin' }, username: { $ne: req.user.username } })
+        .sort({ username: 1 })
+        .toArray((err, users) => {
+            if (err) {
+                return next(err);
             }
-        );
-    });
+
+            db.findOne(
+                'project',
+                {
+                    _id: new ObjectID(id)
+                },
+                (err, record) => {
+                    if (err) {
+                        req.flash('error', err.message || err || 'Andmebaasi viga');
+                        res.redirect('/');
+                        return;
+                    }
+                    if (!record) {
+                        req.flash('error', 'Sellise identifikaatoriga makselahendust ei leitud');
+                        res.redirect('/');
+                        return;
+                    }
+
+                    if (!tools.checkAuthorized(req, record)) {
+                        req.flash('error', 'Sul ei ole õigusi selle makselahenduse kasutamiseks');
+                        res.redirect('/');
+                        return;
+                    }
+
+                    let authorizedIds = [].concat(record.authorized || []).map(id => id.toString());
+
+                    let authorized = users.filter(user => authorizedIds.includes(user._id.toString())).map(user => user.username);
+                    db.count(
+                        'payment',
+                        {
+                            project: id
+                        },
+                        (err, total) => {
+                            if (err) {
+                                //
+                            }
+                            let pageCount = Math.ceil(total / config.pagingCount);
+
+                            if (pageNumber > pageCount) {
+                                pageNumber = pageCount || 1;
+                            }
+
+                            let start_index = (pageNumber - 1) * config.pagingCount;
+
+                            db.find(
+                                'payment',
+                                {
+                                    project: id
+                                },
+                                {},
+                                {
+                                    sort: [['date', 'desc']],
+                                    limit: config.pagingCount,
+                                    skip: start_index
+                                },
+                                (err, records) => {
+                                    if (err) {
+                                        req.flash('error', err.message || err || 'Andmebaasi viga');
+                                        res.redirect('/');
+                                        return;
+                                    }
+
+                                    res.render('index', {
+                                        pageTitle: record.name,
+                                        page: '/project',
+                                        project: record,
+                                        authorized,
+                                        banks,
+                                        tab: req.params.tab || 'payments',
+                                        id,
+
+                                        start_index,
+                                        pageNumber,
+                                        pageCount,
+                                        pagePath: '/project/' + id + '/page',
+                                        paging: tools.paging(pageNumber, pageCount),
+                                        payments: (records || []).map(payment => {
+                                            payment.date = moment(payment.date).calendar();
+                                            payment.amount = tools.formatCurrency(payment.amount, payment.currency || 'EUR');
+                                            payment.typeName =
+                                                {
+                                                    PAYMENT: 'Maksekorraldus',
+                                                    IDENTIFICATION: 'Autentimine'
+                                                }[payment.type] || '';
+                                            return payment;
+                                        }),
+                                        languages: tools.languageNames,
+                                        countries: tools.countryCodes,
+                                        labels: tools.processLabels
+                                    });
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+        });
 }
 
 function serveRenderedExamplePayment(req, res) {
@@ -195,10 +199,10 @@ function serveExamplePayment(req, res) {
         res.render('scripts/' + (req.renderHTML ? 'rendered.pay' : 'pay.' + payment.bank) + '.ejs', {
             title:
                 config.title ||
-                    (config.hostname || (req && req.headers && req.headers.host) || 'localhost')
-                        .replace(/:\d+$/, '')
-                        .toLowerCase()
-                        .replace(/^./, s => s.toUpperCase()),
+                (config.hostname || (req && req.headers && req.headers.host) || 'localhost')
+                    .replace(/:\d+$/, '')
+                    .toLowerCase()
+                    .replace(/^./, s => s.toUpperCase()),
             proto: config.proto || 'http',
             hostname: (config.hostname || (req && req.headers && req.headers.host) || 'localhost').replace(/:(80|443)$/, ''),
             payment,

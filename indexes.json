@@ -1,147 +1,179 @@
-[{
-        "collection": "user",
-        "indexes": [{
-            "name": "username",
-            "key": {
-                "username": 1
-            },
-            "unique": true,
-            "background": true
-        }]
-    },
+[
     {
         "collection": "user",
-        "indexes": [{
-            "name": "account_role",
-            "key": {
-                "role": 1,
-                "username": 1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "username",
+                "key": {
+                    "username": 1
+                },
+                "unique": true,
+                "background": true
+            }
+        ]
     },
     {
         "collection": "user",
-        "indexes": [{
-            "name": "api_token",
-            "key": {
-                "token": 1
-            },
-            "unique": true,
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "account_role",
+                "key": {
+                    "role": 1,
+                    "username": 1
+                },
+                "background": true
+            }
+        ]
+    },
+    {
+        "collection": "user",
+        "indexes": [
+            {
+                "name": "api_token",
+                "key": {
+                    "token": 1
+                },
+                "unique": true,
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_owner_by_name",
-            "key": {
-                "owner": 1,
-                "name": 1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_owner_by_name",
+                "key": {
+                    "owner": 1,
+                    "name": 1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_viewer_by_name",
-            "key": {
-                "authorized": 1,
-                "name": 1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_viewer_by_name",
+                "key": {
+                    "authorized": 1,
+                    "name": 1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_owner_by_created",
-            "key": {
-                "owner": 1,
-                "created": -1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_owner_by_created",
+                "key": {
+                    "owner": 1,
+                    "created": -1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_viewer_by_created",
-            "key": {
-                "authorized": 1,
-                "created": -1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_viewer_by_created",
+                "key": {
+                    "authorized": 1,
+                    "created": -1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_sort_name",
-            "key": {
-                "name": 1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_sort_name",
+                "key": {
+                    "name": 1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_uid",
-            "key": {
-                "uid": 1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_uid",
+                "key": {
+                    "uid": 1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "project",
-        "indexes": [{
-            "name": "project_sort_date",
-            "key": {
-                "created": -1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "project_sort_date",
+                "key": {
+                    "created": -1
+                },
+                "background": true
+            }
+        ]
     },
     {
         "collection": "payment",
-        "indexes": [{
-            "name": "payment_sort_date",
-            "key": {
-                "project": 1,
-                "date": -1
-            },
-            "background": true
-        }]
-    }, {
+        "indexes": [
+            {
+                "name": "payment_sort_date",
+                "key": {
+                    "project": 1,
+                    "date": -1
+                },
+                "background": true
+            }
+        ]
+    },
+    {
         "collection": "tickets",
-        "indexes": [{
-            "name": "autoexpire",
-            "expireAfterSeconds": 604800,
-            "key": {
-                "created": 1
-            },
-            "background": true
-        }]
-    }, {
+        "indexes": [
+            {
+                "name": "autoexpire",
+                "expireAfterSeconds": 604800,
+                "key": {
+                    "created": 1
+                },
+                "background": true
+            }
+        ]
+    },
+    {
         "collection": "tickets",
-        "indexes": [{
-            "name": "sort_by_address",
-            "key": {
-                "address": 1
-            },
-            "background": true
-        }]
-    }, {
+        "indexes": [
+            {
+                "name": "sort_by_address",
+                "key": {
+                    "address": 1
+                },
+                "background": true
+            }
+        ]
+    },
+    {
         "collection": "settings",
-        "indexes": [{
-            "name": "site_settings",
-            "key": {
-                "env": 1
-            },
-            "background": true
-        }]
+        "indexes": [
+            {
+                "name": "site_settings",
+                "key": {
+                    "env": 1
+                },
+                "background": true
+            }
+        ]
     }
 ]

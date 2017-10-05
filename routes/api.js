@@ -118,10 +118,12 @@ function serveAPIListBanks(req, res) {
         req,
         res,
         false,
-        Object.keys(banks).sort().map(bank => ({
-            type: bank,
-            name: banks[bank].name
-        }))
+        Object.keys(banks)
+            .sort()
+            .map(bank => ({
+                type: bank,
+                name: banks[bank].name
+            }))
     );
 }
 
@@ -334,7 +336,10 @@ function apiActionPost(req, project, callback) {
 
     project.return_url = (project.return_url || '').toString().trim();
 
-    project.algo = (project.algo || '').toString().toLowerCase().trim();
+    project.algo = (project.algo || '')
+        .toString()
+        .toLowerCase()
+        .trim();
     if (typeof project.auto_response === 'string') {
         project.auto_response = project.auto_response.toLowerCase().trim() === 'true';
     } else {
