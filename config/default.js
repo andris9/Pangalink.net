@@ -56,7 +56,7 @@ module.exports = {
         smtp: {
             direct: true,
             logger: true,
-            debug: true
+            debug: false
 
             // or try to send mail using sendmail binary
             //sendmail: true,
