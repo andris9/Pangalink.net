@@ -58,9 +58,9 @@ echo "{
         \"smtp\": {
             \"direct\": true
         },
-        \"defaults: {
+        \"defaults\": {
             \"from\": \"no-reply@$HOSTNAME\"
-        }\"
+        }
     }
 }" > config/production.json
 fi
