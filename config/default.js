@@ -54,9 +54,13 @@ module.exports = {
     // SMTP configuration,
     mail: {
         smtp: {
-            // by default the app tries to send mail using sendmail binary
-            sendmail: true,
-            newline: 'unix'
+            direct: true,
+            logger: true,
+            debug: true
+
+            // or try to send mail using sendmail binary
+            //sendmail: true,
+            //newline: 'unix'
         },
         /*
         // alternatively, configure SMTP relay to use
@@ -71,6 +75,7 @@ module.exports = {
         */
 
         defaults: {
+            from: 'no-reply@example.com'
             // Sender address
         }
     },

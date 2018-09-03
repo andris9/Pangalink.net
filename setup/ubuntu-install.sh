@@ -16,7 +16,12 @@ apt-get update
 apt-get upgrade -y
 apt-get install -y curl build-essential python software-properties-common dnsutils
 
-HOSTNAME="$1"
+PUBLIC_IP=`curl -s https://api.ipify.org`
+if [ ! -z "$PUBLIC_IP" ]; then
+    HOSTNAME=`dig +short -x $PUBLIC_IP | sed 's/\.$//'`
+    HOSTNAME="${HOSTNAME:-$PUBLIC_IP}"
+fi
+HOSTNAME="${HOSTNAME:-`hostname`}"
 
 # mongo prerequisites
 MONGODB="3.6"
@@ -43,15 +48,21 @@ cd /opt/pangalink
 
 if [ ! -f config/production.json ]; then
 # Setup installation configuration
-cat >> config/production.json <<EOT
-{
-    "user": "pangalink",
-    "group": "pangalink",
-    "web": {
-        "port": 80
+echo "{
+    \"user\": \"pangalink\",
+    \"group\": \"pangalink\",
+    \"web\": {
+        \"port\": 80
+    },
+    \"mail\": {
+        \"smtp\": {
+            \"direct\": true
+        },
+        \"defaults: {
+            \"from\": \"no-reply@$HOSTNAME\"
+        }\"
     }
-}
-EOT
+}" > config/production.json
 fi
 
 npm install --no-progress --production
