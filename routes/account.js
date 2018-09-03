@@ -126,18 +126,22 @@ function checkJoin(req, res, next) {
             return res.redirect('/');
         }
         if (req.user) {
-            return db.database.collection('user').findOneAndUpdate({ username: req.user.username }, {
-                $set: {
-                    role: 'admin'
-                }
-            }, (err, r) => {
-                if (err || !r || !r.value) {
-                    req.flash('danger', 'Andmebaasi viga');
+            return db.database.collection('user').findOneAndUpdate(
+                { username: req.user.username },
+                {
+                    $set: {
+                        role: 'admin'
+                    }
+                },
+                (err, r) => {
+                    if (err || !r || !r.value) {
+                        req.flash('danger', 'Andmebaasi viga');
+                        return res.redirect('/');
+                    }
+                    req.flash('info', 'Oled nüüd admin kasutaja!');
                     return res.redirect('/');
                 }
-                req.flash('info', 'Oled nüüd admin kasutaja!');
-                return res.redirect('/');
-            });
+            );
         }
         req.ticket = { role: 'admin' };
         return next();
@@ -168,11 +172,11 @@ function checkJoin(req, res, next) {
 function serveProfile(req, res, next) {
     let userId = req.params.user
         ? new ObjectID(
-            (req.params.user || '')
-                .toString()
-                .trim()
-                .toLowerCase()
-        )
+              (req.params.user || '')
+                  .toString()
+                  .trim()
+                  .toLowerCase()
+          )
         : req.user._id;
     db.database.collection('user').findOne({ _id: userId }, (err, userData) => {
         if (err) {
@@ -361,11 +365,11 @@ function handleJoin(req, res) {
 function handleProfile(req, res, next) {
     let userId = req.params.user
         ? new ObjectID(
-            (req.params.user || '')
-                .toString()
-                .trim()
-                .toLowerCase()
-        )
+              (req.params.user || '')
+                  .toString()
+                  .trim()
+                  .toLowerCase()
+          )
         : req.user._id;
     let role = (req.body.role || '')
         .toString()
@@ -523,11 +527,11 @@ function serveUsersAdd(req, res) {
 function serveDeleteProfile(req, res) {
     let userId = req.params.user
         ? new ObjectID(
-            (req.params.user || '')
-                .toString()
-                .trim()
-                .toLowerCase()
-        )
+              (req.params.user || '')
+                  .toString()
+                  .trim()
+                  .toLowerCase()
+          )
         : false;
 
     if (!/^[a-fA-F0-9]{24}$/.test(userId)) {

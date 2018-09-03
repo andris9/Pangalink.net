@@ -141,7 +141,7 @@
 
 <% if(payment.body){%>
     <h4>Päringu sisu</h4>
-    <div style="overflow: auto; margin:0; padding:0;"><pre style="background: #EFEFEF;"><%= new Buffer(payment.body, "base64").toString("binary") %></pre></div>
+    <div style="overflow: auto; margin:0; padding:0;"><pre style="background: #EFEFEF;"><%= Buffer.from(payment.body, "base64").toString("binary") %></pre></div>
 <%}%>
 
 <% if (payment.method == "POST" && payment.fields && payment.fields.length) {%>

@@ -1,6 +1,6 @@
 {
-    "rules":{
+    "rules": {
         "no-undefined": 0
     },
-    "extends":          "nodemailer"
+    "extends": ["nodemailer", "prettier"]
 }

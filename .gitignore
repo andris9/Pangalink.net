@@ -3,3 +3,4 @@ node_modules
 .node_env
 npm-debug.log
 config/production.js*
+package-lock.json*

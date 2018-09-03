@@ -172,7 +172,7 @@ app.use((...args) => {
 });
 
 app.use((req, res, next) => {
-    db.database.collection('user').findOne({ role: 'admin' }, { fields: { _id: true, username: true, role: true } }, (err, admin) => {
+    db.database.collection('user').findOne({ role: 'admin' }, { projection: { _id: true, username: true, role: true } }, (err, admin) => {
         if (err) {
             return next(err);
         }
