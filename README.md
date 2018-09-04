@@ -62,3 +62,9 @@ E-posti saatmiseks peab jälgima, et konfiguratsioonifailis oleks korrektne saat
 ## Litsents
 
 **[MIT](./LICENSE)**
+
+### Kasutatud tarkvaramoodulid
+
+Pangalinker kasutab oma tööks mitmeid teisi tarkvaramoodulid. Nende kõikide info leiab failist DEPENDENCIES. Seal on toodud ära iga alammooduli nimetus, autor, litsents ja litsentsifaili asukoht kataloogipuus.
+
+Kõik tarkvaramoodulid kasutavad üht järgmistest litsentsidest: MIT, ISC, Apache-2.0 või BSD-3-Clause.
