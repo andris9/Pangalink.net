@@ -53,6 +53,12 @@ Näiteks kui tahad, et konfiguratsioon laetaks failidest _default.js_ + _product
 
 Juhul kui MongoDB andmebaas kasutab autentimist või on _replica set_ või shardingu konfiguatsioonis, siis sellega seotud andmed saab määrata andmebaasi URL'is, mille vormingu info [leiab siit](https://docs.mongodb.com/manual/reference/connection-string/)
 
+### E-posti saatmine
+
+E-posti saatmise võimalus ei ole otseselt vajalik, kuid kohati on see oluline. E-posti teel saadetakse parooli meeldetuletuse kirjad ning samuti aktiveerimislingid lisatud kasutajatele. Aktiveerimislingi leiab admin kasutaja ka Kasutajate lehelt, juhul kui vastav kiri kohale ei jõudnud.
+
+E-posti saatmiseks peab jälgima, et konfiguratsioonifailis oleks korrektne saatja aadress ning et sellest serverist oleks lubatud selle aadressi kaudu kirju saata (SPF).
+
 ## Litsents
 
 **[MIT](./LICENSE)**
