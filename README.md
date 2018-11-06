@@ -2,7 +2,7 @@
 
 ## Eeldused
 
--   [Node.js](http://nodejs.org/), vähemalt versioon 8.0.0
+-   [Node.js](http://nodejs.org/), vähemalt versioon 8.0.0 (6 võib aga ei pruugi töötada)
 -   [MongoDB](http://www.mongodb.org/)
 -   OpenSSL käsurea utiliit. Linux põhistes süsteemides reeglina vaikimisi olemas, Windowsis tuleb see ise [paigaldada](https://blog.didierstevens.com/2015/03/30/howto-make-your-own-cert-with-openssl-on-windows/)
 
