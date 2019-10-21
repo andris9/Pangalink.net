@@ -1,3 +1,7 @@
+# NB!
+
+**This software is provided "AS IS". No further development, no bug fixes, no support.** If you like this software then you are free to use it, do not contact the developers regarding issues with usage / installation / possible bugs etc. you will not be answered.
+
 # Pangalinker
 
 ## Eeldused
