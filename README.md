@@ -12,7 +12,7 @@
 
 ## Kiirpaigaldus
 
-Pangalinkerit on võimalik kiirpaigaldada tühja Ubuntu 16.04 operatsioonisüsteemiga serverisse. "Tühja" selles mõttes, et sinna pole veel paigaldatud muud tarkvara. Juhul kui rakenduse failid on kopeeritud serverisse, tuleks rakenduse kaustas käivitada järgmine käsk:
+Pangalinkerit on võimalik kiirpaigaldada tühja Ubuntu 20.04 operatsioonisüsteemiga serverisse (testitud DigitalOcean Ubuntu 20.04 VPS serveril). "Tühja" selles mõttes, et sinna pole veel paigaldatud muud tarkvara. Juhul kui rakenduse failid on kopeeritud serverisse, tuleks rakenduse kaustas käivitada järgmine käsk:
 
     sudo ./setup/ubuntu-install.sh
 

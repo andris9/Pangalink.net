@@ -16,12 +16,7 @@ apt-get update
 apt-get upgrade -y
 apt-get install -y curl build-essential software-properties-common dnsutils gnupg
 
-PUBLIC_IP=`curl -s https://api.ipify.org`
-if [ ! -z "$PUBLIC_IP" ]; then
-    HOSTNAME=`dig +short -x $PUBLIC_IP | sed 's/\.$//'`
-    HOSTNAME="${HOSTNAME:-$PUBLIC_IP}"
-fi
-HOSTNAME="${HOSTNAME:-`hostname`}"
+HOSTNAME=`curl -s https://api.ipify.org`
 
 # mongo prerequisites
 #MONGODB="3.6"
