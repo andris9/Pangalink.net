@@ -8,7 +8,7 @@ const IBAN = require('iban');
 const banks = require('../lib/banks.json');
 const db = require('../lib/db');
 const moment = require('moment');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const util = require('util');
 const randomString = require('random-string');
 
@@ -69,12 +69,12 @@ function serveProjects(req, res) {
                 owner: req.user._id
             },
             {
-                authorized: new ObjectID(req.user._id)
+                authorized: new ObjectId(req.user._id)
             }
         ];
     }
 
-    db.count('project', query, (err, total) => {
+    db.database.collection('project').countDocuments(query, (err, total) => {
         if (err) {
             //
         }
@@ -141,7 +141,7 @@ function serveEditProject(req, res, next) {
             db.findOne(
                 'project',
                 {
-                    _id: new ObjectID(id)
+                    _id: new ObjectId(id)
                 },
                 (err, record) => {
                     if (err) {
@@ -198,7 +198,7 @@ function serveDeleteProject(req, res) {
     db.findOne(
         'project',
         {
-            _id: new ObjectID(id)
+            _id: new ObjectId(id)
         },
         (err, project) => {
             if (err) {
@@ -220,7 +220,7 @@ function serveDeleteProject(req, res) {
             db.remove(
                 'project',
                 {
-                    _id: new ObjectID(id)
+                    _id: new ObjectId(id)
                 },
                 () => {
                     db.remove(
@@ -268,10 +268,7 @@ function handleAddProject(req, res, next) {
 
             req.body.keyBitsize = Number(req.body.keyBitsize) || 1024;
 
-            req.body.soloAlgo = (req.body.soloAlgo || '')
-                .toString()
-                .toLowerCase()
-                .trim();
+            req.body.soloAlgo = (req.body.soloAlgo || '').toString().toLowerCase().trim();
             req.body.soloAutoResponse = !!(req.body.soloAutoResponse || '').toString().trim();
 
             req.body.ecUrl = (req.body.ecUrl || '').toString().trim();
@@ -494,10 +491,7 @@ function handleEditProject(req, res, next) {
 
             req.body.keyBitsize = Number(req.body.keyBitsize) || 1024;
 
-            req.body.soloAlgo = (req.body.soloAlgo || '')
-                .toString()
-                .toLowerCase()
-                .trim();
+            req.body.soloAlgo = (req.body.soloAlgo || '').toString().toLowerCase().trim();
             req.body.soloAutoResponse = !!(req.body.soloAutoResponse || '').toString().trim();
 
             req.body.ecUrl = (req.body.ecUrl || '').toString().trim();
@@ -521,7 +515,7 @@ function handleEditProject(req, res, next) {
             db.findOne(
                 'project',
                 {
-                    _id: new ObjectID(req.body.id)
+                    _id: new ObjectId(req.body.id)
                 },
                 (err, record) => {
                     if (err) {

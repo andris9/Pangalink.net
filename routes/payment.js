@@ -5,7 +5,7 @@ const express = require('express');
 const router = new express.Router();
 const tools = require('../lib/tools');
 const db = require('../lib/db');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const util = require('util');
 const banklink = require('../lib/banklink');
 const banks = require('../lib/banks.json');
@@ -32,7 +32,7 @@ function servePayment(req, res) {
     db.findOne(
         'payment',
         {
-            _id: new ObjectID(id)
+            _id: new ObjectId(id)
         },
         (err, payment) => {
             if (err) {
@@ -49,7 +49,7 @@ function servePayment(req, res) {
             db.findOne(
                 'project',
                 {
-                    _id: new ObjectID(payment.project)
+                    _id: new ObjectId(payment.project)
                 },
                 (err, project) => {
                     if (err) {

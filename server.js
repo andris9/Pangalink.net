@@ -237,48 +237,35 @@ server.on('error', err => {
 });
 
 // open database
-db.init(err => {
-    if (err) {
+db.init()
+    .then(() => {
+        log.info('DB', 'Database opened');
+
+        server.listen(app.get('port'), () => {
+            log.info('SERVER', 'Web server running on port ' + app.get('port'));
+            // downgrade user and group if needed
+            if (config.group) {
+                try {
+                    process.setgid(config.group);
+                    log.info('App', 'Changed group to "%s" (%s)', config.group, process.getgid());
+                } catch (E) {
+                    log.error('App', 'Failed to change group to "%s" (%s)', config.group, E.message);
+                    return process.exit(1);
+                }
+            }
+            if (config.user) {
+                try {
+                    process.setuid(config.user);
+                    log.info('App', 'Changed user to "%s" (%s)', config.user, process.getuid());
+                } catch (E) {
+                    log.error('App', 'Failed to change user to "%s" (%s)', config.user, E.message);
+                    return process.exit(1);
+                }
+            }
+        });
+        return;
+    })
+    .catch(err => {
         log.error('DB', err);
         process.exit(1);
-    } else {
-        let indexpos = 0;
-        let ensureIndexes = err => {
-            if (err) {
-                log.silly('mongo', 'Failed creating index', err.message);
-            }
-            if (indexpos >= setupIndexes.length) {
-                log.info('mongo', 'Setup indexes for %s collections', setupIndexes.length);
-
-                server.listen(app.get('port'), () => {
-                    log.info('SERVER', 'Web server running on port ' + app.get('port'));
-                    // downgrade user and group if needed
-                    if (config.group) {
-                        try {
-                            process.setgid(config.group);
-                            log.info('App', 'Changed group to "%s" (%s)', config.group, process.getgid());
-                        } catch (E) {
-                            log.error('App', 'Failed to change group to "%s" (%s)', config.group, E.message);
-                            return process.exit(1);
-                        }
-                    }
-                    if (config.user) {
-                        try {
-                            process.setuid(config.user);
-                            log.info('App', 'Changed user to "%s" (%s)', config.user, process.getuid());
-                        } catch (E) {
-                            log.error('App', 'Failed to change user to "%s" (%s)', config.user, E.message);
-                            return process.exit(1);
-                        }
-                    }
-                });
-                return;
-            }
-            let index = setupIndexes[indexpos++];
-            log.silly('mongo', 'Creating index %s %s', indexpos, JSON.stringify(index.indexes));
-            db.database.collection(index.collection).createIndexes(index.indexes, ensureIndexes);
-        };
-        log.info('DB', 'Database opened');
-        ensureIndexes();
-    }
-});
+    });
