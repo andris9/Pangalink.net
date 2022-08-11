@@ -14,7 +14,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 apt-get upgrade -y
-apt-get install -y curl build-essential python software-properties-common dnsutils
+apt-get install -y curl build-essential software-properties-common dnsutils gnupg
 
 PUBLIC_IP=`curl -s https://api.ipify.org`
 if [ ! -z "$PUBLIC_IP" ]; then
@@ -24,13 +24,16 @@ fi
 HOSTNAME="${HOSTNAME:-`hostname`}"
 
 # mongo prerequisites
-MONGODB="3.6"
-wget -qO- https://www.mongodb.org/static/pgp/server-${MONGODB}.asc | sudo apt-key add
+#MONGODB="3.6"
+#wget -qO- https://www.mongodb.org/static/pgp/server-${MONGODB}.asc | sudo apt-key add
 # hardcode xenial as at this time there are no non-dev packages for bionic (http://repo.mongodb.org/apt/ubuntu/dists/)
-echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/$MONGODB multiverse" > /etc/apt/sources.list.d/mongodb-org.list
+#echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/$MONGODB multiverse" > /etc/apt/sources.list.d/mongodb-org.list
+
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 
 # also calls apt-get update
-curl -sL https://deb.nodesource.com/setup_10.x | bash -
+curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
 apt-get -q -y install mongodb-org nodejs
 
