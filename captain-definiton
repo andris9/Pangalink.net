@@ -12,7 +12,7 @@ services:
             PL_MONGO_URL: mongodb://$$cap_APP_MONGODB_USERNAME:$$cap_APP_MONGODB_PASSWORD@srv-captain--$$cap_appname-mongodb:27017/$$cap_APP_MONGODB_DATABASE?authSource=$$cap_APP_MONGODB_DATABASE
             PL_HOSTNAME: $$cap_appname.$$cap_root_domain
             PL_PROTO: https
-            PL_SMTP_DIRECT: false
+            PL_SMTP_DIRECT: 'false'
             PL_SMTP_HOST: $$cap_SMTP_HOST
             PL_SMTP_PORT: $$cap_SMTP_PORT
             PL_SMTP_TLS: $$cap_SMTP_TLS

@@ -9,6 +9,7 @@ const util = require('util');
 const urllib = require('url');
 
 const express = require('express');
+const { config } = require('pem');
 const router = new express.Router();
 
 router.get('/reset-link', serveResetLink);
@@ -645,7 +646,7 @@ function serveSettings(req, res, next) {
             url: urllib.format(urlParts),
             logo,
             emailName: 'emailName' in settings ? settings.emailName : settings.title || req.siteTitle,
-            emailAddress: settings.emailAddress || 'pangalink@' + urlParts.host.replace(/:\d+/, ''),
+            emailAddress: settings.emailAddress || config.mail.defaults.from || 'pangalink@' + urlParts.host.replace(/:\d+/, ''),
             validation: {}
         });
     });
