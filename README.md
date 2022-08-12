@@ -56,6 +56,7 @@ Konfiguratsiooni saab ette anda keskkonnamuutujatega.
 **Veebiserver**
 
 -   `PL_PORT` – millist porti kuulata, vaikimisi _3480_
+-   `PL_HOST` – millist ip aadressi kuulata, vaikimisi _"127.0.0.1"_. Kogu maailmale avamiseks kasuta _"0.0.0.0"_
 -   `PL_SESSION_SECRET` – sessiooni küpsise parool
 
 **Lingid**

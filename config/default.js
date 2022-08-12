@@ -26,6 +26,8 @@ module.exports = {
         // Which port to listen (anything below 1000 requires root user. 80 is HTTP and 443 HTTPS,
         port: 3480,
 
+        host: '127.0.0.1',
+
         // If behind proxy, then the protocol the user sees is not what pangalink.net actually uses.,
         // Pangalinker might be using HTTP internally but user should only use HTTPS addresses,
 

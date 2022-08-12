@@ -4,7 +4,8 @@
     "private": true,
     "description": "Pangalink test application",
     "scripts": {
-        "test": "grunt"
+        "test": "grunt",
+        "start": "node server.js"
     },
     "main": "index.js",
     "repository": {

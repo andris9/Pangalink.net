@@ -247,7 +247,7 @@ db.init()
     .then(() => {
         log.info('DB', 'Database opened');
 
-        server.listen(app.get('port'), () => {
+        server.listen(app.get('port'), config.web.host, () => {
             log.info('SERVER', 'Web server running on port ' + app.get('port'));
             // downgrade user and group if needed
             if (config.group) {

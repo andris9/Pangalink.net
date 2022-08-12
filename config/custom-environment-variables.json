@@ -8,7 +8,8 @@
         "port": {
             "__name": "PL_PORT",
             "__format": "number"
-        }
+        },
+        "host": "PL_HOST"
     },
     "session": {
         "secret": "PL_SESSION_SECRET"
