@@ -21,6 +21,10 @@ $ docker-compose up
 
 ja seejärel ava brauseris http://127.0.0.1:3480/
 
+## CapRover
+
+Kasuta [Pangalinkeri definitsioonifaili](captain-definition), et paigaldada Pangalinker [CapRover](https://caprover.com/) rakendusena.
+
 ## Konfiguratsioon
 
 Konfiguratsiooni saab ette anda keskkonnamuutujatega.
