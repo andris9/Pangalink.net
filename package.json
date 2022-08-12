@@ -43,8 +43,8 @@
         "passport-local": "1.0.0",
         "pem": "1.13.2",
         "random-string": "0.2.0",
-        "st": "1.2.2",
-        "zip-stream": "2.0.1"
+        "st": "3.0.0",
+        "zip-stream": "4.1.0"
     },
     "devDependencies": {
         "eslint": "8.21.0",
