@@ -6,7 +6,7 @@ const router = new express.Router();
 const util = require('util');
 const pem = require('pem');
 const Packer = require('zip-stream');
-const punycode = require('punycode');
+const punycode = require('punycode/');
 const removeDiacritics = require('diacritics').remove;
 
 router.get('/keys', serveKeys);
@@ -48,18 +48,7 @@ function handleKeys(req, res) {
         }
 
         if (key === 'emailAddress') {
-            req.body[key] = req.body[key].replace(
-                /@(.*)$/,
-                (o, domain) =>
-                    '@' +
-                    punycode.toASCII(
-                        domain
-                            .split('/')
-                            .shift()
-                            .toLowerCase()
-                            .trim()
-                    )
-            );
+            req.body[key] = req.body[key].replace(/@(.*)$/, (o, domain) => '@' + punycode.toASCII(domain.split('/').shift().toLowerCase().trim()));
         }
 
         if (typeof req.body[key] === 'string') {

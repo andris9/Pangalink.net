@@ -1,0 +1,44 @@
+{
+    "log": {
+        "level": "PL_LOG_LEVEL"
+    },
+    "hostname": "PL_HOSTNAME",
+    "proto": "PL_PROTO",
+    "web": {
+        "port": {
+            "__name": "PL_PORT",
+            "__format": "number"
+        },
+        "host": "PL_HOST"
+    },
+    "session": {
+        "secret": "PL_SESSION_SECRET"
+    },
+    "mail": {
+        "smtp": {
+            "direct": {
+                "__name": "PL_SMTP_DIRECT",
+                "__format": "boolean"
+            },
+            "host": "PL_SMTP_HOST",
+            "port": {
+                "__name": "PL_SMTP_PORT",
+                "__format": "number"
+            },
+            "secure": {
+                "__name": "PL_SMTP_TLS",
+                "__format": "boolean"
+            },
+            "auth": {
+                "user": "PL_SMTP_USER",
+                "pass": "PL_SMTP_PASS"
+            },
+            "defaults": {
+                "from": "PL_SMTP_SENDER"
+            }
+        }
+    },
+    "mongodb": {
+        "url": "PL_MONGO_URL"
+    }
+}

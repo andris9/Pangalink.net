@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+    pangalink:
+        restart: always
+        image: andris9/pangalink:v2
+        ports:
+            # API and web interface
+            - '3480:3480'
+        depends_on:
+            - mongo
+        environment:
+            # Configuration to Pangalinker can be passed via environment variables
+            # For full list see https://github.com/andris9/Pangalink.net#konfiguratsioon
+
+            # Database connection URL
+            PL_MONGO_URL: mongodb://root:example@mongo:27017/
+
+    mongo:
+        image: mongo
+        restart: always
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+        volumes:
+            - /data

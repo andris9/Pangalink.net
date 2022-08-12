@@ -2,7 +2,7 @@
 
 const config = require('config');
 const db = require('../lib/db');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const banks = require('../lib/banks.json');
 const tools = require('../lib/tools');
 const randomString = require('random-string');
@@ -207,7 +207,7 @@ function apiActionGet(req, projectId, callback) {
     db.findOne(
         'project',
         {
-            _id: new ObjectID(projectId)
+            _id: new ObjectId(projectId)
         },
         (err, project) => {
             let responseObject = {};
@@ -276,7 +276,7 @@ function apiActionList(req, start, callback) {
         ];
     }
 
-    db.count('project', query, (err, total) => {
+    db.database.collection('project').countDocuments(query, (err, total) => {
         if (err) {
             //
         }
@@ -336,10 +336,7 @@ function apiActionPost(req, project, callback) {
 
     project.return_url = (project.return_url || '').toString().trim();
 
-    project.algo = (project.algo || '')
-        .toString()
-        .toLowerCase()
-        .trim();
+    project.algo = (project.algo || '').toString().toLowerCase().trim();
     if (typeof project.auto_response === 'string') {
         project.auto_response = project.auto_response.toLowerCase().trim() === 'true';
     } else {
@@ -446,7 +443,7 @@ function apiActionDelete(req, projectId, callback) {
     db.findOne(
         'project',
         {
-            _id: new ObjectID(projectId)
+            _id: new ObjectId(projectId)
         },
         (err, project) => {
             if (err) {
@@ -464,7 +461,7 @@ function apiActionDelete(req, projectId, callback) {
             db.remove(
                 'project',
                 {
-                    _id: new ObjectID(projectId)
+                    _id: new ObjectId(projectId)
                 },
                 err => {
                     if (err) {

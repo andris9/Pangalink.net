@@ -921,7 +921,7 @@ Siin on loetletud kõik tarkvaramoodulid, nende litsentsid ja litsentsifaili asu
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/Dexus/pem
 │  ├─ publisher: Andris Reinman
-│  ├─ email: andris@kreata.ee
+│  ├─ email: andris@postalsys.com
 │  ├─ path: node_modules/pem
 │  └─ licenseFile: node_modules/pem/LICENSE
 ├─ process-nextick-args@1.0.7

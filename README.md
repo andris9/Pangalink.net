@@ -47,11 +47,34 @@ Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurk
 
 ## Konfiguratsioon
 
-Muuda faili `config/default.js` väärtusi või või lisa NODE_ENV väärtuse nimega täiendav fail (soovitatav). Lisakonfiguratsioonifailid täiendavad, mitte ei asenda vaikimisi seadeid.
+Konfiguratsiooni saab ette anda keskkonnamuutujatega.
 
-Näiteks kui tahad, et konfiguratsioon laetaks failidest _default.js_ + _production.js_, käivita rakendus järgmiselt:
+**Andmebaas**
 
-    NODE_ENV=production node index.js
+-   `PL_MONGO_URL` – andmebaasi URL, vaikimisi _"mongodb://127.0.0.1:27017/pangalink"_
+
+**Veebiserver**
+
+-   `PL_PORT` – millist porti kuulata, vaikimisi _3480_
+-   `PL_HOST` – millist ip aadressi kuulata, vaikimisi _"127.0.0.1"_. Kogu maailmale avamiseks kasuta _"0.0.0.0"_
+-   `PL_SESSION_SECRET` – sessiooni küpsise parool
+
+**Lingid**
+
+Mõngingatel juhtudel on rakendusel vaja genereerida absoluutseid veebiaadresse. Domeeni ja protokolli määramiseks kasutatakse järgmiseid väärtuseid.
+
+-   `PL_HOSTNAME` – veebilehe domeeninimi, näiteks _"pangalink.example.com"_. Kasutatakse kliendi linkide genereerimisel.
+-   `PL_PROTO` – veebiaadressi protokoll, näiteks _"https"_ (vaikimisi _"http"_). Kasutatakse kliendi linkide genereerimisel.
+
+**Kirjade saatmine**
+
+-   `PL_SMTP_DIRECT` – kas rakendus peaks saatma kirju otse saaja MX serverile (vaikimisi _"true"_). Selle seadistusega on suur tõenäosus, et kirjad lähevad spämmi või ei võeta üldse vastu.
+-   `PL_SMTP_HOST` – kirjade saatmise SMTP server, näiteks _"smtp.gmail.com"_
+-   `PL_SMTP_PORT` – kirjade saatmise SMTP serveri port, näiteks _465_
+-   `PL_SMTP_TLS` – kas kirjade saatmise SMTP server kasutab TLS'i (_"true"_) või STARTTLS'i (_"false"_)
+-   `PL_SMTP_USER` – kirjade saatmise SMTP serveri kasutajanimi
+-   `PL_SMTP_PASS` – kirjade saatmise SMTP serveri parool
+-   `PL_SMTP_SENDER` – kirjade saatmise kasutatv From aadress
 
 ### Andmebaasi seadistus
 

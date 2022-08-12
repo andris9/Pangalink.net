@@ -1,11 +1,7 @@
 'use strict';
 
 // This is the main file. Here we set globals as well
-
-let config = require('config');
 let log = require('npmlog');
-
-log.level = config.log.level;
 
 // Handle error conditions
 process.on('SIGTERM', () => {

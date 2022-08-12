@@ -7,7 +7,7 @@ const router = new express.Router();
 const banks = require('../lib/banks.json');
 const db = require('../lib/db');
 const moment = require('moment');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const banklink = require('../lib/banklink');
 const util = require('util');
 const urllib = require('url');
@@ -48,7 +48,7 @@ function serveProject(req, res, next) {
             db.findOne(
                 'project',
                 {
-                    _id: new ObjectID(id)
+                    _id: new ObjectId(id)
                 },
                 (err, record) => {
                     if (err) {
@@ -71,8 +71,7 @@ function serveProject(req, res, next) {
                     let authorizedIds = [].concat(record.authorized || []).map(id => id.toString());
 
                     let authorized = users.filter(user => authorizedIds.includes(user._id.toString())).map(user => user.username);
-                    db.count(
-                        'payment',
+                    db.database.collection('payment').countDocuments(
                         {
                             project: id
                         },
@@ -228,7 +227,7 @@ function serveKey(req, res) {
     db.findOne(
         'project',
         {
-            _id: new ObjectID(id)
+            _id: new ObjectId(id)
         },
         (err, record) => {
             if (err) {
@@ -291,7 +290,7 @@ function handleRegenerateProjectCertificate(req, res) {
     db.findOne(
         'project',
         {
-            _id: new ObjectID(id)
+            _id: new ObjectId(id)
         },
         (err, record) => {
             if (err) {

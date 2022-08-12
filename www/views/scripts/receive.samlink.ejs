@@ -5,64 +5,30 @@
         <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
     </head>
     <body>
-<?php
+        <?php
 
 // THIS IS AUTO GENERATED SCRIPT
-// (c) 2011 - <%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
+// (c) 2011 - <%- new Date().getFullYear()%>
+        Postal Systems OÜ www.pangalink.net // STEP 1. Setup signing // ===================== $secret = "<%- project.secret %>"; // STEP 2. Define payment
+        information // ================================== <% var data = ""; -%> $fields = array( <% Object.keys(payment.responseFields ||
+        {}).forEach(function(field, i, arr){ -%> <% if(field != "NET_RETURN_MAC"){ -%> "<%- field %>" <%- field.length < 23 && new Array(23 -
+        field.length).join(" ") || "" %>=> "<%- payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g,
+        "\\n") %>"<%- i < arr.length - 1 && "," || "" %> <% } -%> <% }) -%> ); // STEP 3. Generate data to be verified // ====================================
+        <% signatureOrder = signatureOrder[payment.responseFields["NET_RETURN_VERSION"] || "0002"] || signatureOrder["0002"]; signatureOrder =
+        signatureOrder["PAYMENT-OUT"]; -%> <% signatureOrder.forEach(function(field, i, arr){ -%> <% data += (payment.responseFields[field] ||
+        payment.responseFields[field] || "") + "&" -%> <%- !i ? "$data = " : " "%>$fields["<%- field %>"] . "&" . <% }) data += project.secret + "&" -%> $secret
+        . "&"; /* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */ $fields["NET_RETURN_MAC"] =
+        strtoupper(<%= project.soloAlgo %>($data)); // STEP 4. Verify the data with <%= project.soloAlgo.toUpperCase() %> //
+        ===================================== if (strtoupper(<%= project.soloAlgo %>($data)) != $fields["NET_RETURN_MAC"]) { $signatureVerified = false; }else{
+        $signatureVerified = true; } // STEP 5. Display output of the received payment // ============================================== ?>
 
-// STEP 1. Setup signing
-// =====================
-
-$secret = "<%- project.secret %>";
-
-// STEP 2. Define payment information
-// ==================================
-
-<%
-var data = "";
--%>
-$fields = array(
-<% Object.keys(payment.responseFields || {}).forEach(function(field, i, arr){ -%>
-<% if(field != "NET_RETURN_MAC"){ -%>
-        "<%- field %>" <%- field.length < 23 && new Array(23 - field.length).join(" ") || "" %>=> "<%- payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"<%- i < arr.length - 1  && "," || "" %>
-<% } -%>
-<% }) -%>
-);
-
-// STEP 3. Generate data to be verified
-// ====================================
-<%
-    signatureOrder = signatureOrder[payment.responseFields["NET_RETURN_VERSION"] || "0002"] || signatureOrder["0002"];
-    signatureOrder = signatureOrder["PAYMENT-OUT"];
--%>
-
-<% signatureOrder.forEach(function(field, i, arr){ -%>
-<% data += (payment.responseFields[field] || payment.responseFields[field] || "") + "&" -%>
-<%- !i ? "$data = " : "        "%>$fields["<%- field %>"] . "&" .
-<% })
-data += project.secret + "&"
--%>
-        $secret . "&";
-
-/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
-
-$fields["NET_RETURN_MAC"] = strtoupper(<%= project.soloAlgo %>($data));
-
-// STEP 4. Verify the data with <%= project.soloAlgo.toUpperCase() %>
-// =====================================
-
-if (strtoupper(<%= project.soloAlgo %>($data)) != $fields["NET_RETURN_MAC"]) {
-    $signatureVerified = false;
-}else{
-    $signatureVerified = true;
-}
-
-// STEP 5. Display output of the received payment
-// ==============================================
-?>
-
-    <p>Payment: <?php echo !empty($fields["NET_RETURN_PAID"]) ? "received" : "cancelled" ?></p>
-    <p>Signature: <?php echo $signatureVerified ? "verified" : "not verified" ?></p>
-
+        <p>
+            Payment:
+            <?php echo !empty($fields["NET_RETURN_PAID"]) ? "received" : "cancelled" ?>
+        </p>
+        <p>
+            Signature:
+            <?php echo $signatureVerified ? "verified" : "not verified" ?>
+        </p>
     </body>
 </html>

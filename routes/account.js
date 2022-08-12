@@ -4,7 +4,7 @@ const passport = require('passport');
 const auth = require('../lib/auth');
 const tools = require('../lib/tools');
 const db = require('../lib/db');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const util = require('util');
 const urllib = require('url');
 
@@ -151,7 +151,7 @@ function checkJoin(req, res, next) {
             req.flash('danger', 'Vigane konto loomise URL');
             return res.redirect('/');
         }
-        return db.database.collection('tickets').findOne({ _id: new ObjectID(ticket) }, (err, data) => {
+        return db.database.collection('tickets').findOne({ _id: new ObjectId(ticket) }, (err, data) => {
             if (err) {
                 req.flash('danger', 'Andmebaasi viga');
                 return res.redirect('/');
@@ -170,14 +170,7 @@ function checkJoin(req, res, next) {
 }
 
 function serveProfile(req, res, next) {
-    let userId = req.params.user
-        ? new ObjectID(
-              (req.params.user || '')
-                  .toString()
-                  .trim()
-                  .toLowerCase()
-          )
-        : req.user._id;
+    let userId = req.params.user ? new ObjectId((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
     db.database.collection('user').findOne({ _id: userId }, (err, userData) => {
         if (err) {
             return next(err);
@@ -363,18 +356,8 @@ function handleJoin(req, res) {
 }
 
 function handleProfile(req, res, next) {
-    let userId = req.params.user
-        ? new ObjectID(
-              (req.params.user || '')
-                  .toString()
-                  .trim()
-                  .toLowerCase()
-          )
-        : req.user._id;
-    let role = (req.body.role || '')
-        .toString()
-        .toLowerCase()
-        .trim();
+    let userId = req.params.user ? new ObjectId((req.params.user || '').toString().trim().toLowerCase()) : req.user._id;
+    let role = (req.body.role || '').toString().toLowerCase().trim();
     let description = (req.body.description || '').toString().trim();
 
     if (!req.params.user) {
@@ -525,14 +508,7 @@ function serveUsersAdd(req, res) {
 }
 
 function serveDeleteProfile(req, res) {
-    let userId = req.params.user
-        ? new ObjectID(
-              (req.params.user || '')
-                  .toString()
-                  .trim()
-                  .toLowerCase()
-          )
-        : false;
+    let userId = req.params.user ? new ObjectId((req.params.user || '').toString().trim().toLowerCase()) : false;
 
     if (!/^[a-fA-F0-9]{24}$/.test(userId)) {
         req.flash('error', 'Vigane kasutaja identifikaator');
@@ -543,7 +519,7 @@ function serveDeleteProfile(req, res) {
     db.findOne(
         'user',
         {
-            _id: new ObjectID(userId)
+            _id: new ObjectId(userId)
         },
         (err, user) => {
             if (err) {
@@ -560,7 +536,7 @@ function serveDeleteProfile(req, res) {
             db.remove(
                 'user',
                 {
-                    _id: new ObjectID(userId)
+                    _id: new ObjectId(userId)
                 },
                 () => {
                     req.flash('success', util.format('Kasutaja "%s" on kustutatud', user.username));
@@ -573,10 +549,7 @@ function serveDeleteProfile(req, res) {
 }
 
 function checkUser(req, res, next) {
-    let userId = (req.params.user || '')
-        .toString()
-        .trim()
-        .toLowerCase();
+    let userId = (req.params.user || '').toString().trim().toLowerCase();
 
     if (userId === req.user._id.toString()) {
         return res.redirect('/account/profile');

@@ -11,8 +11,7 @@
         "prefix": "42",
 
         "charset": "VK_ENCODING",
-        "forceCharset":
-            "Coop Panga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
+        "forceCharset": "Coop Panga puhul on kodeeringu parameetri VK_ENCODING kasutamine kohustuslik. Pank ise seda ei nõua, küll aga kasutab sellisel juhul ebastandardset allkirjastamise meetodit.",
         "allowedCharsets": ["UTF-8", "ISO-8859-13", "WINDOWS-1257"],
         "defaultCharset": "UTF-8",
         "utf8length": "symbols",

@@ -1,12 +1,15 @@
 'use strict';
 
 const config = require('config');
+const log = require('npmlog');
+log.level = config.log.level;
+
 const pathlib = require('path');
 const express = require('express');
 const app = express();
 const flash = require('connect-flash');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
 const routes = require('./lib/routes');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -18,10 +21,9 @@ const http = require('http');
 const tools = require('./lib/tools');
 const db = require('./lib/db');
 const st = require('st');
-const log = require('npmlog');
+
 const packageInfo = require('./package.json');
 const moment = require('moment');
-const setupIndexes = require('./indexes');
 const urllib = require('url');
 
 moment.locale('et');
@@ -119,8 +121,8 @@ app.use(tools.checkEncoding);
 // setup session handling, store everything to MongoDB
 app.use(
     session({
-        store: new MongoStore({
-            url: config.mongodb.url,
+        store: MongoStore.create({
+            mongoUrl: config.mongodb.url,
             ttl: config.session.ttl
         }),
         secret: config.session.secret,
@@ -129,12 +131,12 @@ app.use(
     })
 );
 
+// setup flash messages
+app.use(flash());
+
 // setup user handling
 app.use(passport.initialize());
 app.use(passport.session());
-
-// setup flash messages
-app.use(flash());
 
 // Log requests to console
 app.use(
@@ -205,11 +207,6 @@ app.use((req, res, next) => {
 
         res.locals.packageTitle = packageInfo.name;
 
-        res.locals.messages = {
-            success: req.flash('success'),
-            error: req.flash('error'),
-            info: req.flash('info')
-        };
         res.locals.user = req.user;
         res.locals.googleAnalyticsID = config.googleAnalyticsID;
 
@@ -219,6 +216,15 @@ app.use((req, res, next) => {
         res.locals.version = packageInfo.version;
         next();
     });
+});
+
+app.use((req, res, next) => {
+    res.locals.messages = {
+        success: req.flash('success'),
+        error: req.flash('error'),
+        info: req.flash('info')
+    };
+    next();
 });
 
 // Use routes from routes.js
@@ -237,48 +243,35 @@ server.on('error', err => {
 });
 
 // open database
-db.init(err => {
-    if (err) {
+db.init()
+    .then(() => {
+        log.info('DB', 'Database opened');
+
+        server.listen(app.get('port'), config.web.host, () => {
+            log.info('SERVER', 'Web server running on port ' + app.get('port'));
+            // downgrade user and group if needed
+            if (config.group) {
+                try {
+                    process.setgid(config.group);
+                    log.info('App', 'Changed group to "%s" (%s)', config.group, process.getgid());
+                } catch (E) {
+                    log.error('App', 'Failed to change group to "%s" (%s)', config.group, E.message);
+                    return process.exit(1);
+                }
+            }
+            if (config.user) {
+                try {
+                    process.setuid(config.user);
+                    log.info('App', 'Changed user to "%s" (%s)', config.user, process.getuid());
+                } catch (E) {
+                    log.error('App', 'Failed to change user to "%s" (%s)', config.user, E.message);
+                    return process.exit(1);
+                }
+            }
+        });
+        return;
+    })
+    .catch(err => {
         log.error('DB', err);
         process.exit(1);
-    } else {
-        let indexpos = 0;
-        let ensureIndexes = err => {
-            if (err) {
-                log.silly('mongo', 'Failed creating index', err.message);
-            }
-            if (indexpos >= setupIndexes.length) {
-                log.info('mongo', 'Setup indexes for %s collections', setupIndexes.length);
-
-                server.listen(app.get('port'), () => {
-                    log.info('SERVER', 'Web server running on port ' + app.get('port'));
-                    // downgrade user and group if needed
-                    if (config.group) {
-                        try {
-                            process.setgid(config.group);
-                            log.info('App', 'Changed group to "%s" (%s)', config.group, process.getgid());
-                        } catch (E) {
-                            log.error('App', 'Failed to change group to "%s" (%s)', config.group, E.message);
-                            return process.exit(1);
-                        }
-                    }
-                    if (config.user) {
-                        try {
-                            process.setuid(config.user);
-                            log.info('App', 'Changed user to "%s" (%s)', config.user, process.getuid());
-                        } catch (E) {
-                            log.error('App', 'Failed to change user to "%s" (%s)', config.user, E.message);
-                            return process.exit(1);
-                        }
-                    }
-                });
-                return;
-            }
-            let index = setupIndexes[indexpos++];
-            log.silly('mongo', 'Creating index %s %s', indexpos, JSON.stringify(index.indexes));
-            db.database.collection(index.collection).createIndexes(index.indexes, ensureIndexes);
-        };
-        log.info('DB', 'Database opened');
-        ensureIndexes();
-    }
-});
+    });

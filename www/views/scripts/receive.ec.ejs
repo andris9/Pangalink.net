@@ -5,95 +5,41 @@
         <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
     </head>
     <body>
-<?php
+        <?php
 
 // THIS IS AUTO GENERATED SCRIPT
-// (c) 2011 - <%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
+// (c) 2011 - <%- new Date().getFullYear()%>
+        Postal Systems OÜ www.pangalink.net // STEP 1. Setup bank certificate // ============================== $public_key = openssl_pkey_get_public("<%-
+        project.bankCertificate.certificate %>"); // STEP 2. Define payment information // ================================== // NB! In a real application, you
+        should read the values either from `$_POST`, `$_GET` or `$_REQUEST`. <% var service = "002"; var action = "gaf"; var signatureLength = { 'action': -3,
+        'ver': 3, 'id': -10, 'ecuno': 12, 'eamount': 12, 'cur': -3, 'lang': -2, 'datetime': -14, 'receipt_no': 6, 'respcode': 3, 'msgdata': -40,
+        'actiontext':-40, 'charEncoding':-16, 'feedBackUrl': -128, 'delivery': -1, "auto": -1 }; var data = ""; -%> $fields = array( <%
+        Object.keys(payment.responseFields || {}).forEach(function(field, i, arr){ -%> "<%- field %>" <%- field.length < 15 && new Array(15 -
+        field.length).join(" ") || "" %>=> "<%- payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g,
+        "\\n") %>"<%- i < arr.length - 1 && "," || "" %> <% }) -%> ); // STEP 3. Generate data to be verified // ==================================== // Number
+        values are padded with 0s on the left, strings with spaces on the right <% if(payment.charset.match(/^utf[\-_]8$/i)){ -%> // Using UTF-8 requires
+        multibyte support for padding if(!function_exists("mb_str_pad")){ function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT,
+        $encoding = null){ if (!$encoding) { $diff = strlen($input) - mb_strlen($input); } else { $diff = strlen($input) - mb_strlen($input, $encoding); }
+        return str_pad($input, $pad_length + $diff, $pad_string, $pad_type); } }<% } -%> <% signatureOrder = signatureOrder[payment.responseFields.service ||
+        "002"] || signatureOrder["002"]; signatureOrder = signatureOrder[payment.responseFields.action || "afb"] || signatureOrder["afb"]; -%> <%
+        signatureOrder.forEach(function(field, i, arr){%> <% data += (signatureLength[field] >= 0 ? new Array(Math.abs(signatureLength[field]) + 1 - (field in
+        payment.responseFields ? payment.responseFields[field] : "").length).join("0") : "") + (field in payment.responseFields ? payment.responseFields[field]
+        : "") + (signatureLength[field] < 0 ? new Array(Math.abs(signatureLength[field]) + 1 - (field in payment.responseFields ? payment.responseFields[field]
+        : "").length).join(" ") : "") -%> <%- !i ? "$data = " : " "%><%- payment.charset.match(/^utf[\-_]8$/i) ? "mb_str_pad" : "str_pad" %>($fields["<%= field
+        %>"],<%= new Array(12 - field.length).join(" ")%> <%- Math.abs(signatureLength[field]) %>,<%= new Array(4 -
+        Math.abs(signatureLength[field]).toString().length).join(" ")%> "<%= signatureLength[field]<0 ? " " : "0" %>", STR_PAD_<%= signatureLength[field]<0 ?
+        "RIGHT" : "LEFT" %><%- payment.charset.match(/^utf[\-_]8$/i) ? ", \"" + payment.charset + "\")" :")" %><%- i< arr.length - 1?".":"; " -%> <%})%> /*
+        $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */ // STEP 4. Verify the data with
+        RSA-SHA1 // ===================================== if (openssl_verify ($data, pack('H*', $fields["mac"]), $public_key) !== 1) { $signatureVerified =
+        false; }else{ $signatureVerified = true; } // STEP 5. Display output of the received payment // ============================================== ?>
 
-// STEP 1. Setup bank certificate
-// ==============================
-
-$public_key = openssl_pkey_get_public("<%- project.bankCertificate.certificate %>");
-
-// STEP 2. Define payment information
-// ==================================
-// NB! In a real application, you should read the values either from `$_POST`, `$_GET` or `$_REQUEST`.
-
-<%
-    var service = "002";
-    var action = "gaf";
-    var signatureLength = {
-        'action':     -3,
-        'ver':         3,
-        'id':        -10,
-        'ecuno':      12,
-        'eamount':    12,
-        'cur':        -3,
-        'lang':       -2,
-        'datetime':  -14,
-        'receipt_no':  6,
-        'respcode':    3,
-        'msgdata':   -40,
-        'actiontext':-40,
-        'charEncoding':-16,
-        'feedBackUrl': -128,
-        'delivery':   -1,
-        "auto":       -1
-    };
-
-var data = "";
-
--%>
-$fields = array(
-<% Object.keys(payment.responseFields || {}).forEach(function(field, i, arr){ -%>
-        "<%- field %>" <%- field.length < 15 && new Array(15 - field.length).join(" ") || "" %>=> "<%- payment.responseFields[field].replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"<%- i < arr.length - 1  && "," || "" %>
-<% }) -%>
-);
-
-// STEP 3. Generate data to be verified
-// ====================================
-// Number values are padded with 0s on the left, strings with spaces on the right
-<% if(payment.charset.match(/^utf[\-_]8$/i)){ -%>
-
-// Using UTF-8 requires multibyte support for padding
-if(!function_exists("mb_str_pad")){
-    function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = null){
-        if (!$encoding) {
-            $diff = strlen($input) - mb_strlen($input);
-        }
-        else {
-            $diff = strlen($input) - mb_strlen($input, $encoding);
-        }
-        return str_pad($input, $pad_length + $diff, $pad_string, $pad_type);
-    }
-}<% } -%>
-
-<%
-    signatureOrder = signatureOrder[payment.responseFields.service || "002"] || signatureOrder["002"];
-    signatureOrder = signatureOrder[payment.responseFields.action || "afb"] || signatureOrder["afb"];
--%>
-<% signatureOrder.forEach(function(field, i, arr){%>
-<% data += (signatureLength[field] >= 0 ? new Array(Math.abs(signatureLength[field]) + 1 -  (field in payment.responseFields ? payment.responseFields[field] : "").length).join("0") : "") + (field in payment.responseFields ? payment.responseFields[field] : "") + (signatureLength[field] < 0 ? new Array(Math.abs(signatureLength[field]) + 1 - (field in payment.responseFields ? payment.responseFields[field] : "").length).join(" ") : "") -%>
-<%- !i ? "$data = " : "        "%><%- payment.charset.match(/^utf[\-_]8$/i) ? "mb_str_pad" : "str_pad" %>($fields["<%= field %>"],<%= new Array(12 - field.length).join(" ")%> <%- Math.abs(signatureLength[field]) %>,<%= new Array(4 - Math.abs(signatureLength[field]).toString().length).join(" ")%> "<%= signatureLength[field]<0 ? " " : "0" %>", STR_PAD_<%= signatureLength[field]<0 ? "RIGHT" : "LEFT" %><%- payment.charset.match(/^utf[\-_]8$/i) ? ", \"" + payment.charset + "\")" :")" %><%- i< arr.length - 1?".":"; " -%>
-<%})%>
-
-/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
-
-// STEP 4. Verify the data with RSA-SHA1
-// =====================================
-
-if (openssl_verify ($data, pack('H*', $fields["mac"]), $public_key) !== 1) {
-    $signatureVerified = false;
-}else{
-    $signatureVerified = true;
-}
-
-// STEP 5. Display output of the received payment
-// ==============================================
-?>
-
-    <p>Payment: <?php echo $fields["respcode"] == "000" ? "received" : "cancelled" ?></p>
-    <p>Signature: <?php echo $signatureVerified ? "verified" : "not verified" ?></p>
-
+        <p>
+            Payment:
+            <?php echo $fields["respcode"] == "000" ? "received" : "cancelled" ?>
+        </p>
+        <p>
+            Signature:
+            <?php echo $signatureVerified ? "verified" : "not verified" ?>
+        </p>
     </body>
 </html>
