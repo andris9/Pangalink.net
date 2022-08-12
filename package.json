@@ -31,7 +31,7 @@
         "highlight.js": "11.6.0",
         "iban": "0.0.14",
         "joi": "17.6.0",
-        "marked": "0.5.1",
+        "marked": "4.0.18",
         "moment": "2.29.4",
         "mongodb": "4.8.1",
         "morgan": "1.10.0",

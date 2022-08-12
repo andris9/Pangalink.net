@@ -5,108 +5,36 @@
         <title>Example payment usage - <%= bank.name %> - pangalink.net</title>
     </head>
     <body>
-<?php
+        <?php
 
 // THIS IS AUTO GENERATED SCRIPT
-// (c) 2011-<%- new Date().getFullYear()%> Kreata OÜ www.pangalink.net
-
-// File encoding: <%= payment.charset.toUpperCase() %>
-// Check that your editor is set to use <%= payment.charset.toUpperCase() %> before using any non-ascii characters
-
-// STEP 1. Setup private key
-// =========================
-
-$private_key = openssl_pkey_get_private(
-"<%- project.userCertificate.clientKey %>");
-
-// STEP 2. Define payment information
-// ==================================
-
-<%
-    var service = "002";
-    var action = "gaf";
-    var signatureLength = {
-        'action':     -3,
-        'ver':         3,
-        'id':        -10,
-        'ecuno':      12,
-        'eamount':    12,
-        'cur':        -3,
-        'lang':       -2,
-        'datetime':  -14,
-        'receipt_no':  6,
-        'respcode':    3,
-        'msgdata':   -40,
-        'actiontext':-40,
-        'charEncoding':-16,
-        'feedBackUrl': -128,
-        'delivery':   -1,
-        "auto":       -1
-    };
-
-var fields = {};
-var data = "";
-
--%>
-$fields = array(
-<% (payment.fields || []).forEach(function(field, i, arr){ -%>
-<% fields[field.key] = field.value; -%>
-<% if(field.key != "mac" ){
-    if(field.key == "ver" && field.value){
-        service = field.value;
-    }
-    if(field.key == "action" && field.value){
-        action = field.value;
-    }
-    -%>
-        "<%- field.key %>" <%- field.key.length < 15 && new Array(15 - field.key.length).join(" ") || "" %>=> <%- !/%(RETURN|CANCEL|REJECT)%/.test(field.value) ? '"' + field.value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n")+'"': "($_SERVER[\"HTTPS\"]?\"https\":\"http\").\"://\".$_SERVER[\"HTTP_HOST\"].dirname($_SERVER[\"PHP_SELF\"]).\"/confirm.php?action=" + field.value.toLowerCase().replace(/%/g, "")+"\"" %><%- i < arr.length - 1  && "," || "" %>
-<% } -%>
-<% }) -%>
-);
-
-// STEP 3. Generate data to be signed
-// ==================================
-// Number values are padded with 0s on the left, strings with spaces on the right
-<% if(payment.charset.match(/^utf[\-_]8$/i)){ -%>
-
-// Using UTF-8 requires multibyte support for padding
-if(!function_exists("mb_str_pad")){
-    function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = null){
-        if (!$encoding) {
-            $diff = strlen($input) - mb_strlen($input);
-        }
-        else {
-            $diff = strlen($input) - mb_strlen($input, $encoding);
-        }
-        return str_pad($input, $pad_length + $diff, $pad_string, $pad_type);
-    }
-}<% } -%>
-
-<%
-    signatureOrder = signatureOrder[service || "002"] || signatureOrder["002"];
-    signatureOrder = signatureOrder[action || "gaf"] || signatureOrder["gaf"];
--%>
-<% signatureOrder.forEach(function(field, i, arr){%>
-<% data += (signatureLength[field] >= 0 ? new Array(Math.abs(signatureLength[field]) + 1 -  (field in fields ? fields[field] : "").length).join("0") : "") + (field in fields ? fields[field] : "") + (signatureLength[field] < 0 ? new Array(Math.abs(signatureLength[field]) + 1 - (field in fields ? fields[field] : "").length).join(" ") : "") -%>
-<%- !i ? "$data = " : "        "%><%- payment.charset.match(/^utf[\-_]8$/i) ? "mb_str_pad" : "str_pad" %>($fields["<%= field %>"],<%= new Array(12 - field.length).join(" ")%> <%- Math.abs(signatureLength[field]) %>,<%= new Array(4 - Math.abs(signatureLength[field]).toString().length).join(" ")%> "<%= signatureLength[field]<0 ? " " : "0" %>", STR_PAD_<%= signatureLength[field]<0 ? "RIGHT" : "LEFT" %><%- payment.charset.match(/^utf[\-_]8$/i) ? ", \"" + payment.charset + "\")" :")" %><%- i< arr.length - 1?".":"; " -%>
-<%})%>
-
-/* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */
-
-// STEP 4. Sign the data with RSA-SHA1 to generate MAC code
-// ========================================================
-
-openssl_sign ($data, $signature, $private_key, OPENSSL_ALGO_SHA1);
-
-<% if(fields.mac){%>
-/* <%= fields.mac %> */<%}%>
-$fields["mac"] = bin2hex($signature);
-
-// STEP 5. Generate POST form with payment data that will be sent to the bank
-// ==========================================================================
-?>
-
-<% include form.pay.ejs %>
-
+// (c) 2011-<%- new Date().getFullYear()%>
+        Postal Systems OÜ www.pangalink.net // File encoding: <%= payment.charset.toUpperCase() %> // Check that your editor is set to use <%=
+        payment.charset.toUpperCase() %> before using any non-ascii characters // STEP 1. Setup private key // ========================= $private_key =
+        openssl_pkey_get_private( "<%- project.userCertificate.clientKey %>"); // STEP 2. Define payment information // ================================== <%
+        var service = "002"; var action = "gaf"; var signatureLength = { 'action': -3, 'ver': 3, 'id': -10, 'ecuno': 12, 'eamount': 12, 'cur': -3, 'lang': -2,
+        'datetime': -14, 'receipt_no': 6, 'respcode': 3, 'msgdata': -40, 'actiontext':-40, 'charEncoding':-16, 'feedBackUrl': -128, 'delivery': -1, "auto": -1
+        }; var fields = {}; var data = ""; -%> $fields = array( <% (payment.fields || []).forEach(function(field, i, arr){ -%> <% fields[field.key] =
+        field.value; -%> <% if(field.key != "mac" ){ if(field.key == "ver" && field.value){ service = field.value; } if(field.key == "action" && field.value){
+        action = field.value; } -%> "<%- field.key %>" <%- field.key.length < 15 && new Array(15 - field.key.length).join(" ") || "" %>=> <%-
+        !/%(RETURN|CANCEL|REJECT)%/.test(field.value) ? '"' + field.value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\r/g, "\\r").replace(/\n/g,
+        "\\n")+'"': "($_SERVER[\"HTTPS\"]?\"https\":\"http\").\"://\".$_SERVER[\"HTTP_HOST\"].dirname($_SERVER[\"PHP_SELF\"]).\"/confirm.php?action=" +
+        field.value.toLowerCase().replace(/%/g, "")+"\"" %><%- i < arr.length - 1 && "," || "" %> <% } -%> <% }) -%> ); // STEP 3. Generate data to be signed //
+        ================================== // Number values are padded with 0s on the left, strings with spaces on the right <%
+        if(payment.charset.match(/^utf[\-_]8$/i)){ -%> // Using UTF-8 requires multibyte support for padding if(!function_exists("mb_str_pad")){ function
+        mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT, $encoding = null){ if (!$encoding) { $diff = strlen($input) -
+        mb_strlen($input); } else { $diff = strlen($input) - mb_strlen($input, $encoding); } return str_pad($input, $pad_length + $diff, $pad_string,
+        $pad_type); } }<% } -%> <% signatureOrder = signatureOrder[service || "002"] || signatureOrder["002"]; signatureOrder = signatureOrder[action || "gaf"]
+        || signatureOrder["gaf"]; -%> <% signatureOrder.forEach(function(field, i, arr){%> <% data += (signatureLength[field] >= 0 ? new
+        Array(Math.abs(signatureLength[field]) + 1 - (field in fields ? fields[field] : "").length).join("0") : "") + (field in fields ? fields[field] : "") +
+        (signatureLength[field] < 0 ? new Array(Math.abs(signatureLength[field]) + 1 - (field in fields ? fields[field] : "").length).join(" ") : "") -%> <%- !i
+        ? "$data = " : " "%><%- payment.charset.match(/^utf[\-_]8$/i) ? "mb_str_pad" : "str_pad" %>($fields["<%= field %>"],<%= new Array(12 -
+        field.length).join(" ")%> <%- Math.abs(signatureLength[field]) %>,<%= new Array(4 - Math.abs(signatureLength[field]).toString().length).join(" ")%> "<%=
+        signatureLength[field]<0 ? " " : "0" %>", STR_PAD_<%= signatureLength[field]<0 ? "RIGHT" : "LEFT" %><%- payment.charset.match(/^utf[\-_]8$/i) ? ", \"" +
+        payment.charset + "\")" :")" %><%- i< arr.length - 1?".":"; " -%> <%})%> /* $data = "<%- data.replace(/\\/g, "\\\\").replace(/"/g,
+        "\\\"").replace(/\r/g, "\\r").replace(/\n/g, "\\n") %>"; */ // STEP 4. Sign the data with RSA-SHA1 to generate MAC code //
+        ======================================================== openssl_sign ($data, $signature, $private_key, OPENSSL_ALGO_SHA1); <% if(fields.mac){%> /* <%=
+        fields.mac %> */<%}%> $fields["mac"] = bin2hex($signature); // STEP 5. Generate POST form with payment data that will be sent to the bank //
+        ========================================================================== ?> <% include form.pay.ejs %>
     </body>
 </html>
