@@ -1,12 +1,12 @@
 'use strict';
 
-const config = require('config');
+const config = require('wild-config');
 const pathlib = require('path');
 const express = require('express');
 const app = express();
 const flash = require('connect-flash');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
 const routes = require('./lib/routes');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -119,8 +119,8 @@ app.use(tools.checkEncoding);
 // setup session handling, store everything to MongoDB
 app.use(
     session({
-        store: new MongoStore({
-            url: config.mongodb.url,
+        store: MongoStore.create({
+            mongoUrl: config.mongodb.url,
             ttl: config.session.ttl
         }),
         secret: config.session.secret,

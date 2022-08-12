@@ -2,7 +2,7 @@
 
 // This is the main file. Here we set globals as well
 
-let config = require('config');
+let config = require('wild-config');
 let log = require('npmlog');
 
 log.level = config.log.level;

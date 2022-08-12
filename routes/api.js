@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('config');
+const config = require('wild-config');
 const db = require('../lib/db');
 const ObjectId = require('mongodb').ObjectId;
 const banks = require('../lib/banks.json');
