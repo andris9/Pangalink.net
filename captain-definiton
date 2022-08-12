@@ -11,7 +11,14 @@ services:
             WAIT_HOSTS: srv-captain--$$cap_appname-mongodb:27017
             PL_MONGO_URL: mongodb://$$cap_APP_MONGODB_USERNAME:$$cap_APP_MONGODB_PASSWORD@srv-captain--$$cap_appname-mongodb:27017/$$cap_APP_MONGODB_DATABASE?authSource=$$cap_APP_MONGODB_DATABASE
             PL_HOSTNAME: $$cap_appname.$$cap_root_domain
-            PL_PROTO: $$cap_APP_PROTO
+            PL_PROTO: https
+            PL_SMTP_DIRECT: false
+            PL_SMTP_HOST: $$cap_SMTP_HOST
+            PL_SMTP_PORT: $$cap_SMTP_PORT
+            PL_SMTP_TLS: $$cap_SMTP_TLS
+            PL_SMTP_USER: $$cap_SMTP_USER
+            PL_SMTP_PASS: $$cap_SMTP_PASS
+            PL_SMTP_SENDER: $$cap_SMTP_SENDER
         caproverExtra:
             containerHttpPort: '3480'
 
@@ -34,7 +41,7 @@ caproverOneClickApp:
     variables:
         - id: $$cap_pangalink_version
           label: Pangalinker Version
-          defaultValue: 'latest'
+          defaultValue: 'v2.1.1'
           description: Check out their docker page for the valid tags https://hub.docker.com/r/andris9/pangalink/tags
           validRegex: /^([^\s^\/])+$/
         - label: Mongo - root password
@@ -53,18 +60,41 @@ caproverOneClickApp:
           description: Name of the database.
           defaultValue: pangalink
           id: $$cap_APP_MONGODB_DATABASE
-        - label: '* External URL protocol'
-          description: Protocol for external URL availble from outside, like via browser. You can re-enter this value later.
-          defaultValue: 'https'
-          id: $$cap_APP_PROTO
+        - label: SMTP - sender address
+          description: The 'From' address for sent emails.
+          defaultValue: 'pangalink@example.com'
+          id: $$cap_SMTP_SENDER
+        - label: SMTP - server name
+          description: Name of the SMTP server for sending emails.
+          defaultValue: smtp.example.com
+          id: $$cap_SMTP_HOST
+        - label: SMTP - port number
+          description: Port number for the SMTP server.
+          defaultValue: 465
+          id: $$cap_SMTP_PORT
+        - label: SMTP - username
+          description: Username for the SMTP server.
+          defaultValue: ''
+          id: $$cap_SMTP_USER
+        - label: SMTP - password
+          description: Password for the SMTP server.
+          defaultValue: ''
+          id: $$cap_SMTP_PASS
+        - label: SMTP - use TLS
+          description: Use TLS for SMTP. Usually 'true' only when using port 465, set ir to 'false' for any other ports to fall back to using STARTTLS.
+          defaultValue: 'true'
+          id: $$cap_SMTP_TLS
+
     instructions:
         start: >-
             Testing service for Estonian pangalink protocols
             GitHub: https://github.com/andris9/Pangalink.net
-        end: >-
+        end: |-
             You're done! 🤗
-            Your Pangalinker instance is available at http://$$cap_appname.$$cap_root_domain
-            Do not forget to enable HTTPS for Pangalinker!
+
+            Your Pangalinker instance is available at https://$$cap_appname.$$cap_root_domain
+
+            You must enable HTTPS for Pangalinker before using it!
     displayName: 'Pangalink'
     isOfficial: true
     description: Self-hosted application to test Estonian pangalink protocols
