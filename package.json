@@ -28,7 +28,7 @@
         "express-session": "1.15.6",
         "fetch": "1.1.0",
         "he": "1.2.0",
-        "highlight.js": "9.13.1",
+        "highlight.js": "11.6.0",
         "iban": "0.0.14",
         "joi": "17.6.0",
         "marked": "0.5.1",

@@ -129,12 +129,12 @@ app.use(
     })
 );
 
+// setup flash messages
+app.use(flash());
+
 // setup user handling
 app.use(passport.initialize());
 app.use(passport.session());
-
-// setup flash messages
-app.use(flash());
 
 // Log requests to console
 app.use(
@@ -205,11 +205,6 @@ app.use((req, res, next) => {
 
         res.locals.packageTitle = packageInfo.name;
 
-        res.locals.messages = {
-            success: req.flash('success'),
-            error: req.flash('error'),
-            info: req.flash('info')
-        };
         res.locals.user = req.user;
         res.locals.googleAnalyticsID = config.googleAnalyticsID;
 
@@ -219,6 +214,15 @@ app.use((req, res, next) => {
         res.locals.version = packageInfo.version;
         next();
     });
+});
+
+app.use((req, res, next) => {
+    res.locals.messages = {
+        success: req.flash('success'),
+        error: req.flash('error'),
+        info: req.flash('info')
+    };
+    next();
 });
 
 // Use routes from routes.js

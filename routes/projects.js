@@ -321,7 +321,7 @@ function handleAddProject(req, res, next) {
             }
 
             if (error) {
-                req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+                res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
                 res.render('index', {
                     pageTitle: 'Lisa uus makselahendus',
                     page: '/add-project',
@@ -568,7 +568,7 @@ function handleEditProject(req, res, next) {
                     }
 
                     if (error) {
-                        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+                        res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
                         res.render('index', {
                             pageTitle: 'Muuda makselahendust',
                             page: '/edit-project',
