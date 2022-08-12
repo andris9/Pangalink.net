@@ -37,6 +37,13 @@ Juhul kui samas serveris serveerib veebiporte juba Apache või Nginx vmt veebise
 1.  Kas kasutada mittestandardset porti. http://example.com/ asemel näiteks http://example.com:3000/
 2.  Või seadistada peamine veebiserver proksima Pangalinkeri päringuid. Näidisseadistused Apache ja Nginx jaoks leiab setup/virtual-hosts kaustast.
 
+## Docker
+
+```
+$ docker pull andris9/pangalink:latest
+$ docker run -dp 3480:3480 --env PL_MONGO_URL="mongodb://host.docker.internal:27017/pangalink" andris9/pangalink:latest
+```
+
 ## Käivitamine
 
 Rakenduse kaustas:
