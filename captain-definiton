@@ -81,7 +81,7 @@ caproverOneClickApp:
           defaultValue: ''
           id: $$cap_SMTP_PASS
         - label: SMTP - use TLS
-          description: Use TLS for SMTP. Usually 'true' only when using port 465, set ir to 'false' for any other ports to fall back to using STARTTLS.
+          description: Use TLS for SMTP. Usually 'true' only when using port 465, set it to 'false' for any other ports to fall back to using STARTTLS.
           defaultValue: 'true'
           id: $$cap_SMTP_TLS
 
