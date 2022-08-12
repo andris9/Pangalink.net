@@ -1,0 +1,71 @@
+captainVersion: 4
+services:
+    # Pangalinker
+    $$cap_appname:
+        depends_on:
+            - $$cap_appname-mongodb
+        image: andris9/pangalink:$$cap_pangalink_version
+        restart: always
+        environment:
+            NODE_ENV: production
+            WAIT_HOSTS: srv-captain--$$cap_appname-mongodb:27017
+            PL_MONGO_URL: mongodb://$$cap_APP_MONGODB_USERNAME:$$cap_APP_MONGODB_PASSWORD@srv-captain--$$cap_appname-mongodb:27017/$$cap_APP_MONGODB_DATABASE?authSource=$$cap_APP_MONGODB_DATABASE
+            PL_HOSTNAME: $$cap_appname.$$cap_root_domain
+            PL_PROTO: $$cap_APP_PROTO
+        caproverExtra:
+            containerHttpPort: '3480'
+
+    # MongoDB
+    $$cap_appname-mongodb:
+        caproverExtra:
+            notExposeAsWebApp: 'true'
+        image: bitnami/mongodb:4.4.1-debian-10-r8
+        ports:
+            - '27017:27017'
+        volumes:
+            - $$cap_appname-mongodb-data:/bitnami
+        environment:
+            MONGODB_ROOT_PASSWORD: $$cap_APP_MONGODB_ROOT_PASSWORD
+            MONGODB_DATABASE: $$cap_APP_MONGODB_DATABASE
+            MONGODB_USERNAME: $$cap_APP_MONGODB_USERNAME
+            MONGODB_PASSWORD: $$cap_APP_MONGODB_PASSWORD
+
+caproverOneClickApp:
+    variables:
+        - id: $$cap_pangalink_version
+          label: Pangalinker Version
+          defaultValue: 'latest'
+          description: Check out their docker page for the valid tags https://hub.docker.com/r/andris9/pangalink/tags
+          validRegex: /^([^\s^\/])+$/
+        - label: Mongo - root password
+          description: Root password for Mongo DB.
+          defaultValue: $$cap_gen_random_hex(32)
+          id: $$cap_APP_MONGODB_ROOT_PASSWORD
+        - label: Mongo - database username
+          description: Mongo DB username.
+          defaultValue: pangalink
+          id: $$cap_APP_MONGODB_USERNAME
+        - label: Mongo - database password
+          description: Mongo DB password.
+          defaultValue: $$cap_gen_random_hex(32)
+          id: $$cap_APP_MONGODB_PASSWORD
+        - label: Mongo - database name
+          description: Name of the database.
+          defaultValue: pangalink
+          id: $$cap_APP_MONGODB_DATABASE
+        - label: '* External URL protocol'
+          description: Protocol for external URL availble from outside, like via browser. You can re-enter this value later.
+          defaultValue: 'https'
+          id: $$cap_APP_PROTO
+    instructions:
+        start: >-
+            Testing service for Estonian pangalink protocols
+            GitHub: https://github.com/andris9/Pangalink.net
+        end: >-
+            You're done! 🤗
+            Your Pangalinker instance is available at http://$$cap_appname.$$cap_root_domain
+            Do not forget to enable HTTPS for Pangalinker!
+    displayName: 'Pangalink'
+    isOfficial: true
+    description: Self-hosted application to test Estonian pangalink protocols
+    documentation: Taken from https://hub.docker.com/r/andris9/pangalink
