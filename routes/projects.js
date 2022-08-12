@@ -412,9 +412,9 @@ function handleAddProject(req, res, next) {
                     }
 
                     if (['tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
-                        project.uid = (10000000 + Number(tools.getReferenceCode(id))).toString();
+                        project.uid = (10000000 + Number(tools.getReferenceCode(id) || 0)).toString();
                     } else {
-                        project.uid = 'uid' + tools.getReferenceCode(id);
+                        project.uid = 'uid' + (tools.getReferenceCode(id) || '0');
                     }
 
                     db.save('project', project, (err, id) => {

@@ -416,7 +416,7 @@ function apiActionPost(req, project, callback) {
             if (['tapiola', 'alandsbanken', 'handelsbanken', 'aktiasppop'].indexOf(req.body.bank) >= 0) {
                 record.uid = (10000000 + Number(tools.getReferenceCode(id))).toString();
             } else {
-                record.uid = 'uid' + tools.getReferenceCode(id);
+                record.uid = 'uid' + (tools.getReferenceCode(id) || '0');
             }
 
             db.save('project', record, (err, id) => {

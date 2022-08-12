@@ -211,7 +211,7 @@ app.use((req, res, next) => {
         res.locals.googleAnalyticsID = config.googleAnalyticsID;
 
         req.emailName = 'emailName' in settings ? settings.emailName : settings.title || req.siteTitle;
-        req.emailAddress = settings.emailAddress || 'pangalink@' + req.siteHostname;
+        req.emailAddress = settings.emailAddress || config.mail.defaults.from || 'pangalink@' + req.siteHostname;
 
         res.locals.version = packageInfo.version;
         next();
