@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('wild-config');
+const config = require('config');
 const express = require('express');
 const tools = require('../lib/tools');
 const router = new express.Router();

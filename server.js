@@ -1,6 +1,9 @@
 'use strict';
 
-const config = require('wild-config');
+const config = require('config');
+const log = require('npmlog');
+log.level = config.log.level;
+
 const pathlib = require('path');
 const express = require('express');
 const app = express();
@@ -18,10 +21,9 @@ const http = require('http');
 const tools = require('./lib/tools');
 const db = require('./lib/db');
 const st = require('st');
-const log = require('npmlog');
+
 const packageInfo = require('./package.json');
 const moment = require('moment');
-const setupIndexes = require('./indexes');
 const urllib = require('url');
 
 moment.locale('et');
