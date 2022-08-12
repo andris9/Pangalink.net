@@ -2,7 +2,7 @@ version: '3.7'
 services:
     pangalink:
         restart: always
-        image: andris9/pangalink:v2
+        image: andris9/pangalink:latest
         ports:
             # API and web interface
             - '3480:3480'
