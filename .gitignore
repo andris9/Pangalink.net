@@ -4,3 +4,4 @@ node_modules
 npm-debug.log
 config/production.js*
 package-lock.json*
+data/

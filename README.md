@@ -4,6 +4,54 @@
 
 # Pangalinker
 
+## Docker
+
+Järgnev eeldab, et _host_ masinas jookseb autentimata MongoDB. Muuda `PL_MONGO_URL` väärtust, kui kasutad muud seadistust.
+
+```
+$ docker pull andris9/pangalink:latest
+$ docker run -dp 3480:3480 --env PL_MONGO_URL="mongodb://host.docker.internal:27017/pangalink" andris9/pangalink:latest
+```
+
+või alternatiivselt, käivita siinsamas kaustas:
+
+```
+$ docker-compose up
+```
+
+ja seejärel ava brauseris http://127.0.0.1:3480/
+
+## Konfiguratsioon
+
+Konfiguratsiooni saab ette anda keskkonnamuutujatega.
+
+**Andmebaas**
+
+-   `PL_MONGO_URL` – andmebaasi URL, vaikimisi _"mongodb://127.0.0.1:27017/pangalink"_
+
+**Veebiserver**
+
+-   `PL_PORT` – millist porti kuulata, vaikimisi _3480_
+-   `PL_HOST` – millist ip aadressi kuulata, vaikimisi _"127.0.0.1"_. Kogu maailmale avamiseks kasuta _"0.0.0.0"_
+-   `PL_SESSION_SECRET` – sessiooni küpsise parool
+
+**Lingid**
+
+Mõngingatel juhtudel on rakendusel vaja genereerida absoluutseid veebiaadresse. Domeeni ja protokolli määramiseks kasutatakse järgmiseid väärtuseid.
+
+-   `PL_HOSTNAME` – veebilehe domeeninimi, näiteks _"pangalink.example.com"_. Kasutatakse kliendi linkide genereerimisel.
+-   `PL_PROTO` – veebiaadressi protokoll, näiteks _"https"_ (vaikimisi _"http"_). Kasutatakse kliendi linkide genereerimisel.
+
+**Kirjade saatmine**
+
+-   `PL_SMTP_DIRECT` – kas rakendus peaks saatma kirju otse saaja MX serverile (vaikimisi _"true"_). Selle seadistusega on suur tõenäosus, et kirjad lähevad spämmi või ei võeta üldse vastu.
+-   `PL_SMTP_HOST` – kirjade saatmise SMTP server, näiteks _"smtp.gmail.com"_
+-   `PL_SMTP_PORT` – kirjade saatmise SMTP serveri port, näiteks _465_
+-   `PL_SMTP_TLS` – kas kirjade saatmise SMTP server kasutab TLS'i (_"true"_) või STARTTLS'i (_"false"_)
+-   `PL_SMTP_USER` – kirjade saatmise SMTP serveri kasutajanimi
+-   `PL_SMTP_PASS` – kirjade saatmise SMTP serveri parool
+-   `PL_SMTP_SENDER` – kirjade saatmise kasutatv From aadress
+
 ## Eeldused
 
 -   [Node.js](http://nodejs.org/), vähemalt versioon 8.0.0 (6 võib aga ei pruugi töötada)
@@ -37,13 +85,6 @@ Juhul kui samas serveris serveerib veebiporte juba Apache või Nginx vmt veebise
 1.  Kas kasutada mittestandardset porti. http://example.com/ asemel näiteks http://example.com:3000/
 2.  Või seadistada peamine veebiserver proksima Pangalinkeri päringuid. Näidisseadistused Apache ja Nginx jaoks leiab setup/virtual-hosts kaustast.
 
-## Docker
-
-```
-$ docker pull andris9/pangalink:latest
-$ docker run -dp 3480:3480 --env PL_MONGO_URL="mongodb://host.docker.internal:27017/pangalink" andris9/pangalink:latest
-```
-
 ## Käivitamine
 
 Rakenduse kaustas:
@@ -51,37 +92,6 @@ Rakenduse kaustas:
     node index.js
 
 Juhul kui veebiliides kasutab porti 80 või 443, pead käivitama rakenduse juurkasutaja õigustes.
-
-## Konfiguratsioon
-
-Konfiguratsiooni saab ette anda keskkonnamuutujatega.
-
-**Andmebaas**
-
--   `PL_MONGO_URL` – andmebaasi URL, vaikimisi _"mongodb://127.0.0.1:27017/pangalink"_
-
-**Veebiserver**
-
--   `PL_PORT` – millist porti kuulata, vaikimisi _3480_
--   `PL_HOST` – millist ip aadressi kuulata, vaikimisi _"127.0.0.1"_. Kogu maailmale avamiseks kasuta _"0.0.0.0"_
--   `PL_SESSION_SECRET` – sessiooni küpsise parool
-
-**Lingid**
-
-Mõngingatel juhtudel on rakendusel vaja genereerida absoluutseid veebiaadresse. Domeeni ja protokolli määramiseks kasutatakse järgmiseid väärtuseid.
-
--   `PL_HOSTNAME` – veebilehe domeeninimi, näiteks _"pangalink.example.com"_. Kasutatakse kliendi linkide genereerimisel.
--   `PL_PROTO` – veebiaadressi protokoll, näiteks _"https"_ (vaikimisi _"http"_). Kasutatakse kliendi linkide genereerimisel.
-
-**Kirjade saatmine**
-
--   `PL_SMTP_DIRECT` – kas rakendus peaks saatma kirju otse saaja MX serverile (vaikimisi _"true"_). Selle seadistusega on suur tõenäosus, et kirjad lähevad spämmi või ei võeta üldse vastu.
--   `PL_SMTP_HOST` – kirjade saatmise SMTP server, näiteks _"smtp.gmail.com"_
--   `PL_SMTP_PORT` – kirjade saatmise SMTP serveri port, näiteks _465_
--   `PL_SMTP_TLS` – kas kirjade saatmise SMTP server kasutab TLS'i (_"true"_) või STARTTLS'i (_"false"_)
--   `PL_SMTP_USER` – kirjade saatmise SMTP serveri kasutajanimi
--   `PL_SMTP_PASS` – kirjade saatmise SMTP serveri parool
--   `PL_SMTP_SENDER` – kirjade saatmise kasutatv From aadress
 
 ### Andmebaasi seadistus
 
