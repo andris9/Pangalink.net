@@ -202,7 +202,7 @@ function handleResetLink(req, res) {
     }
 
     if (error) {
-        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+        res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
         res.render('index', {
             pageTitle: 'Parooli taastamine',
             page: '/account/reset-link',
@@ -279,7 +279,7 @@ function handleJoin(req, res) {
     }
 
     if (error) {
-        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+        res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
         res.render('index', {
             pageTitle: 'Loo uus konto',
             page: '/account/join',
@@ -396,7 +396,7 @@ function handleProfile(req, res, next) {
         }
 
         if (error) {
-            req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+            res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
             res.render('index', {
                 pageTitle: 'Konto andmed',
                 page: '/account/profile',
@@ -575,7 +575,7 @@ function handleUsersAdd(req, res) {
     }
 
     if (error) {
-        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+        res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
         res.render('index', {
             pageTitle: 'Lisa uus kasutaja',
             page: '/account/users/add',
@@ -680,7 +680,7 @@ function handleSettings(req, res, next) {
     }
 
     if (error) {
-        req.flash('error', 'Andmete valideerimisel ilmnesid vead');
+        res.locals.messages.error.push('Andmete valideerimisel ilmnesid vead');
         res.render('index', {
             pageTitle: 'Teenuse seaded',
             page: '/account/settings',

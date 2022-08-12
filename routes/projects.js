@@ -345,7 +345,7 @@ function handleAddProject(req, res, next) {
 
             tools.generateKeys(req.user, 20 * 365, Number(req.body.keyBitsize) || 1024, (err, userCertificate, bankCertificate) => {
                 if (err) {
-                    req.flash('error', 'Sertifikaadi genereerimisel tekkis viga');
+                    res.locals.messages.error.push('Sertifikaadi genereerimisel tekkis viga');
                     res.render('index', {
                         pageTitle: 'Lisa uus makselahendus',
                         page: '/add-project',
@@ -389,7 +389,7 @@ function handleAddProject(req, res, next) {
 
                 tools.incrIdCounter((err, id) => {
                     if (err) {
-                        req.flash('error', 'Andmebaasi viga');
+                        res.locals.messages.error.push('Andmebaasi viga');
                         res.render('index', {
                             pageTitle: 'Lisa uus makselahendus',
                             page: '/add-project',
@@ -419,7 +419,7 @@ function handleAddProject(req, res, next) {
 
                     db.save('project', project, (err, id) => {
                         if (err) {
-                            req.flash('error', 'Andmebaasi viga');
+                            res.locals.messages.error.push('Andmebaasi viga');
                             res.render('index', {
                                 pageTitle: 'Lisa uus makselahendus',
                                 page: '/add-project',
@@ -445,7 +445,7 @@ function handleAddProject(req, res, next) {
                             req.flash('success', 'Makselahendus on loodud');
                             res.redirect('/project/' + id.toString() + '/certs');
                         } else {
-                            req.flash('error', 'Makselahenduse loomine ebaõnnestus');
+                            res.locals.messages.error.push('Makselahenduse loomine ebaõnnestus');
                             res.render('index', {
                                 pageTitle: 'Lisa uus makselahendus',
                                 page: '/add-project',
@@ -593,7 +593,7 @@ function handleEditProject(req, res, next) {
 
                     tools.generateKeys(req.user, 20 * 365, Number(req.body.keyBitsize) || 1024, (err, userCertificate, bankCertificate) => {
                         if (err && req.body.regenerate) {
-                            req.flash('error', 'Sertifikaadi genereerimisel tekkis viga');
+                            res.locals.messages.error.push('Sertifikaadi genereerimisel tekkis viga');
                             res.render('index', {
                                 pageTitle: 'Muuda makselahendust',
                                 page: '/edit-project',
@@ -638,7 +638,7 @@ function handleEditProject(req, res, next) {
 
                         db.save('project', record, (err, id) => {
                             if (err) {
-                                req.flash('error', 'Andmebaasi viga');
+                                res.locals.messages.error.push('Andmebaasi viga');
                                 res.render('index', {
                                     pageTitle: 'Muuda makselahendust',
                                     page: '/edit-project',
@@ -668,7 +668,7 @@ function handleEditProject(req, res, next) {
                                 }
                                 res.redirect('/project/' + id.toString() + '/certs');
                             } else {
-                                req.flash('error', 'Makselahenduse andmete uuendamine ebaõnnestus');
+                                res.locals.messages.error.push('Makselahenduse andmete uuendamine ebaõnnestus');
                                 res.render('index', {
                                     pageTitle: 'Muuda makselahendust',
                                     page: '/edit-project',
