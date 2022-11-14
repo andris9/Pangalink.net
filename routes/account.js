@@ -103,10 +103,16 @@ function serveLogin(req, res) {
  * @param {Object} req HTTP Request object
  * @param {Object} req HTTP Response object
  */
-function serveLogout(req, res) {
-    req.flash('info', 'Oled välja logitud');
-    req.logout();
-    res.redirect('/');
+function serveLogout(req, res, next) {
+    req.logout(function(err) {
+        if (err) {
+            return next(err);
+        }
+        else {
+            req.flash('info', 'Oled välja logitud');
+            res.redirect('/');
+        }
+    });
 }
 
 function serveJoin(req, res) {
@@ -646,7 +652,7 @@ function serveSettings(req, res, next) {
             url: urllib.format(urlParts),
             logo,
             emailName: 'emailName' in settings ? settings.emailName : settings.title || req.siteTitle,
-            emailAddress: settings.emailAddress || config.mail.defaults.from || 'pangalink@' + urlParts.host.replace(/:\d+/, ''),
+            emailAddress: settings.emailAddress || config.mail?.defaults?.from || 'pangalink@' + urlParts.host.replace(/:\d+/, ''),
             validation: {}
         });
     });
